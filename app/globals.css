@@ -97,4 +97,122 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
+
+  .invoice-paper {
+    aspect-ratio: 210 / 297;
+    min-height: 0;
+  }
+
+  .invoice-viewer {
+    max-height: calc(100dvh - 13rem);
+    overflow: auto;
+  }
+
+  .invoice-page-viewport {
+    flex: 0 0 auto;
+  }
+
+  .invoice-page-scale {
+    transform-origin: top left;
+  }
+
+  .invoice-measurement {
+    position: absolute;
+    top: 0;
+    left: -100000px;
+    width: 210mm;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .invoice-line-row {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .invoice-page,
+  .invoice-page [data-invoice-table-header],
+  .invoice-page [data-invoice-footer] {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+@media (min-width: 768px) {
+  .invoice-paper {
+    min-height: 0;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .invoice-measurement {
+    display: none !important;
+  }
+
+  .invoice-editor > :not(.grid) {
+    display: none !important;
+  }
+
+  .invoice-editor,
+  .invoice-editor > * {
+    margin: 0 !important;
+  }
+
+  .invoice-editor > .grid {
+    display: block !important;
+  }
+
+  .invoice-editor > .grid > :not(.invoice-print-area) {
+    display: none !important;
+  }
+
+  .invoice-print-area {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .invoice-print-area > :first-child {
+    display: none !important;
+  }
+
+  .invoice-pages {
+    display: block !important;
+  }
+
+  .invoice-page-viewport {
+    display: block !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .invoice-page-scale {
+    display: block !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    transform: none !important;
+  }
+
+  .invoice-page-viewport:not(:last-child) {
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .invoice-page {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    break-after: auto;
+    page-break-after: auto;
+  }
 }

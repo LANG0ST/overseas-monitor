@@ -1,5 +1,5 @@
-import { RoutePlaceholder } from "@/components/shared";
+import { DocumentList, type DocumentListFilters } from "@/components/shared/document-list";
 
-export default function AvoirsPage() {
-  return <RoutePlaceholder title="Avoirs" />;
+export default async function AvoirsPage({ searchParams }: { searchParams: Promise<DocumentListFilters> }) {
+  return <DocumentList filters={await searchParams} newLabel="+ Nouvel avoir" path="/avoirs" subtitle="Corrections de facturation" title="Avoirs" type="avoir" />;
 }

@@ -35,14 +35,19 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function isFactureEditorPath(pathname: string) {
+  return pathname.startsWith("/factures/") && pathname !== "/factures/new";
+}
+
 export function DesktopNavigation({ isAdmin }: AppNavigationProps) {
   const pathname = usePathname();
+  if (isFactureEditorPath(pathname)) return null;
   const items = isAdmin
     ? [...navigation, { href: "/permissions", label: "Permissions", icon: ShieldCheck }]
     : navigation;
 
   return (
-    <nav aria-label="Navigation principale" className="hidden w-56 shrink-0 flex-col gap-3 md:flex">
+    <nav aria-label="Navigation principale" className="hidden w-56 shrink-0 flex-col gap-3 md:flex print:hidden">
       <Link
         aria-label="Overseas Services"
         className="glass-card mb-3 flex h-16 items-center rounded-2xl px-4"
@@ -77,12 +82,13 @@ export function DesktopNavigation({ isAdmin }: AppNavigationProps) {
 
 export function MobileNavigation({ isAdmin }: AppNavigationProps) {
   const pathname = usePathname();
+  if (isFactureEditorPath(pathname)) return null;
   const items = isAdmin
     ? [...navigation, { href: "/permissions", label: "Permissions", icon: ShieldCheck }]
     : navigation;
 
   return (
-    <nav aria-label="Navigation mobile" className="glass-card fixed inset-x-3 bottom-3 z-20 flex gap-1 overflow-x-auto rounded-2xl p-2 md:hidden">
+    <nav aria-label="Navigation mobile" className="glass-card fixed inset-x-3 bottom-3 z-20 flex gap-1 overflow-x-auto rounded-2xl p-2 md:hidden print:hidden">
       {items.map(({ href, label, icon: Icon }) => {
         const active = isActivePath(pathname, href);
 

@@ -22,11 +22,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const isAdmin = profile?.role === "admin";
 
   return (
-    <div className="app-canvas p-4 md:p-8">
+    <div className="app-canvas p-4 md:p-8 print:bg-white print:p-0">
       <div className="mx-auto flex max-w-[1600px] gap-6">
         <DesktopNavigation isAdmin={isAdmin} />
-        <div className="glass-card min-h-[calc(100dvh-2rem)] flex-1 rounded-3xl p-3 md:min-h-[calc(100dvh-4rem)] md:p-5">
-          <header className="glass-card flex min-h-14 items-center justify-between rounded-full px-4 py-2 md:px-6">
+        <div className="glass-card min-h-[calc(100dvh-2rem)] flex-1 rounded-3xl p-3 md:min-h-[calc(100dvh-4rem)] md:p-5 print:contents">
+          <header className="glass-card flex min-h-14 items-center justify-between rounded-full px-4 py-2 md:px-6 print:hidden">
             <div>
               <p className="text-sm font-semibold text-neutral-900">Overseas Services</p>
               <p className="text-xs text-neutral-500">Gestion interne</p>
@@ -50,7 +50,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               </form>
             </div>
           </header>
-          <div className="px-1 py-6 pb-24 md:px-4 md:pb-6">{children}</div>
+          <div className="px-1 py-6 pb-24 md:px-4 md:pb-6 print:p-0">{children}</div>
         </div>
       </div>
       <MobileNavigation isAdmin={isAdmin} />
