@@ -36,7 +36,10 @@ function isActivePath(pathname: string, href: string) {
 }
 
 function isFactureEditorPath(pathname: string) {
-  return pathname.startsWith("/factures/") && pathname !== "/factures/new";
+  return (
+    (pathname.startsWith("/factures/") && pathname !== "/factures/new") ||
+    (pathname.startsWith("/devis/") && pathname !== "/devis/new")
+  );
 }
 
 export function DesktopNavigation({ isAdmin }: AppNavigationProps) {
