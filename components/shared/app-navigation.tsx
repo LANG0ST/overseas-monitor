@@ -39,7 +39,8 @@ function isActivePath(pathname: string, href: string) {
 
 function isFactureEditorPath(pathname: string) {
   return (
-    pathname === "/pointage" ||
+    pathname === "/pointage/new" ||
+    pathname.startsWith("/pointage/") ||
     (pathname.startsWith("/factures/") && pathname !== "/factures/new") ||
     (pathname.startsWith("/devis/") && pathname !== "/devis/new") ||
     (pathname.startsWith("/avoirs/") && pathname !== "/avoirs/new") ||

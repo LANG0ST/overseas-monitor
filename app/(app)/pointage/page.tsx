@@ -1,7 +1,7 @@
-import { PointageEditor } from "@/components/shared/pointage-editor";
+import { PointageDashboard, type PointageDashboardRow } from "@/components/shared/pointage-dashboard";
 import { canEdit } from "@/lib/auth/can-edit";
-import { findPointageSheet } from "@/lib/db/pointage";
-import { isValidMonth, normalizeText } from "@/lib/pointage";
+import { roundMoney } from "@/lib/db/document-calculations";
+import { entryTotals, isValidMonth, type DayValues } from "@/lib/pointage";
 import { createClient } from "@/lib/supabase/server";
 
 function currentMonth() {
@@ -15,66 +15,79 @@ function currentMonth() {
   return `${year}-${month}`;
 }
 
+type SheetRow = {
+  id: string;
+  client_name: string;
+  project: string | null;
+  updated_at: string;
+};
+
+type EntryRow = {
+  sheet_id: string;
+  unit_price: number | string;
+  days: DayValues;
+  overtime_hours: DayValues;
+};
+
 export default async function PointagePage({
   searchParams,
 }: {
-  searchParams: Promise<{ partenaire?: string; client?: string; ym?: string }>;
+  searchParams: Promise<{ ym?: string }>;
 }) {
   const params = await searchParams;
   const ym = isValidMonth(params.ym ?? "") ? String(params.ym) : currentMonth();
-  const partenaireId = params.partenaire?.trim() || undefined;
-  const manualClientName = partenaireId
-    ? ""
-    : normalizeText(params.client ?? "");
   const supabase = await createClient();
   const [
-    { data: partners, error: partnersError },
-    { data: engins, error: enginsError },
+    { data: sheets, error: sheetsError },
     { data: settings, error: settingsError },
     editable,
     canCreateFacture,
   ] = await Promise.all([
     supabase
-      .from("partenaires")
-      .select("id, name, ice, address")
+      .from("pointage_sheets")
+      .select("id, client_name, project, updated_at")
+      .eq("ym", ym)
       .eq("is_active", true)
-      .order("name"),
-    supabase
-      .from("engins")
-      .select("id, name, default_price")
-      .eq("is_active", true)
-      .eq("unit", "Jour")
-      .order("name"),
+      .order("client_name"),
     supabase.from("settings").select("ot_reference_hours").eq("id", 1).maybeSingle(),
     canEdit("pointage"),
     canEdit("factures"),
   ]);
-  if (partnersError) throw new Error(partnersError.message);
-  if (enginsError) throw new Error(enginsError.message);
+  if (sheetsError) throw new Error(sheetsError.message);
   if (settingsError) throw new Error(settingsError.message);
 
-  const initialSheet = partenaireId || manualClientName
-    ? await findPointageSheet({
-        partenaireId,
-        clientName: manualClientName,
-        ym,
-      })
-    : null;
+  const sheetRows = (sheets ?? []) as SheetRow[];
+  const sheetIds = sheetRows.map((sheet) => sheet.id);
+  let entries: EntryRow[] = [];
+  if (sheetIds.length > 0) {
+    const { data, error } = await supabase
+      .from("pointage_entries")
+      .select("sheet_id, unit_price, days, overtime_hours")
+      .in("sheet_id", sheetIds)
+      .eq("is_active", true);
+    if (error) throw new Error(error.message);
+    entries = (data ?? []) as EntryRow[];
+  }
 
-  return (
-    <PointageEditor
-      canCreateFacture={canCreateFacture}
-      editable={editable}
-      engins={(engins ?? []).map((engin) => ({
-        ...engin,
-        default_price: Number(engin.default_price),
-      }))}
-      initialClient={{ partenaireId, manualClientName }}
-      initialSheet={initialSheet}
-      key={`${initialSheet?.id ?? partenaireId ?? manualClientName}-${initialSheet?.updated_at ?? ym}`}
-      otReferenceHours={Number(settings?.ot_reference_hours ?? 9)}
-      partners={partners ?? []}
-      ym={ym}
-    />
-  );
+  const otReferenceHours = Number(settings?.ot_reference_hours ?? 9);
+  const rows: PointageDashboardRow[] = sheetRows.map((sheet) => {
+    const totals = entries
+      .filter((entry) => entry.sheet_id === sheet.id)
+      .map((entry) => entryTotals({
+        days: entry.days ?? {},
+        overtime_hours: entry.overtime_hours ?? {},
+        unit_price: Number(entry.unit_price),
+      }, otReferenceHours));
+    return {
+      id: sheet.id,
+      clientName: sheet.client_name,
+      project: sheet.project,
+      totalDays: totals.reduce((total, entry) => total + entry.days, 0),
+      overtimeHours: totals.reduce((total, entry) => total + entry.overtimeHours, 0),
+      estimatedHt: roundMoney(totals.reduce((total, entry) => total + entry.totalHt, 0)),
+      updatedAt: sheet.updated_at,
+    };
+  });
+
+  return <PointageDashboard canCreateFacture={editable && canCreateFacture} rows={rows} ym={ym} />;
 }

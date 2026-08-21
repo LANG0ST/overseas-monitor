@@ -44,6 +44,23 @@ export function isValidMonth(value: string) {
   return /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
 }
 
+export function pointageMonthOptions(selectedYm: string) {
+  const selectedYear = Number(selectedYm.slice(0, 4));
+  const formatter = new Intl.DateTimeFormat("fr-FR", {
+    month: "long",
+    year: "numeric",
+  });
+  return Array.from({ length: 132 }, (_, index) => {
+    const year = selectedYear - 5 + Math.floor(index / 12);
+    const month = (index % 12) + 1;
+    const value = `${year}-${String(month).padStart(2, "0")}`;
+    return {
+      value,
+      label: formatter.format(new Date(Date.UTC(year, month - 1, 1))),
+    };
+  });
+}
+
 export function daysInMonth(ym: string) {
   if (!isValidMonth(ym)) return 0;
   const [year, month] = ym.split("-").map(Number);

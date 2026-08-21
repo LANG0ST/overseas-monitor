@@ -14,7 +14,6 @@ export default async function NewAvoirPage({ searchParams }: { searchParams: Pro
     .eq("type", "facture")
     .eq("is_active", true)
     .eq("is_locked", true)
-    .eq("has_cachet", true)
     .not("number", "is", null);
   if (selectedId) query = query.eq("id", selectedId);
   else {

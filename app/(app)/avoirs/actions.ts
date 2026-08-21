@@ -56,7 +56,7 @@ export async function createAvoirDraftAction(input: {
       .maybeSingle();
     if (factureError) throw factureError;
     if (!facture || !facture.number) {
-      throw new DocumentError("INVALID_INPUT", "La facture sélectionnée est introuvable, non verrouillée ou non cachetée.");
+      throw new DocumentError("INVALID_INPUT", "La facture sélectionnée est introuvable ou non verrouillée.");
     }
 
     const document = await createDraftDocument("avoir", {
