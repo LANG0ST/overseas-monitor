@@ -10,6 +10,7 @@ export type DocumentListFilters = {
   client?: string;
   search?: string;
   paid?: string;
+  drafts?: string;
 };
 
 type DocumentListProps = {
@@ -70,14 +71,39 @@ export async function DocumentList({
 }: DocumentListProps) {
   const showInactive = filters.inactive === "1";
   const supabase = await createClient();
-  const { data, error } = await supabase
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const userId = claimsData?.claims?.sub;
+  const { data: profile } = userId
+    ? await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .maybeSingle()
+    : { data: null };
+  const isAdmin = profile?.role === "admin";
+  const draftScope =
+    type === "facture" && filters.drafts === "mine"
+      ? "mine"
+      : type === "facture" && filters.drafts === "all" && isAdmin
+        ? "all"
+        : null;
+
+  let query = supabase
     .from("documents")
     .select(
       "id, number, date, client_name, ttc, paid, is_locked, has_cachet, reference_facture_number",
     )
     .eq("type", type)
-    .eq("is_active", !showInactive)
-    .order("date", { ascending: false });
+    .eq("is_active", !showInactive);
+
+  if (type === "facture") {
+    query = draftScope
+      ? query.is("number", null)
+      : query.not("number", "is", null);
+    if (draftScope === "mine" && userId) query = query.eq("created_by", userId);
+  }
+
+  const { data, error } = await query.order("date", { ascending: false });
 
   if (error) throw new Error(error.message);
   const search = filters.search?.trim().toLocaleLowerCase("fr") ?? "";
@@ -96,7 +122,12 @@ export async function DocumentList({
     if (client && !name.includes(client)) return false;
     if (search && !number.includes(search) && !name.includes(search))
       return false;
-    if (type === "facture" && filters.paid && filters.paid !== "all") {
+    if (
+      type === "facture" &&
+      draftScope === null &&
+      filters.paid &&
+      filters.paid !== "all"
+    ) {
       if (filters.paid === "paid" && !document.paid) return false;
       if (filters.paid === "unpaid" && document.paid) return false;
     }
@@ -130,12 +161,49 @@ export async function DocumentList({
         </div>
       </div>
 
+      {type === "facture" ? (
+        <nav aria-label="Vues des factures" className="flex flex-wrap gap-2">
+          <Link
+            className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${draftScope === null ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+            href={hrefWithFilters(path, filters, {
+              drafts: undefined,
+              paid: filters.paid,
+            })}
+          >
+            Factures
+          </Link>
+          <Link
+            className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${draftScope === "mine" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+            href={hrefWithFilters(path, filters, {
+              drafts: "mine",
+              paid: undefined,
+            })}
+          >
+            Mes brouillons
+          </Link>
+          {isAdmin ? (
+            <Link
+              className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${draftScope === "all" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+              href={hrefWithFilters(path, filters, {
+                drafts: "all",
+                paid: undefined,
+              })}
+            >
+              Tous les brouillons
+            </Link>
+          ) : null}
+        </nav>
+      ) : null}
+
       <form
         className="glass-card grid gap-4 rounded-2xl p-5 md:grid-cols-2 xl:grid-cols-5"
         method="get"
       >
         {showInactive ? (
           <input name="inactive" type="hidden" value="1" />
+        ) : null}
+        {draftScope ? (
+          <input name="drafts" type="hidden" value={draftScope} />
         ) : null}
         <label className="text-sm font-semibold text-neutral-900">
           Recherche
@@ -173,7 +241,7 @@ export async function DocumentList({
             type="date"
           />
         </label>
-        {type === "facture" ? (
+        {type === "facture" && draftScope === null ? (
           <label className="text-sm font-semibold text-neutral-900">
             Paiement
             <select
@@ -186,7 +254,7 @@ export async function DocumentList({
               <option value="unpaid">Impayées</option>
             </select>
           </label>
-        ) : (
+        ) : type !== "facture" ? (
           <div className="flex items-end">
             <button
               className="w-full rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white"
@@ -195,7 +263,7 @@ export async function DocumentList({
               Filtrer
             </button>
           </div>
-        )}
+        ) : null}
         {type === "facture" ? (
           <div className="flex items-end md:col-span-2 xl:col-span-1">
             <button
@@ -258,7 +326,15 @@ export async function DocumentList({
                 {type === "facture" ? (
                   <>
                     <td className="px-5 py-4">
-                      {document.paid ? (
+                      {draftScope ? (
+                        <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-700">
+                          Brouillon
+                        </span>
+                      ) : !document.is_locked ? (
+                        <span className="rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-900">
+                          Numérotée
+                        </span>
+                      ) : document.paid ? (
                         <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
                           Payée
                         </span>
@@ -313,12 +389,22 @@ export async function DocumentList({
               {type === "facture" ? (
                 <span
                   className={
-                    document.paid
-                      ? "font-semibold text-green-800"
-                      : "font-semibold text-amber-900"
+                    draftScope
+                      ? "font-semibold text-neutral-700"
+                      : !document.is_locked
+                        ? "font-semibold text-primary-900"
+                        : document.paid
+                          ? "font-semibold text-green-800"
+                          : "font-semibold text-amber-900"
                   }
                 >
-                  {document.paid ? "Payée" : "Impayée"}
+                  {draftScope
+                    ? "Brouillon"
+                    : !document.is_locked
+                      ? "Numérotée"
+                      : document.paid
+                        ? "Payée"
+                        : "Impayée"}
                 </span>
               ) : null}
             </div>

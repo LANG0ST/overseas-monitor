@@ -14,7 +14,10 @@ export default async function NewBonCommandePage() {
   return (
     <div className="space-y-6">
       <div>
-        <Link className="text-sm font-medium text-primary-700" href="/bons-commande">
+        <Link
+          className="text-sm font-medium text-primary-700"
+          href="/bons-commande"
+        >
           ← Bons de commande
         </Link>
         <h1 className="mt-3 text-3xl font-semibold text-neutral-900">

@@ -14,9 +14,15 @@ export default async function NewDevisPage() {
   return (
     <div className="space-y-6">
       <div>
-        <Link className="text-sm font-medium text-primary-700" href="/devis">← Devis</Link>
-        <h1 className="mt-3 text-3xl font-semibold text-neutral-900">Nouveau devis</h1>
-        <p className="mt-2 text-neutral-700">Commencez par choisir le client ou saisir ses coordonnées.</p>
+        <Link className="text-sm font-medium text-primary-700" href="/devis">
+          ← Devis
+        </Link>
+        <h1 className="mt-3 text-3xl font-semibold text-neutral-900">
+          Nouveau devis
+        </h1>
+        <p className="mt-2 text-neutral-700">
+          Commencez par choisir le client ou saisir ses coordonnées.
+        </p>
       </div>
       <DevisCreateForm partners={partners ?? []} />
     </div>

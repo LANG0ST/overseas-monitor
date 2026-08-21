@@ -24,10 +24,17 @@ export default async function NewPointagePage({
   const params = await searchParams;
   const ym = isValidMonth(params.ym ?? "") ? String(params.ym) : currentMonth();
   const partenaireId = params.partenaire?.trim() || undefined;
-  const manualClientName = partenaireId ? "" : normalizeText(params.client ?? "");
-  const initialSheet = partenaireId || manualClientName
-    ? await findPointageSheet({ partenaireId, clientName: manualClientName, ym })
-    : null;
+  const manualClientName = partenaireId
+    ? ""
+    : normalizeText(params.client ?? "");
+  const initialSheet =
+    partenaireId || manualClientName
+      ? await findPointageSheet({
+          partenaireId,
+          clientName: manualClientName,
+          ym,
+        })
+      : null;
 
   if (initialSheet) redirect(`/pointage/${initialSheet.id}`);
 
@@ -39,9 +46,22 @@ export default async function NewPointagePage({
     editable,
     canCreateFacture,
   ] = await Promise.all([
-    supabase.from("partenaires").select("id, name, ice, address").eq("is_active", true).order("name"),
-    supabase.from("engins").select("id, name, default_price").eq("is_active", true).eq("unit", "Jour").order("name"),
-    supabase.from("settings").select("ot_reference_hours").eq("id", 1).maybeSingle(),
+    supabase
+      .from("partenaires")
+      .select("id, name, ice, address")
+      .eq("is_active", true)
+      .order("name"),
+    supabase
+      .from("engins")
+      .select("id, name, default_price")
+      .eq("is_active", true)
+      .eq("unit", "Jour")
+      .order("name"),
+    supabase
+      .from("settings")
+      .select("ot_reference_hours")
+      .eq("id", 1)
+      .maybeSingle(),
     canEdit("pointage"),
     canEdit("factures"),
   ]);
@@ -54,7 +74,10 @@ export default async function NewPointagePage({
       canCreateFacture={canCreateFacture}
       editable={editable}
       editorMode="new"
-      engins={(engins ?? []).map((engin) => ({ ...engin, default_price: Number(engin.default_price) }))}
+      engins={(engins ?? []).map((engin) => ({
+        ...engin,
+        default_price: Number(engin.default_price),
+      }))}
       initialClient={{ partenaireId, manualClientName }}
       initialSheet={null}
       key={`${partenaireId ?? manualClientName}-${ym}`}
