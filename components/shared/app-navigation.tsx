@@ -28,7 +28,9 @@ const navigation = [
 ] as const;
 
 type AppNavigationProps = {
+  avatarUrl?: string;
   isAdmin: boolean;
+  userName: string;
 };
 
 function isActivePath(pathname: string, href: string) {
@@ -37,13 +39,15 @@ function isActivePath(pathname: string, href: string) {
 
 function isFactureEditorPath(pathname: string) {
   return (
+    pathname === "/pointage" ||
     (pathname.startsWith("/factures/") && pathname !== "/factures/new") ||
     (pathname.startsWith("/devis/") && pathname !== "/devis/new") ||
-    (pathname.startsWith("/avoirs/") && pathname !== "/avoirs/new")
+    (pathname.startsWith("/avoirs/") && pathname !== "/avoirs/new") ||
+    (pathname.startsWith("/bons-commande/") && pathname !== "/bons-commande/new")
   );
 }
 
-export function DesktopNavigation({ isAdmin }: AppNavigationProps) {
+export function DesktopNavigation({ avatarUrl, isAdmin, userName }: AppNavigationProps) {
   const pathname = usePathname();
   if (isFactureEditorPath(pathname)) return null;
   const items = isAdmin
@@ -52,13 +56,19 @@ export function DesktopNavigation({ isAdmin }: AppNavigationProps) {
 
   return (
     <nav aria-label="Navigation principale" className="hidden w-56 shrink-0 flex-col gap-3 md:flex print:hidden">
-      <Link
-        aria-label="Overseas Services"
-        className="glass-card mb-3 flex h-16 items-center rounded-2xl px-4"
-        href="/dashboard"
-      >
-        <Image alt="Overseas Services" className="h-auto w-40" height={880} priority src="/logo.png" width={3574} />
-      </Link>
+      <div className="glass-card mb-3 flex h-16 items-center gap-3 rounded-2xl px-4">
+        {avatarUrl ? (
+          <Image alt="Photo de profil" className="size-9 rounded-full object-cover" height={72} src={avatarUrl} unoptimized width={72} />
+        ) : (
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-100 text-sm font-semibold text-primary-700">
+            {userName.slice(0, 1).toUpperCase()}
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-neutral-900">{userName}</p>
+          <p className="mt-0.5 text-xs text-neutral-500">{isAdmin ? "Administrateur" : "Utilisateur"}</p>
+        </div>
+      </div>
       {items.map(({ href, label, icon: Icon }) => {
         const active = isActivePath(pathname, href);
 

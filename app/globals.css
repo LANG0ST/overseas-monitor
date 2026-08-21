@@ -138,13 +138,40 @@
   }
 }
 
+body:has(.pointage-editor) {
+  overflow-x: hidden;
+}
+
 @media (min-width: 768px) {
   .invoice-paper {
     min-height: 0;
   }
 }
 
+@page pointage {
+  size: landscape;
+  margin: 0;
+}
+
+@layer utilities {
+  .pointage-sticky-left {
+    position: sticky;
+    left: 0;
+  }
+
+  .pointage-sticky-name {
+    position: sticky;
+    left: 2.5rem;
+  }
+}
+
 @media print {
+  .pointage-sheet,
+  .pointage-sheet * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   @page {
     size: A4;
     margin: 0;
@@ -214,5 +241,226 @@
     page-break-inside: avoid;
     break-after: auto;
     page-break-after: auto;
+  }
+
+  .pointage-editor > :not(.pointage-print-area) {
+    display: none !important;
+  }
+
+  .pointage-print-area {
+    display: block !important;
+    overflow: visible !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .pointage-screen-sheet {
+    display: none !important;
+  }
+
+  .pointage-print-document {
+    display: block !important;
+    page: pointage;
+    box-sizing: border-box;
+    color: #08294d;
+    background: white;
+    padding: 6mm 4mm 5mm;
+  }
+
+  .pointage-print-page {
+    display: flex;
+    min-height: 190mm;
+    flex-direction: column;
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    font-family: Arial, sans-serif;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .pointage-print-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .pointage-print-header {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 12mm;
+    align-items: start;
+    margin-bottom: 4mm;
+    border-bottom: 1.5px solid #1c3f6e;
+    padding-bottom: 3mm;
+  }
+
+  .pointage-print-header h2 {
+    margin: 0;
+    font-size: 17px;
+    letter-spacing: 0.06em;
+  }
+
+  .pointage-print-header p {
+    margin: 1.5mm 0 0;
+    color: #5f6b78;
+    font-size: 9px;
+  }
+
+  .pointage-print-header dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.55fr;
+    gap: 3mm;
+    margin: 0;
+  }
+
+  .pointage-print-header dt {
+    color: #5f6b78;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .pointage-print-header dd {
+    margin: 1mm 0 0;
+    font-size: 10px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .pointage-print-grid {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 6.5px;
+  }
+
+  .pointage-print-grid th,
+  .pointage-print-grid td {
+    height: 7mm;
+    border: 1px solid #9aa7b4;
+    padding: 0.35mm;
+  }
+
+  .pointage-print-grid th {
+    height: 7mm;
+    background: #1c3f6e;
+    color: white;
+    font-weight: 700;
+  }
+
+  .pointage-print-grid .pointage-print-number {
+    width: 6mm;
+  }
+
+  .pointage-print-grid .pointage-print-name {
+    width: 29mm;
+  }
+
+  .pointage-print-grid .pointage-print-money {
+    width: 25mm;
+  }
+
+  .pointage-print-grid .pointage-print-total {
+    width: 12mm;
+  }
+
+  .pointage-print-entry-name {
+    text-align: left;
+    font-weight: 700;
+  }
+
+  .pointage-print-overtime {
+    background: #fffdf5;
+    color: #8a5a00;
+  }
+
+  .pointage-print-sunday-head {
+    background: #7a2f2f !important;
+  }
+
+  .pointage-print-sunday {
+    background: #fbf1f1 !important;
+  }
+
+  .pointage-print-legend {
+    margin: 3mm 0 0;
+    color: #465466;
+    font-size: 8px;
+  }
+
+  .pointage-print-signatures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24mm;
+    margin-top: auto;
+    padding-top: 15mm;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .pointage-print-signatures > p,
+  .pointage-print-signatures > div {
+    margin: 0;
+    border-top: 1px solid #9aa7b4;
+    padding-top: 2mm;
+  }
+
+  .pointage-print-signatures img {
+    width: 22mm;
+    height: auto;
+    margin: 2mm auto 0;
+  }
+
+  .pointage-sheet {
+    page: pointage;
+    width: 100% !important;
+  }
+
+  .pointage-grid-wrap {
+    overflow: visible !important;
+  }
+
+  .pointage-grid {
+    width: 100% !important;
+    table-layout: fixed !important;
+    font-size: 8.5px !important;
+  }
+
+  .pointage-grid th,
+  .pointage-grid td {
+    min-width: 0 !important;
+    padding: 2px 1px !important;
+    overflow-wrap: anywhere;
+  }
+
+  .pointage-grid thead th {
+    font-size: 8px !important;
+    padding: 3px 1px !important;
+  }
+
+  .pointage-grid .pointage-sticky-left,
+  .pointage-grid .pointage-sticky-name {
+    position: static !important;
+  }
+
+  .pointage-grid input {
+    min-height: 0 !important;
+    width: 100% !important;
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    text-align: center !important;
+  }
+
+  .pointage-grid input::-webkit-inner-spin-button,
+  .pointage-grid input::-webkit-outer-spin-button {
+    display: none !important;
+  }
+
+  .pointage-grid .pointage-action-cell {
+    display: none !important;
   }
 }

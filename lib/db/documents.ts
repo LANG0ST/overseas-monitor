@@ -124,7 +124,11 @@ function normalizeNumber(value: string) {
   return number;
 }
 
-export async function createDraftDocument(type: DocumentType, client: string | ManualClientInfo) {
+export async function createDraftDocument(
+  type: DocumentType,
+  client: string | ManualClientInfo,
+  initial?: { lineItems?: LineItem[]; tvaRate?: number },
+) {
   requireType(type);
   const supabase = await createClient();
   const { userId } = await requireUser(supabase);
@@ -150,6 +154,18 @@ export async function createDraftDocument(type: DocumentType, client: string | M
     if (!snapshot.name) throw new DocumentError("INVALID_INPUT", "Le nom du client est obligatoire.");
   }
 
+  const lineItems = initial?.lineItems ?? [];
+  const tvaRate = initial?.tvaRate ?? 20;
+  let totals: DocumentTotals;
+  try {
+    totals = calculateTotals(lineItems, tvaRate);
+  } catch (error) {
+    throw new DocumentError(
+      "INVALID_INPUT",
+      error instanceof Error ? error.message : "Lignes invalides.",
+    );
+  }
+
   const { data, error } = await supabase
     .from("documents")
     .insert({
@@ -161,11 +177,9 @@ export async function createDraftDocument(type: DocumentType, client: string | M
       client_name: snapshot.name,
       client_ice: snapshot.ice ?? null,
       client_address: snapshot.address ?? null,
-      line_items: [],
-      tva_rate: 20,
-      ht: 0,
-      tva: 0,
-      ttc: 0,
+      line_items: lineItems,
+      tva_rate: tvaRate,
+      ...totals,
       created_by: userId,
     })
     .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked")
