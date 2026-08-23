@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CreateAvoirButton } from "@/components/shared/create-avoir-button";
+import { canEdit } from "@/lib/auth/can-edit";
 import type { DocumentType } from "@/lib/db/documents";
 import { createClient } from "@/lib/supabase/server";
 
@@ -70,6 +71,7 @@ export async function DocumentList({
   filters,
 }: DocumentListProps) {
   const showInactive = filters.inactive === "1";
+  const canAccessAvoirs = type === "facture" ? await canEdit("avoirs") : false;
   const supabase = await createClient();
   const { data: claimsData } = await supabase.auth.getClaims();
   const userId = claimsData?.claims?.sub;
@@ -345,7 +347,7 @@ export async function DocumentList({
                       )}
                     </td>
                     <td className="px-5 py-4 text-right">
-                      {document.number && document.is_locked ? (
+                      {canAccessAvoirs && document.number && document.is_locked ? (
                         <CreateAvoirButton
                           factureId={document.id}
                           factureNumber={document.number}

@@ -15,19 +15,21 @@ import {
   WalletCards,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Resource } from "@/lib/auth/resources";
 
 const navigation = [
-  { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-  { href: "/factures", label: "Factures", icon: ReceiptText },
-  { href: "/devis", label: "Devis", icon: FileText },
-  { href: "/bons-commande", label: "Bons de commande", icon: ClipboardList },
-  { href: "/avoirs", label: "Avoirs", icon: WalletCards },
-  { href: "/pointage", label: "Pointage", icon: Settings2 },
-  { href: "/partenaires", label: "Partenaires", icon: UsersRound },
-  { href: "/engins", label: "Parc d’engins", icon: Truck },
+  { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard, resource: null },
+  { href: "/factures", label: "Factures", icon: ReceiptText, resource: "factures" },
+  { href: "/devis", label: "Devis", icon: FileText, resource: "devis" },
+  { href: "/bons-commande", label: "Bons de commande", icon: ClipboardList, resource: "bons_commande" },
+  { href: "/avoirs", label: "Avoirs", icon: WalletCards, resource: "avoirs" },
+  { href: "/pointage", label: "Pointage", icon: Settings2, resource: "pointage" },
+  { href: "/partenaires", label: "Partenaires", icon: UsersRound, resource: "partenaires" },
+  { href: "/engins", label: "Parc d’engins", icon: Truck, resource: "engins" },
 ] as const;
 
 type AppNavigationProps = {
+  allowedResources: Resource[];
   avatarUrl?: string;
   isAdmin: boolean;
   userName: string;
@@ -48,12 +50,13 @@ function isFactureEditorPath(pathname: string) {
   );
 }
 
-export function DesktopNavigation({ avatarUrl, isAdmin, userName }: AppNavigationProps) {
+export function DesktopNavigation({ allowedResources, avatarUrl, isAdmin, userName }: AppNavigationProps) {
   const pathname = usePathname();
   if (isFactureEditorPath(pathname)) return null;
+  const visibleNavigation = navigation.filter((item) => item.resource === null || allowedResources.includes(item.resource));
   const items = isAdmin
-    ? [...navigation, { href: "/permissions", label: "Permissions", icon: ShieldCheck }]
-    : navigation;
+    ? [...visibleNavigation, { href: "/permissions", label: "Permissions", icon: ShieldCheck, resource: null }]
+    : visibleNavigation;
 
   return (
     <nav aria-label="Navigation principale" className="hidden w-56 shrink-0 flex-col gap-3 md:flex print:hidden">
@@ -95,12 +98,13 @@ export function DesktopNavigation({ avatarUrl, isAdmin, userName }: AppNavigatio
   );
 }
 
-export function MobileNavigation({ isAdmin }: AppNavigationProps) {
+export function MobileNavigation({ allowedResources, isAdmin }: AppNavigationProps) {
   const pathname = usePathname();
   if (isFactureEditorPath(pathname)) return null;
+  const visibleNavigation = navigation.filter((item) => item.resource === null || allowedResources.includes(item.resource));
   const items = isAdmin
-    ? [...navigation, { href: "/permissions", label: "Permissions", icon: ShieldCheck }]
-    : navigation;
+    ? [...visibleNavigation, { href: "/permissions", label: "Permissions", icon: ShieldCheck, resource: null }]
+    : visibleNavigation;
 
   return (
     <nav aria-label="Navigation mobile" className="glass-card fixed inset-x-3 bottom-3 z-20 flex gap-1 overflow-x-auto rounded-2xl p-2 md:hidden print:hidden">

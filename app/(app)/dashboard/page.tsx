@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ClipboardList, FilePlus2, FileText, Gauge } from "lucide-react";
+import { getAccessibleResources } from "@/lib/auth/can-edit";
+import type { Resource } from "@/lib/auth/resources";
 import { createClient } from "@/lib/supabase/server";
 
 const actions = [
@@ -8,24 +10,28 @@ const actions = [
     label: "Nouvelle facture",
     icon: FilePlus2,
     detail: "Créer un document de facturation",
+    resource: "factures",
   },
   {
     href: "/devis",
     label: "Nouveau devis",
     icon: FileText,
     detail: "Préparer une proposition",
+    resource: "devis",
   },
   {
     href: "/bons-commande",
     label: "Nouveau bon de commande",
     icon: ClipboardList,
     detail: "Enregistrer une commande",
+    resource: "bons_commande",
   },
   {
     href: "/pointage",
     label: "Pointage",
     icon: Gauge,
     detail: "Saisir les présences du mois",
+    resource: "pointage",
   },
 ] as const;
 
@@ -38,18 +44,23 @@ function formatAmount(amount: number) {
 
 export default async function DashboardPage() {
   const supabase = await createClient();
+  const allowedResources = await getAccessibleResources();
+  const canAccessFactures = allowedResources.includes("factures");
+  const visibleActions = actions.filter((action) => allowedResources.includes(action.resource as Resource));
   const today = new Date();
   const startOfMonth = new Date(
     Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1),
   );
-  const { data: documents } = await supabase
-    .from("documents")
-    .select("ttc, paid")
-    .eq("type", "facture")
-    .eq("is_active", true)
-    .not("number", "is", null)
-    .gte("date", startOfMonth.toISOString().slice(0, 10))
-    .lte("date", today.toISOString().slice(0, 10));
+  const { data: documents } = canAccessFactures
+    ? await supabase
+        .from("documents")
+        .select("ttc, paid")
+        .eq("type", "facture")
+        .eq("is_active", true)
+        .not("number", "is", null)
+        .gte("date", startOfMonth.toISOString().slice(0, 10))
+        .lte("date", today.toISOString().slice(0, 10))
+    : { data: [] };
 
   const factures = documents ?? [];
   const totalTtc = factures.reduce(
@@ -74,7 +85,7 @@ export default async function DashboardPage() {
         aria-label="Actions rapides"
         className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
       >
-        {actions.map(({ href, label, icon: Icon, detail }) => (
+        {visibleActions.map(({ href, label, icon: Icon, detail }) => (
           <Link
             className="glass-card group rounded-2xl p-5 transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
             href={href}
@@ -89,10 +100,7 @@ export default async function DashboardPage() {
         ))}
       </section>
 
-      <section
-        aria-label="Statistiques du mois"
-        className="grid gap-4 md:grid-cols-3"
-      >
+      {canAccessFactures ? <section aria-label="Statistiques du mois" className="grid gap-4 md:grid-cols-3">
         <div className="glass-card rounded-2xl p-6">
           <p className="text-sm text-neutral-500">Factures ce mois-ci</p>
           <p className="mt-2 text-3xl font-semibold text-neutral-900">
@@ -111,7 +119,7 @@ export default async function DashboardPage() {
             {formatAmount(unpaidTotal)}
           </p>
         </div>
-      </section>
+      </section> : null}
     </div>
   );
 }
