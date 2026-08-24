@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { setEnginActive } from "./actions";
 import { SubmitButton } from "@/components/shared/submit-button";
+import { ConfirmedForm } from "@/components/shared/confirmed-form";
 import { canEdit } from "@/lib/auth/can-edit";
 import { createClient } from "@/lib/supabase/server";
 import { signedImageUrl } from "@/lib/supabase/storage";
@@ -159,23 +160,27 @@ export default async function EnginsPage({
               {editable ? (
                 <div className="flex gap-2">
                   <Link
-                    className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-900 shadow-sm"
+                    className="inline-flex min-h-11 items-center rounded-full border border-neutral-200 bg-white px-3 text-xs font-medium text-ink-900 shadow-sm"
                     href={`/engins/${engin.id}/edit`}
                   >
                     Modifier
                   </Link>
-                  <form
+                  <ConfirmedForm
                     action={setEnginActive.bind(
                       null,
                       engin.id,
                       showInactive,
                       showInactive ? "/engins?inactive=1" : "/engins",
                     )}
+                    confirmationTitle={showInactive ? "Restaurer cet engin ?" : "Désactiver cet engin ?"}
+                    confirmationDescription={showInactive ? "L’engin redeviendra disponible dans les sélections." : "L’engin sera conservé dans les éléments inactifs."}
+                    confirmationLabel={showInactive ? "Restaurer" : "Désactiver"}
+                    destructive={!showInactive}
                   >
-                    <SubmitButton className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-900 shadow-sm">
+                    <SubmitButton className="min-h-11 rounded-full border border-neutral-200 bg-white px-3 text-xs font-medium text-ink-900 shadow-sm">
                       {showInactive ? "Restaurer" : "Désactiver"}
                     </SubmitButton>
-                  </form>
+                  </ConfirmedForm>
                 </div>
               ) : (
                 <p className="text-xs text-neutral-500">Lecture seule</p>

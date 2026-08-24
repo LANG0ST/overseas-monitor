@@ -44,7 +44,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               <form action={signOut}>
                 <button
                   aria-label="Se déconnecter"
-                  className="flex size-9 items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-white"
+                  className="flex size-11 items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-white"
                   type="submit"
                 >
                   <LogOut size={18} strokeWidth={1.75} />

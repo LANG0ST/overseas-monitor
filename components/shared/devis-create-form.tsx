@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createDevisDraftAction } from "@/app/(app)/devis/actions";
+import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 
 type Partner = { id: string; name: string; ice: string | null; address: string | null };
 
@@ -11,8 +12,10 @@ export function DevisCreateForm({ partners }: { partners: Partner[] }) {
   const [manual, setManual] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const { confirm, confirmationDialog } = useConfirmDialog();
 
-  function submit(formData: FormData) {
+  async function submit(formData: FormData) {
+    if (!(await confirm({ title: "Créer ce devis ?", description: "Un nouveau brouillon de devis sera créé pour ce client.", confirmLabel: "Créer le devis" }))) return;
     setError(null);
     const partnerId = manual ? "" : String(formData.get("partner_id") ?? "");
     startTransition(async () => {
@@ -35,6 +38,7 @@ export function DevisCreateForm({ partners }: { partners: Partner[] }) {
         submit(new FormData(event.currentTarget));
       }}
     >
+      {confirmationDialog}
       <div className="flex items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold text-neutral-900">Client du devis</h2>
@@ -61,7 +65,7 @@ export function DevisCreateForm({ partners }: { partners: Partner[] }) {
           <label className="text-sm font-semibold text-neutral-900 sm:col-span-2">Adresse<textarea className="mt-1 min-h-24 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2.5" name="client_address" /></label>
         </div>
       )}
-      <button className="rounded-full bg-ink-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm disabled:opacity-60" disabled={pending} type="submit">{pending ? "Création…" : "Créer le devis"}</button>
+      <button className="min-h-11 rounded-full bg-ink-900 px-5 text-sm font-semibold text-white shadow-sm disabled:opacity-60" disabled={pending} type="submit">{pending ? "Création…" : "Créer le devis"}</button>
     </form>
   );
 }

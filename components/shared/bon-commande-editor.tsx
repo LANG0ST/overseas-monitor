@@ -36,6 +36,7 @@ import {
   BonCommandePage,
   type InvoicePageKind,
 } from "@/components/shared/bon-commande-page";
+import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
 import {
   calculateTotals,
@@ -196,6 +197,7 @@ export function BonCommandeEditor({
   const [manualNumber, setManualNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const { confirm, confirmationDialog } = useConfirmDialog();
   const [pages, setPages] = useState<LineItem[][]>(() => [
     initialDocument.line_items ?? [],
   ]);
@@ -409,25 +411,18 @@ export function BonCommandeEditor({
     );
   }
 
-  function assignNumber() {
-    if (
-      locked ||
-      document.number ||
-      !window.confirm(
-        "Attribuer un numéro à ce bon de commande ? Cette action consomme un numéro.",
-      )
-    )
-      return;
+  async function assignNumber() {
+    if (locked || document.number) return;
+    if (!(await confirm({ title: "Numéroter le bon de commande ?", description: "Cette action consomme définitivement le prochain numéro disponible.", confirmLabel: "Attribuer le numéro" }))) return;
     startTransition(async () => {
       applyResult(await assignBonCommandeNumberAction(document.id), true);
     });
   }
 
-  function assignManualNumber() {
+  async function assignManualNumber() {
     if (locked || document.number) return;
     const number = window.prompt("Numéro manuel du bon de commande", manualNumber);
-    if (!number || !window.confirm(`Définir le numéro « ${number.trim()} » ?`))
-      return;
+    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à ce bon de commande.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
     startTransition(async () => {
       applyResult(
@@ -437,16 +432,9 @@ export function BonCommandeEditor({
     });
   }
 
-  function save() {
-    if (
-      locked ||
-      !window.confirm(
-        document.number
-          ? "Enregistrer et verrouiller ce bon de commande ?"
-          : "Enregistrer ce bon de commande en brouillon ?",
-      )
-    )
-      return;
+  async function save() {
+    if (locked) return;
+    if (!(await confirm({ title: document.number ? "Enregistrer et verrouiller ?" : "Enregistrer le brouillon ?", description: document.number ? "Le bon de commande ne sera plus modifiable après son verrouillage." : "Les modifications seront enregistrées en brouillon.", confirmLabel: "Enregistrer" }))) return;
     startTransition(async () => {
       applyResult(
         await saveBonCommandeAction(
@@ -474,13 +462,8 @@ export function BonCommandeEditor({
     });
   }
 
-  function deleteDocument() {
-    if (
-      !window.confirm(
-        "Désactiver ce bon de commande ? Il restera disponible dans les inactifs.",
-      )
-    )
-      return;
+  async function deleteDocument() {
+    if (!(await confirm({ title: "Désactiver ce bon de commande ?", description: "Il restera disponible dans les documents inactifs et pourra être restauré.", confirmLabel: "Désactiver", destructive: true }))) return;
     startTransition(async () => {
       const result = await deleteBonCommandeAction(document.id);
       if (applyResult(result)) router.push("/bons-commande");
@@ -506,6 +489,7 @@ export function BonCommandeEditor({
 
   return (
     <div className="invoice-editor space-y-5">
+      {confirmationDialog}
       <header className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div>
           <Link className="text-sm font-medium text-primary-700" href="/bons-commande">

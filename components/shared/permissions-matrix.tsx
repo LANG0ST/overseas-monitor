@@ -5,6 +5,15 @@ import { useState, useTransition } from "react";
 import { updatePermissionAction } from "@/app/(app)/permissions/actions";
 import { resources, type Resource } from "@/lib/auth/resources";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const resourceLabels: Record<Resource, string> = {
   factures: "Factures",
@@ -193,27 +202,23 @@ export function PermissionsMatrix({ initialRows }: { initialRows: PermissionStaf
         ))}
       </div>
 
-      {confirmation ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/45 p-4" role="presentation">
-          <section aria-labelledby="permission-confirm-title" aria-modal="true" className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl" role="alertdialog">
-            <h2 className="text-lg font-semibold text-neutral-900" id="permission-confirm-title">
-              Confirmer la permission
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-neutral-700">
-              {confirmation.nextValue ? "Autoriser" : "Retirer"} la modification de <strong>{resourceLabels[confirmation.resource]}</strong> pour <strong>{confirmation.userName}</strong> ?
-            </p>
-            <div className="mt-6 flex justify-end gap-2">
-              <button className="min-h-11 rounded-full border border-neutral-300 bg-white px-4 text-sm font-semibold text-neutral-800" disabled={pending} onClick={() => setConfirmation(null)} type="button">
-                Annuler
-              </button>
+      <AlertDialog open={confirmation !== null} onOpenChange={(open) => { if (!open && !pending) setConfirmation(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmer la permission</AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmation?.nextValue ? "Autoriser" : "Retirer"} la modification de <strong>{confirmation ? resourceLabels[confirmation.resource] : ""}</strong> pour <strong>{confirmation?.userName}</strong> ?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+              <AlertDialogCancel disabled={pending}>Annuler</AlertDialogCancel>
               <button className="min-h-11 rounded-full bg-ink-900 px-4 text-sm font-semibold text-white disabled:opacity-60" disabled={pending} onClick={confirmChange} type="button">
                 {pending ? <LoaderCircle className="mr-2 inline size-4 animate-spin" /> : null}
                 Confirmer
               </button>
-            </div>
-          </section>
-        </div>
-      ) : null}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

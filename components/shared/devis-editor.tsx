@@ -37,6 +37,7 @@ import {
   DevisPage,
   type InvoicePageKind,
 } from "@/components/shared/devis-page";
+import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
 import {
   calculateTotals,
@@ -198,6 +199,7 @@ export function DevisEditor({
   const [manualNumber, setManualNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const { confirm, confirmationDialog } = useConfirmDialog();
   const [pages, setPages] = useState<LineItem[][]>(() => [
     initialDocument.line_items ?? [],
   ]);
@@ -411,25 +413,18 @@ export function DevisEditor({
     );
   }
 
-  function assignNumber() {
-    if (
-      locked ||
-      document.number ||
-      !window.confirm(
-        "Attribuer un numéro à ce devis ? Cette action consomme un numéro.",
-      )
-    )
-      return;
+  async function assignNumber() {
+    if (locked || document.number) return;
+    if (!(await confirm({ title: "Numéroter le devis ?", description: "Cette action consomme définitivement le prochain numéro disponible.", confirmLabel: "Attribuer le numéro" }))) return;
     startTransition(async () => {
       applyResult(await assignDevisNumberAction(document.id), true);
     });
   }
 
-  function assignManualNumber() {
+  async function assignManualNumber() {
     if (locked || document.number) return;
     const number = window.prompt("Numéro manuel du devis", manualNumber);
-    if (!number || !window.confirm(`Définir le numéro « ${number.trim()} » ?`))
-      return;
+    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à ce devis.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
     startTransition(async () => {
       applyResult(
@@ -439,16 +434,9 @@ export function DevisEditor({
     });
   }
 
-  function save() {
-    if (
-      locked ||
-      !window.confirm(
-        document.number
-          ? "Enregistrer et verrouiller ce devis ?"
-          : "Enregistrer ce devis en brouillon ?",
-      )
-    )
-      return;
+  async function save() {
+    if (locked) return;
+    if (!(await confirm({ title: document.number ? "Enregistrer et verrouiller ?" : "Enregistrer le brouillon ?", description: document.number ? "Le devis ne sera plus modifiable après son verrouillage." : "Les modifications de ce devis seront enregistrées en brouillon.", confirmLabel: "Enregistrer" }))) return;
     startTransition(async () => {
       applyResult(
         await saveDevisAction(
@@ -476,13 +464,8 @@ export function DevisEditor({
     });
   }
 
-  function deleteDocument() {
-    if (
-      !window.confirm(
-        "Désactiver ce devis ? Il restera disponible dans les inactifs.",
-      )
-    )
-      return;
+  async function deleteDocument() {
+    if (!(await confirm({ title: "Désactiver ce devis ?", description: "Il restera disponible dans les documents inactifs et pourra être restauré.", confirmLabel: "Désactiver", destructive: true }))) return;
     startTransition(async () => {
       const result = await deleteDevisAction(document.id);
       if (applyResult(result)) router.push("/devis");
@@ -508,6 +491,7 @@ export function DevisEditor({
 
   return (
     <div className="invoice-editor space-y-5">
+      {confirmationDialog}
       <header className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div>
           <Link className="text-sm font-medium text-primary-700" href="/devis">

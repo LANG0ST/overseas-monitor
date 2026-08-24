@@ -147,7 +147,7 @@ export async function DocumentList({
         </div>
         <div className="flex gap-2">
           <Link
-            className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-medium text-ink-900 shadow-sm"
+            className="inline-flex min-h-11 items-center rounded-full border border-neutral-300 bg-white px-4 text-sm font-medium text-ink-900 shadow-sm"
             href={hrefWithFilters(path, filters, {
               inactive: showInactive ? undefined : "1",
             })}
@@ -155,7 +155,7 @@ export async function DocumentList({
             {showInactive ? "Voir les actifs" : "Voir les inactifs"}
           </Link>
           <Link
-            className="rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-sm"
+            className="inline-flex min-h-11 items-center rounded-full bg-ink-900 px-4 text-sm font-semibold text-white shadow-sm"
             href={`${path}/new`}
           >
             {newLabel}
@@ -166,7 +166,7 @@ export async function DocumentList({
       {type === "facture" ? (
         <nav aria-label="Vues des factures" className="flex flex-wrap gap-2">
           <Link
-            className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${draftScope === null ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold shadow-sm ${draftScope === null ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
             href={hrefWithFilters(path, filters, {
               drafts: undefined,
               paid: filters.paid,
@@ -175,7 +175,7 @@ export async function DocumentList({
             Factures
           </Link>
           <Link
-            className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${draftScope === "mine" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold shadow-sm ${draftScope === "mine" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
             href={hrefWithFilters(path, filters, {
               drafts: "mine",
               paid: undefined,
@@ -185,7 +185,7 @@ export async function DocumentList({
           </Link>
           {isAdmin ? (
             <Link
-              className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${draftScope === "all" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+              className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold shadow-sm ${draftScope === "all" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
               href={hrefWithFilters(path, filters, {
                 drafts: "all",
                 paid: undefined,
@@ -210,7 +210,7 @@ export async function DocumentList({
         <label className="text-sm font-semibold text-neutral-900">
           Recherche
           <input
-            className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900"
+            className="mt-1 min-h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-sm text-neutral-900"
             defaultValue={filters.search}
             name="search"
             placeholder="N° ou client"
@@ -219,7 +219,7 @@ export async function DocumentList({
         <label className="text-sm font-semibold text-neutral-900">
           Client
           <input
-            className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900"
+            className="mt-1 min-h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-sm text-neutral-900"
             defaultValue={filters.client}
             name="client"
             placeholder="Nom du client"
@@ -228,7 +228,7 @@ export async function DocumentList({
         <label className="text-sm font-semibold text-neutral-900">
           Du
           <input
-            className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900"
+            className="mt-1 min-h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-sm text-neutral-900"
             defaultValue={filters.from}
             name="from"
             type="date"
@@ -237,7 +237,7 @@ export async function DocumentList({
         <label className="text-sm font-semibold text-neutral-900">
           Au
           <input
-            className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900"
+            className="mt-1 min-h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-sm text-neutral-900"
             defaultValue={filters.to}
             name="to"
             type="date"
@@ -247,7 +247,7 @@ export async function DocumentList({
           <label className="text-sm font-semibold text-neutral-900">
             Paiement
             <select
-              className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900"
+              className="mt-1 min-h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-sm text-neutral-900"
               defaultValue={filters.paid ?? "all"}
               name="paid"
             >
@@ -259,7 +259,7 @@ export async function DocumentList({
         ) : type !== "facture" ? (
           <div className="flex items-end">
             <button
-              className="w-full rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white"
+              className="min-h-11 w-full rounded-full bg-ink-900 px-4 text-sm font-semibold text-white"
               type="submit"
             >
               Filtrer

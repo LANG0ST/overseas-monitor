@@ -1,3 +1,6 @@
+import { ConfirmedForm } from "@/components/shared/confirmed-form";
+import { SubmitButton } from "@/components/shared/submit-button";
+
 type EnginFormProps = {
   action: (formData: FormData) => void | Promise<void>;
   submitLabel: string;
@@ -17,10 +20,13 @@ export function EnginForm({
   error,
 }: EnginFormProps) {
   return (
-    <form
+    <ConfirmedForm
       action={action}
       encType="multipart/form-data"
       className="glass-card max-w-2xl space-y-5 rounded-3xl p-6 md:p-8"
+      confirmationTitle={`${submitLabel} ?`}
+      confirmationDescription="Les informations de cet engin seront enregistrées."
+      confirmationLabel={submitLabel}
     >
       {error === "name" ? (
         <p className="text-sm text-destructive">Le nom est obligatoire.</p>
@@ -85,7 +91,6 @@ export function EnginForm({
       <SubmitButton className="rounded-full bg-ink-900 px-5 py-2.5 text-sm font-medium text-white">
         {submitLabel}
       </SubmitButton>
-    </form>
+    </ConfirmedForm>
   );
 }
-import { SubmitButton } from "@/components/shared/submit-button";

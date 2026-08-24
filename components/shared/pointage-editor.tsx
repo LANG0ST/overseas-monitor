@@ -22,6 +22,15 @@ import {
 } from "@/app/(app)/pointage/actions";
 import { PointageSheet } from "@/components/shared/pointage-sheet";
 import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   cyclePresence,
   isHalfHourIncrement,
   normalizeText,
@@ -85,49 +94,20 @@ function ConfirmDialog({
   title: string;
 }) {
   return (
-    <div
-      className="fixed inset-0 z-50 grid place-items-center bg-ink-950/35 p-4"
-      role="presentation"
-    >
-      <section
-        aria-describedby="pointage-confirmation-body"
-        aria-labelledby="pointage-confirmation-title"
-        aria-modal="true"
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
-        role="alertdialog"
-      >
-        <h2
-          className="text-lg font-bold text-neutral-900"
-          id="pointage-confirmation-title"
-        >
-          {title}
-        </h2>
-        <p
-          className="mt-2 text-sm leading-relaxed text-neutral-600"
-          id="pointage-confirmation-body"
-        >
-          {body}
-        </p>
-        <div className="mt-6 flex justify-end gap-3">
-          <button
-            className="min-h-11 rounded-xl border border-neutral-300 px-4 text-sm font-semibold text-neutral-700"
-            disabled={pending}
-            onClick={onCancel}
-            type="button"
-          >
-            Annuler
-          </button>
-          <button
-            className="min-h-11 rounded-xl bg-ink-900 px-4 text-sm font-semibold text-white disabled:opacity-60"
-            disabled={pending}
-            onClick={onConfirm}
-            type="button"
-          >
+    <AlertDialog open onOpenChange={(open) => { if (!open && !pending) onCancel(); }}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{body}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={pending} onClick={onCancel}>Annuler</AlertDialogCancel>
+          <button className="min-h-11 rounded-xl bg-ink-900 px-4 text-sm font-semibold text-white disabled:opacity-60" disabled={pending} onClick={onConfirm} type="button">
             {pending ? "Traitement…" : confirmLabel}
           </button>
-        </div>
-      </section>
-    </div>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 

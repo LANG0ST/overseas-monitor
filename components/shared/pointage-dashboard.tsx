@@ -13,6 +13,7 @@ import {
   Plus,
 } from "lucide-react";
 import { createPointageFactureDraftAction } from "@/app/(app)/pointage/actions";
+import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { pointageMonthOptions } from "@/lib/pointage";
 
 export type PointageDashboardRow = {
@@ -52,12 +53,13 @@ export function PointageDashboard({
   const [error, setError] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const { confirm, confirmationDialog } = useConfirmDialog();
   const totalDays = rows.reduce((total, row) => total + row.totalDays, 0);
   const overtimeHours = rows.reduce((total, row) => total + row.overtimeHours, 0);
   const estimatedHt = rows.reduce((total, row) => total + row.estimatedHt, 0);
 
-  function createInvoice(row: PointageDashboardRow) {
-    if (!window.confirm(`Créer un brouillon de facture pour ${row.clientName} ?`)) return;
+  async function createInvoice(row: PointageDashboardRow) {
+    if (!(await confirm({ title: "Créer le brouillon de facture ?", description: `Une facture sera préparée pour ${row.clientName} à partir de cette feuille.`, confirmLabel: "Créer la facture" }))) return;
     setError(null);
     setPendingId(row.id);
     startTransition(async () => {
@@ -73,6 +75,7 @@ export function PointageDashboard({
 
   return (
     <div className="space-y-6">
+      {confirmationDialog}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-neutral-600">Présences, heures supplémentaires et facturation mensuelle</p>
@@ -116,7 +119,7 @@ export function PointageDashboard({
                   <td className="px-5 py-4 text-right font-medium">{row.overtimeHours} h</td>
                   <td className="px-5 py-4 text-right font-semibold text-primary-900">{formatAmount(row.estimatedHt)}</td>
                   <td className="px-5 py-4 text-neutral-600">{formatDate(row.updatedAt)}</td>
-                  <td className="px-5 py-4"><div className="flex justify-end gap-2"><Link className="inline-flex min-h-10 items-center rounded-xl border border-primary-300 bg-primary-50 px-3 text-xs font-semibold text-primary-900" href={`/pointage/${row.id}`}><FolderOpen className="mr-1 size-3.5" />Ouvrir</Link>{canCreateFacture ? <button className="min-h-10 rounded-xl bg-primary-700 px-3 text-xs font-semibold text-white disabled:opacity-50" disabled={pending} onClick={() => createInvoice(row)} type="button">{pendingId === row.id ? <LoaderCircle className="mr-1 inline size-3.5 animate-spin" /> : <FilePlus2 className="mr-1 inline size-3.5" />}Facturer</button> : null}</div></td>
+                  <td className="px-5 py-4"><div className="flex justify-end gap-2"><Link className="inline-flex min-h-11 items-center rounded-xl border border-primary-300 bg-primary-50 px-3 text-xs font-semibold text-primary-900" href={`/pointage/${row.id}`}><FolderOpen className="mr-1 size-3.5" />Ouvrir</Link>{canCreateFacture ? <button className="min-h-11 rounded-xl bg-primary-700 px-3 text-xs font-semibold text-white disabled:opacity-50" disabled={pending} onClick={() => createInvoice(row)} type="button">{pendingId === row.id ? <LoaderCircle className="mr-1 inline size-3.5 animate-spin" /> : <FilePlus2 className="mr-1 inline size-3.5" />}Facturer</button> : null}</div></td>
                 </tr>
               ))}
             </tbody>

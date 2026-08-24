@@ -1,4 +1,5 @@
 import { SubmitButton } from "@/components/shared/submit-button";
+import { ConfirmedForm } from "@/components/shared/confirmed-form";
 
 type PartenaireFormProps = {
   action: (formData: FormData) => void | Promise<void>;
@@ -20,10 +21,13 @@ export function PartenaireForm({
   error,
 }: PartenaireFormProps) {
   return (
-    <form
+    <ConfirmedForm
       action={action}
       encType="multipart/form-data"
       className="glass-card max-w-2xl space-y-5 rounded-3xl p-6 md:p-8"
+      confirmationTitle={`${submitLabel} ?`}
+      confirmationDescription="Les informations de ce partenaire seront enregistrées."
+      confirmationLabel={submitLabel}
     >
       {error === "name" ? (
         <p className="text-sm text-destructive">Le nom est obligatoire.</p>
@@ -88,6 +92,6 @@ export function PartenaireForm({
       <SubmitButton className="rounded-full bg-ink-900 px-5 py-2.5 text-sm font-medium text-white">
         {submitLabel}
       </SubmitButton>
-    </form>
+    </ConfirmedForm>
   );
 }

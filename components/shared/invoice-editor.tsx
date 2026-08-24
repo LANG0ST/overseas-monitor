@@ -35,6 +35,7 @@ import {
   InvoicePage,
   type InvoicePageKind,
 } from "@/components/shared/invoice-page";
+import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
 import {
   calculateTotals,
@@ -200,6 +201,7 @@ export function InvoiceEditor({
   const [manualNumber, setManualNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const { confirm, confirmationDialog } = useConfirmDialog();
   const [pages, setPages] = useState<LineItem[][]>(() => [
     initialDocument.line_items ?? [],
   ]);
@@ -413,25 +415,18 @@ export function InvoiceEditor({
     );
   }
 
-  function assignNumber() {
-    if (
-      locked ||
-      document.number ||
-      !window.confirm(
-        "Attribuer un numéro à cette facture ? Cette action consomme un numéro.",
-      )
-    )
-      return;
+  async function assignNumber() {
+    if (locked || document.number) return;
+    if (!(await confirm({ title: "Numéroter la facture ?", description: "Cette action consomme définitivement le prochain numéro disponible.", confirmLabel: "Attribuer le numéro" }))) return;
     startTransition(async () => {
       applyResult(await assignInvoiceNumberAction(document.id), true);
     });
   }
 
-  function assignManualNumber() {
+  async function assignManualNumber() {
     if (locked || document.number) return;
     const number = window.prompt("Numéro manuel de la facture", manualNumber);
-    if (!number || !window.confirm(`Définir le numéro « ${number.trim()} » ?`))
-      return;
+    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à cette facture.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
     startTransition(async () => {
       applyResult(
@@ -441,16 +436,9 @@ export function InvoiceEditor({
     });
   }
 
-  function save() {
-    if (
-      locked ||
-      !window.confirm(
-        document.number
-          ? "Enregistrer et verrouiller cette facture ?"
-          : "Enregistrer cette facture en brouillon ?",
-      )
-    )
-      return;
+  async function save() {
+    if (locked) return;
+    if (!(await confirm({ title: document.number ? "Enregistrer et verrouiller ?" : "Enregistrer le brouillon ?", description: document.number ? "La facture ne sera plus modifiable après son verrouillage." : "Les modifications de cette facture seront enregistrées en brouillon.", confirmLabel: "Enregistrer" }))) return;
     startTransition(async () => {
       applyResult(
         await saveInvoiceAction(
@@ -466,28 +454,16 @@ export function InvoiceEditor({
     });
   }
 
-  function togglePaid() {
-    if (
-      !locked ||
-      !window.confirm(
-        document.paid
-          ? "Marquer cette facture comme impayée ?"
-          : "Marquer cette facture comme payée ?",
-      )
-    )
-      return;
+  async function togglePaid() {
+    if (!locked) return;
+    if (!(await confirm({ title: document.paid ? "Marquer comme impayée ?" : "Marquer comme payée ?", description: "Le statut de paiement de cette facture sera mis à jour.", confirmLabel: "Confirmer" }))) return;
     startTransition(async () => {
       applyResult(await setInvoicePaidAction(document.id, !document.paid));
     });
   }
 
-  function deleteDocument() {
-    if (
-      !window.confirm(
-        "Désactiver cette facture ? Elle restera disponible dans les inactifs.",
-      )
-    )
-      return;
+  async function deleteDocument() {
+    if (!(await confirm({ title: "Désactiver cette facture ?", description: "Elle restera disponible dans les documents inactifs et pourra être restaurée.", confirmLabel: "Désactiver", destructive: true }))) return;
     startTransition(async () => {
       const result = await deleteInvoiceAction(document.id);
       if (applyResult(result)) router.push("/factures");
@@ -513,6 +489,7 @@ export function InvoiceEditor({
 
   return (
     <div className="invoice-editor space-y-5">
+      {confirmationDialog}
       <header className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div>
           <Link

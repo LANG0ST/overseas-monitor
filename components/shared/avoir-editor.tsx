@@ -37,6 +37,7 @@ import {
   AvoirPage,
   type InvoicePageKind,
 } from "@/components/shared/avoir-page";
+import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
 import {
   calculateTotals,
@@ -198,6 +199,7 @@ export function AvoirEditor({
   const [manualNumber, setManualNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const { confirm, confirmationDialog } = useConfirmDialog();
   const [pages, setPages] = useState<LineItem[][]>(() => [
     initialDocument.line_items ?? [],
   ]);
@@ -411,25 +413,18 @@ export function AvoirEditor({
     );
   }
 
-  function assignNumber() {
-    if (
-      locked ||
-      document.number ||
-      !window.confirm(
-        "Attribuer un numéro à cet avoir ? Cette action consomme un numéro.",
-      )
-    )
-      return;
+  async function assignNumber() {
+    if (locked || document.number) return;
+    if (!(await confirm({ title: "Numéroter l’avoir ?", description: "Cette action consomme définitivement le prochain numéro disponible.", confirmLabel: "Attribuer le numéro" }))) return;
     startTransition(async () => {
       applyResult(await assignAvoirNumberAction(document.id), true);
     });
   }
 
-  function assignManualNumber() {
+  async function assignManualNumber() {
     if (locked || document.number) return;
     const number = window.prompt("Numéro manuel de l’avoir", manualNumber);
-    if (!number || !window.confirm(`Définir le numéro « ${number.trim()} » ?`))
-      return;
+    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à cet avoir.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
     startTransition(async () => {
       applyResult(
@@ -439,16 +434,9 @@ export function AvoirEditor({
     });
   }
 
-  function save() {
-    if (
-      locked ||
-      !window.confirm(
-        document.number
-          ? "Enregistrer et verrouiller cet avoir ?"
-          : "Enregistrer cet avoir en brouillon ?",
-      )
-    )
-      return;
+  async function save() {
+    if (locked) return;
+    if (!(await confirm({ title: document.number ? "Enregistrer et verrouiller ?" : "Enregistrer le brouillon ?", description: document.number ? "L’avoir ne sera plus modifiable après son verrouillage." : "Les modifications de cet avoir seront enregistrées en brouillon.", confirmLabel: "Enregistrer" }))) return;
     startTransition(async () => {
       applyResult(
         await saveAvoirAction(
@@ -465,13 +453,8 @@ export function AvoirEditor({
     });
   }
 
-  function deleteDocument() {
-    if (
-      !window.confirm(
-        "Désactiver cet avoir ? Il restera disponible dans les inactifs.",
-      )
-    )
-      return;
+  async function deleteDocument() {
+    if (!(await confirm({ title: "Désactiver cet avoir ?", description: "Il restera disponible dans les documents inactifs et pourra être restauré.", confirmLabel: "Désactiver", destructive: true }))) return;
     startTransition(async () => {
       const result = await deleteAvoirAction(document.id);
       if (applyResult(result)) router.push("/avoirs");
@@ -497,6 +480,7 @@ export function AvoirEditor({
 
   return (
     <div className="invoice-editor space-y-5">
+      {confirmationDialog}
       <header className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div>
           <Link className="text-sm font-medium text-primary-700" href="/avoirs">
