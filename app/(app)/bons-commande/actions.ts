@@ -7,6 +7,7 @@ import {
   DocumentError,
   lockDocument,
   softDelete,
+  restore,
   updateLineItems,
   type DocumentRow,
   type LineItem,
@@ -131,5 +132,10 @@ export async function saveBonCommandeAction(
 
 export async function deleteBonCommandeAction(documentId: string): Promise<ActionResult> {
   try { return { ok: true, document: { ...(await softDelete(documentId)), ...(await getBonCommande(documentId)) } }; }
+  catch (error) { return result(error); }
+}
+
+export async function restoreBonCommandeAction(documentId: string): Promise<ActionResult> {
+  try { await restore(documentId); return { ok: true, document: await getBonCommande(documentId) }; }
   catch (error) { return result(error); }
 }

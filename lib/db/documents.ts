@@ -29,6 +29,7 @@ export type DocumentRow = {
   ttc: number;
   is_active: boolean;
   is_locked: boolean;
+  source_pointage_sheet_id?: string | null;
 };
 
 type ServerClient = Awaited<ReturnType<typeof createClient>>;
@@ -100,7 +101,7 @@ async function requireDocumentEdit(supabase: ServerClient, type: DocumentType) {
 async function getDocument(supabase: ServerClient, documentId: string): Promise<DocumentRow> {
   const { data, error } = await supabase
     .from("documents")
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
     .eq("id", documentId)
     .maybeSingle();
   if (error) failDatabase(error);
@@ -110,6 +111,12 @@ async function getDocument(supabase: ServerClient, documentId: string): Promise<
 
 function requireId(id: string) {
   if (!id || typeof id !== "string") throw new DocumentError("INVALID_INPUT", "Identifiant de document invalide.");
+}
+
+function requireActive(document: DocumentRow) {
+  if (!document.is_active) {
+    throw new DocumentError("INVALID_INPUT", "Restaurez ce document avant de le modifier.");
+  }
 }
 
 function requireType(type: DocumentType) {
@@ -127,7 +134,7 @@ function normalizeNumber(value: string) {
 export async function createDraftDocument(
   type: DocumentType,
   client: string | ManualClientInfo,
-  initial?: { lineItems?: LineItem[]; tvaRate?: number },
+  initial?: { lineItems?: LineItem[]; tvaRate?: number; sourcePointageSheetId?: string },
 ) {
   requireType(type);
   const supabase = await createClient();
@@ -181,8 +188,9 @@ export async function createDraftDocument(
       tva_rate: tvaRate,
       ...totals,
       created_by: userId,
+      source_pointage_sheet_id: initial?.sourcePointageSheetId ?? null,
     })
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
     .single();
   if (error) failDatabase(error);
   return data as DocumentRow;
@@ -193,6 +201,7 @@ export async function assignNumber(documentId: string) {
   const supabase = await createClient();
   await requireUser(supabase);
   const document = await getDocument(supabase, documentId);
+  requireActive(document);
   await requireDocumentEdit(supabase, document.type);
   if (document.number) return document;
   if (document.is_locked) throw new DocumentError("LOCKED", "Un numéro ne peut pas être attribué à un document verrouillé.");
@@ -211,7 +220,7 @@ export async function assignNumber(documentId: string) {
     .eq("id", documentId)
     .is("number", null)
     .eq("is_locked", false)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
     .maybeSingle();
   if (updateError) failDatabase(updateError);
   if (updated) return updated as DocumentRow;
@@ -228,6 +237,7 @@ export async function assignNumberManually(documentId: string, value: string) {
   const user = await requireUser(supabase);
   if (!user.isAdmin) throw new DocumentError("PERMISSION_DENIED", "Seul un administrateur peut définir un numéro manuellement.");
   const document = await getDocument(supabase, documentId);
+  requireActive(document);
   if (document.number) throw new DocumentError("ALREADY_NUMBERED", "Ce document possède déjà un numéro.");
   if (document.is_locked) throw new DocumentError("LOCKED", "Un document verrouillé ne peut pas être renuméroté.");
 
@@ -237,7 +247,7 @@ export async function assignNumberManually(documentId: string, value: string) {
     .eq("id", documentId)
     .is("number", null)
     .eq("is_locked", false)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
     .maybeSingle();
   if (error) failDatabase(error);
   if (updated) return updated as DocumentRow;
@@ -251,6 +261,7 @@ export async function lockDocument(documentId: string) {
   const supabase = await createClient();
   await requireUser(supabase);
   const document = await getDocument(supabase, documentId);
+  requireActive(document);
   await requireDocumentEdit(supabase, document.type);
   if (!document.number) throw new DocumentError("NUMBER_REQUIRED", "Attribuez un numéro avant de verrouiller le document.");
   if (document.is_locked) return document;
@@ -261,7 +272,7 @@ export async function lockDocument(documentId: string) {
     .eq("id", documentId)
     .eq("is_locked", false)
     .not("number", "is", null)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
     .maybeSingle();
   if (error) failDatabase(error);
   if (updated) return updated as DocumentRow;
@@ -275,6 +286,7 @@ export async function updateLineItems(documentId: string, lineItems: readonly Li
   const supabase = await createClient();
   await requireUser(supabase);
   const document = await getDocument(supabase, documentId);
+  requireActive(document);
   await requireDocumentEdit(supabase, document.type);
   if (document.is_locked) throw new DocumentError("LOCKED", "Les lignes d’un document verrouillé ne sont pas modifiables.");
   const rate = tvaRate ?? Number(document.tva_rate);
@@ -290,7 +302,7 @@ export async function updateLineItems(documentId: string, lineItems: readonly Li
     .update({ line_items: lineItems, tva_rate: rate, ...(date ? { date } : {}), ...(city?.trim() ? { city: city.trim() } : {}), ...(typeof hasCachet === "boolean" ? { has_cachet: hasCachet } : {}), ...totals })
     .eq("id", documentId)
     .eq("is_locked", false)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
     .maybeSingle();
   if (error) failDatabase(error);
   if (updated) return updated as DocumentRow;
@@ -309,7 +321,7 @@ async function setDocumentActive(documentId: string, isActive: boolean) {
     .from("documents")
     .update({ is_active: isActive })
     .eq("id", documentId)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
     .maybeSingle();
   if (error) failDatabase(error);
   if (!updated) throw new DocumentError("CONCURRENT_UPDATE", "Le document a été modifié dans un autre onglet. Rechargez-le et réessayez.");
@@ -321,12 +333,13 @@ export async function setPaid(documentId: string, paid: boolean) {
   const supabase = await createClient();
   await requireUser(supabase);
   const document = await getDocument(supabase, documentId);
+  requireActive(document);
   await requireDocumentEdit(supabase, document.type);
   const { data: updated, error } = await supabase
     .from("documents")
     .update({ paid, paid_date: paid ? new Date().toISOString().slice(0, 10) : null })
     .eq("id", documentId)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, paid, paid_date")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id, paid, paid_date")
     .maybeSingle();
   if (error) failDatabase(error);
   if (!updated) throw new DocumentError("CONCURRENT_UPDATE", "Le document a été modifié dans un autre onglet. Rechargez-le et réessayez.");

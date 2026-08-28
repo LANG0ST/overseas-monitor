@@ -20,6 +20,7 @@ type SheetRow = {
   client_name: string;
   project: string | null;
   updated_at: string;
+  facture_id: string | null;
 };
 
 type EntryRow = {
@@ -45,7 +46,7 @@ export default async function PointagePage({
   ] = await Promise.all([
     supabase
       .from("pointage_sheets")
-      .select("id, client_name, project, updated_at")
+      .select("id, client_name, project, updated_at, facture_id")
       .eq("ym", ym)
       .eq("is_active", true)
       .order("client_name"),
@@ -59,6 +60,12 @@ export default async function PointagePage({
   const sheetRows = (sheets ?? []) as SheetRow[];
   const sheetIds = sheetRows.map((sheet) => sheet.id);
   let entries: EntryRow[] = [];
+  const factureIds = sheetRows.map((sheet) => sheet.facture_id).filter(Boolean) as string[];
+  const { data: factures, error: facturesError } = factureIds.length
+    ? await supabase.from("documents").select("id, number, is_locked, is_active").in("id", factureIds)
+    : { data: [], error: null };
+  if (facturesError) throw new Error(facturesError.message);
+  const facturesById = new Map((factures ?? []).map((facture) => [facture.id, facture]));
   if (sheetIds.length > 0) {
     const { data, error } = await supabase
       .from("pointage_entries")
@@ -86,6 +93,7 @@ export default async function PointagePage({
       overtimeHours: totals.reduce((total, entry) => total + entry.overtimeHours, 0),
       estimatedHt: roundMoney(totals.reduce((total, entry) => total + entry.totalHt, 0)),
       updatedAt: sheet.updated_at,
+      facture: sheet.facture_id ? (facturesById.get(sheet.facture_id) ?? { id: sheet.facture_id, number: null, is_locked: false, is_active: true }) : null,
     };
   });
 

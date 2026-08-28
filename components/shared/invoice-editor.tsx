@@ -18,6 +18,7 @@ import {
   FilePlus2,
   HardHat,
   Hash,
+  Ship,
   Trash2,
   Truck,
   UserPen,
@@ -28,6 +29,7 @@ import {
   assignInvoiceNumberAction,
   assignInvoiceNumberManuallyAction,
   deleteInvoiceAction,
+  restoreInvoiceAction,
   saveInvoiceAction,
   setInvoicePaidAction,
 } from "@/app/(app)/factures/actions";
@@ -36,7 +38,9 @@ import {
   type InvoicePageKind,
 } from "@/components/shared/invoice-page";
 import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
+import { documentDraftSignature, useUnsavedDocument } from "@/components/shared/use-unsaved-document";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
+import { printWithTitle } from "@/lib/print-title";
 import {
   calculateTotals,
   roundMoney,
@@ -58,7 +62,9 @@ type Invoice = {
   tva: number;
   ttc: number;
   paid?: boolean;
+  is_active: boolean;
   is_locked: boolean;
+  source_pointage_sheet_id?: string | null;
 };
 
 type Engin = { id: string; name: string; unit: string; default_price: number };
@@ -67,6 +73,7 @@ type Tool =
   | "engin"
   | "overtime"
   | "mobilisation"
+  | "customs"
   | "client"
   | "date"
   | "totals"
@@ -84,6 +91,7 @@ const tools: { id: Tool; label: string; Icon: typeof FilePlus2 }[] = [
   { id: "engin", label: "Depuis le parc", Icon: HardHat },
   { id: "overtime", label: "Heures supp.", Icon: Clock3 },
   { id: "mobilisation", label: "Mobilisation", Icon: Truck },
+  { id: "customs", label: "Frais de douane", Icon: Ship },
   { id: "client", label: "Infos client", Icon: UserRound },
   { id: "date", label: "Date et lieu", Icon: CalendarDays },
   { id: "payment", label: "Règlement", Icon: WalletCards },
@@ -195,24 +203,25 @@ export function InvoiceEditor({
   const [tvaRate, setTvaRate] = useState(
     normalizeTvaRate(Number(initialDocument.tva_rate)),
   );
-  const [selectedTool, setSelectedTool] = useState<Tool>("line");
+  const [selectedTool, setSelectedTool] = useState<Tool>(initialDocument.is_active ? "line" : "delete");
   const [selectedLine, setSelectedLine] = useState(0);
   const [selectedEngin, setSelectedEngin] = useState("");
   const [manualNumber, setManualNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [savedSignature, setSavedSignature] = useState(() => documentDraftSignature(initialDocument as unknown as Record<string, unknown>, initialDocument.line_items ?? [], normalizeTvaRate(Number(initialDocument.tva_rate)), initialDocument.city || "Casablanca", Boolean(initialDocument.has_cachet)));
   const { confirm, confirmationDialog } = useConfirmDialog();
   const [pages, setPages] = useState<LineItem[][]>(() => [
     initialDocument.line_items ?? [],
   ]);
   const [pageScale, setPageScale] = useState(1);
-  const linePanelTarget =
-    typeof window === "undefined"
-      ? null
-      : window.document.querySelector<HTMLElement>("aside.glass-card.order-3");
+  const [linePanelTarget, setLinePanelTarget] = useState<HTMLElement | null>(null);
   const viewerRef = useRef<HTMLDivElement>(null);
   const measurementRef = useRef<HTMLDivElement>(null);
   const locked = document.is_locked;
+  const currentSignature = documentDraftSignature(document as unknown as Record<string, unknown>, lineItems, tvaRate, city, hasCachet);
+  const dirty = !locked && currentSignature !== savedSignature;
+  useUnsavedDocument(dirty);
   const totals = useMemo(
     () => calculateTotals(lineItems, tvaRate),
     [lineItems, tvaRate],
@@ -341,11 +350,12 @@ export function InvoiceEditor({
     }
     setCity(result.document.city || "Casablanca");
     setHasCachet(Boolean(result.document.has_cachet));
+    setSavedSignature(documentDraftSignature(result.document as unknown as Record<string, unknown>, result.document.line_items ?? [], normalizeTvaRate(Number(result.document.tva_rate)), result.document.city || "Casablanca", Boolean(result.document.has_cachet)));
     setError(null);
     return true;
   }
 
-  function addLine(kind: "line" | "overtime" | "mobilisation") {
+  function addLine(kind: "line" | "overtime" | "mobilisation" | "customs") {
     if (locked) return;
     const line: LineItem =
       kind === "overtime"
@@ -356,13 +366,13 @@ export function InvoiceEditor({
             unit_price: 0,
             tva_rate: tvaRate,
           }
-        : kind === "mobilisation"
+        : kind === "mobilisation" || kind === "customs"
           ? {
-              desc: "Mobilisation",
+              desc: kind === "customs" ? "Frais de douane" : "Mobilisation",
               unit: "Fois",
               qty: 1,
               unit_price: 0,
-              tva_rate: tvaRate,
+              tva_rate: 10,
             }
           : {
               desc: "Nouvelle prestation",
@@ -463,19 +473,20 @@ export function InvoiceEditor({
   }
 
   async function deleteDocument() {
-    if (!(await confirm({ title: "Désactiver cette facture ?", description: "Elle restera disponible dans les documents inactifs et pourra être restaurée.", confirmLabel: "Désactiver", destructive: true }))) return;
+    const restoring = !document.is_active;
+    if (!(await confirm({ title: restoring ? "Restaurer cette facture ?" : "Désactiver cette facture ?", description: restoring ? "Elle redeviendra disponible dans les factures actives." : "Elle restera disponible dans les documents inactifs et pourra être restaurée.", confirmLabel: restoring ? "Restaurer" : "Désactiver", destructive: !restoring }))) return;
     startTransition(async () => {
-      const result = await deleteInvoiceAction(document.id);
-      if (applyResult(result)) router.push("/factures");
+      const result = restoring ? await restoreInvoiceAction(document.id) : await deleteInvoiceAction(document.id);
+      if (applyResult(result)) router.push(restoring ? "/factures" : "/factures?inactive=1");
     });
   }
 
   function printInvoice() {
-    window.print();
+    printWithTitle(`Facture-${document.number || `Brouillon-${document.client_name}`}`);
   }
 
   function selectTool(id: Tool) {
-    if (id === "line" || id === "overtime" || id === "mobilisation")
+    if (id === "line" || id === "overtime" || id === "mobilisation" || id === "customs")
       return addLine(id);
     if (id === "delete") return deleteDocument();
     setSelectedTool(id);
@@ -501,6 +512,7 @@ export function InvoiceEditor({
           <h1 className="mt-1 text-2xl font-semibold text-neutral-900">
             {document.number || "Brouillon"}
           </h1>
+          {document.source_pointage_sheet_id ? <Link className="mt-1 inline-block text-xs font-semibold text-primary-700 hover:underline" href={`/pointage/${document.source_pointage_sheet_id}`}>Voir le Pointage source</Link> : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {document.number ? (
@@ -520,7 +532,7 @@ export function InvoiceEditor({
             <Download className="mr-2 inline" size={16} />
             Télécharger en PDF
           </button>
-          {!locked && !document.number ? (
+          {document.is_active && !locked && !document.number ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -531,7 +543,7 @@ export function InvoiceEditor({
               Attribuer un numéro
             </button>
           ) : null}
-          {!locked && !document.number && isAdmin ? (
+          {document.is_active && !locked && !document.number && isAdmin ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -542,7 +554,7 @@ export function InvoiceEditor({
               Numéro manuel
             </button>
           ) : null}
-          {!locked ? (
+          {document.is_active && !locked ? (
             <button
               className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${hasCachet ? "border-primary-700 bg-primary-100 text-primary-900" : "border-neutral-300 bg-white text-ink-900"}`}
               onClick={() => setHasCachet((current) => !current)}
@@ -551,7 +563,7 @@ export function InvoiceEditor({
               {hasCachet ? "Retirer le cachet" : "Ajouter le cachet"}
             </button>
           ) : null}
-          {!locked ? (
+          {document.is_active && !locked ? (
             <button
               className="rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-sm"
               disabled={pending}
@@ -568,6 +580,7 @@ export function InvoiceEditor({
           ) : null}
         </div>
       </header>
+      {dirty ? <p className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 print:hidden">Modifications non enregistrées</p> : null}
       {error ? (
         <p className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-900 print:hidden">
           {error}
@@ -583,7 +596,7 @@ export function InvoiceEditor({
             {tools.map(({ id, label, Icon }) => (
               <button
                 className={`flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-2xl border p-2 text-center text-xs font-semibold transition-colors ${selectedTool === id ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900 hover:bg-primary-50"}`}
-                disabled={locked && id !== "payment" && id !== "delete"}
+                disabled={(!document.is_active && id !== "delete") || (locked && id !== "payment" && id !== "delete")}
                 key={id}
                 onClick={() => selectTool(id)}
                 type="button"
@@ -652,7 +665,7 @@ export function InvoiceEditor({
           {tools.map(({ id, label, Icon }) => (
             <button
               className={`flex min-w-24 flex-col items-center gap-1 rounded-xl px-2 py-2 text-xs font-semibold ${selectedTool === id ? "bg-ink-900 text-white" : "bg-white text-ink-900"}`}
-              disabled={locked && id !== "payment" && id !== "delete"}
+              disabled={(!document.is_active && id !== "delete") || (locked && id !== "payment" && id !== "delete")}
               key={id}
               onClick={() => selectTool(id)}
               type="button"
@@ -663,7 +676,7 @@ export function InvoiceEditor({
           ))}
         </div>
 
-        <aside className="glass-card order-3 rounded-2xl p-5 print:hidden">
+        <aside className="glass-card order-3 rounded-2xl p-5 print:hidden" ref={setLinePanelTarget}>
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-neutral-900">
               {selectedTool === "line"
@@ -860,8 +873,7 @@ export function InvoiceEditor({
           {selectedTool === "delete" ? (
             <div className="mt-5 space-y-4">
               <p className="text-sm text-neutral-700">
-                La facture sera désactivée mais restera récupérable dans les
-                inactifs.
+                {document.is_active ? "La facture sera conservée dans les inactifs." : "La facture redeviendra disponible dans les actifs."}
               </p>
               <button
                 className="rounded-full border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900"
@@ -869,7 +881,7 @@ export function InvoiceEditor({
                 onClick={deleteDocument}
                 type="button"
               >
-                Désactiver la facture
+                {document.is_active ? "Désactiver la facture" : "Restaurer la facture"}
               </button>
             </div>
           ) : null}

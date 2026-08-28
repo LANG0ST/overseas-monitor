@@ -24,6 +24,7 @@ export type PointageDashboardRow = {
   overtimeHours: number;
   estimatedHt: number;
   updatedAt: string;
+  facture: { id: string; number: string | null; is_locked: boolean; is_active: boolean } | null;
 };
 
 function formatAmount(value: number) {
@@ -114,12 +115,12 @@ export function PointageDashboard({
             <tbody className="divide-y divide-neutral-200">
               {rows.map((row) => (
                 <tr key={row.id}>
-                  <td className="px-5 py-4"><p className="font-semibold text-neutral-900">{row.clientName}</p><p className="mt-1 text-xs text-neutral-500">{row.project || "Chantier non renseigné"}</p></td>
+                  <td className="px-5 py-4"><p className="font-semibold text-neutral-900">{row.clientName}</p><p className="mt-1 text-xs text-neutral-500">{row.project || "Chantier non renseigné"}</p><span className={`mt-2 inline-flex rounded-full px-2 py-1 text-[11px] font-semibold ${row.facture ? "bg-emerald-100 text-emerald-900" : "bg-amber-100 text-amber-900"}`}>{row.facture ? (row.facture.number ? "Facture numérotée" : "Brouillon créé") : "À facturer"}</span></td>
                   <td className="px-5 py-4 text-right font-medium">{row.totalDays}</td>
                   <td className="px-5 py-4 text-right font-medium">{row.overtimeHours} h</td>
                   <td className="px-5 py-4 text-right font-semibold text-primary-900">{formatAmount(row.estimatedHt)}</td>
                   <td className="px-5 py-4 text-neutral-600">{formatDate(row.updatedAt)}</td>
-                  <td className="px-5 py-4"><div className="flex justify-end gap-2"><Link className="inline-flex min-h-11 items-center rounded-xl border border-primary-300 bg-primary-50 px-3 text-xs font-semibold text-primary-900" href={`/pointage/${row.id}`}><FolderOpen className="mr-1 size-3.5" />Ouvrir</Link>{canCreateFacture ? <button className="min-h-11 rounded-xl bg-primary-700 px-3 text-xs font-semibold text-white disabled:opacity-50" disabled={pending} onClick={() => createInvoice(row)} type="button">{pendingId === row.id ? <LoaderCircle className="mr-1 inline size-3.5 animate-spin" /> : <FilePlus2 className="mr-1 inline size-3.5" />}Facturer</button> : null}</div></td>
+                  <td className="px-5 py-4"><div className="flex justify-end gap-2"><Link className="inline-flex min-h-11 items-center rounded-xl border border-primary-300 bg-primary-50 px-3 text-xs font-semibold text-primary-900" href={`/pointage/${row.id}`}><FolderOpen className="mr-1 size-3.5" />Ouvrir</Link>{row.facture && canCreateFacture ? <Link className="inline-flex min-h-11 items-center rounded-xl bg-emerald-700 px-3 text-xs font-semibold text-white" href={`/factures/${row.facture.id}`}><FilePlus2 className="mr-1 size-3.5" />Voir facture</Link> : !row.facture && canCreateFacture ? <button className="min-h-11 rounded-xl bg-primary-700 px-3 text-xs font-semibold text-white disabled:opacity-50" disabled={pending} onClick={() => createInvoice(row)} type="button">{pendingId === row.id ? <LoaderCircle className="mr-1 inline size-3.5 animate-spin" /> : <FilePlus2 className="mr-1 inline size-3.5" />}Facturer</button> : null}</div></td>
                 </tr>
               ))}
             </tbody>

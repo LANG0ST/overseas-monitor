@@ -7,6 +7,7 @@ import {
   DocumentError,
   lockDocument,
   softDelete,
+  restore,
   updateLineItems,
   type DocumentRow,
   type LineItem,
@@ -131,5 +132,10 @@ export async function saveDevisAction(
 
 export async function deleteDevisAction(documentId: string): Promise<ActionResult> {
   try { return { ok: true, document: { ...(await softDelete(documentId)), ...(await getDevis(documentId)) } }; }
+  catch (error) { return result(error); }
+}
+
+export async function restoreDevisAction(documentId: string): Promise<ActionResult> {
+  try { await restore(documentId); return { ok: true, document: await getDevis(documentId) }; }
   catch (error) { return result(error); }
 }

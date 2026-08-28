@@ -51,6 +51,9 @@ export async function createPointageFactureDraftAction(
     if (!sheet || !sheet.is_active) {
       throw new PointageError("NOT_FOUND", "Feuille de pointage introuvable.");
     }
+    if (sheet.facture_id) {
+      return { ok: true, data: { documentId: sheet.facture_id } };
+    }
 
     const supabase = await createClient();
     const { data: settings, error: settingsError } = await supabase
@@ -76,7 +79,7 @@ export async function createPointageFactureDraftAction(
         ice: sheet.client_ice,
         address: sheet.client_address,
       },
-      { lineItems },
+      { lineItems, sourcePointageSheetId: sheet.id },
     );
     revalidatePath("/pointage");
     revalidatePath("/factures");

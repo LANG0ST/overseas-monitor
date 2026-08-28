@@ -55,7 +55,7 @@ export default async function PointageEditorPage({
   return (
     <PointageEditor
       canCreateFacture={canCreateFacture}
-      editable={editable}
+      editable={editable && !sheet.facture_id}
       editorMode="existing"
       engins={(engins ?? []).map((engin) => ({
         ...engin,

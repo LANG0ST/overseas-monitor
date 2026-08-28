@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Check,
@@ -39,6 +40,7 @@ import {
   type PointageEntryDraft,
   type PointageSheet as PointageSheetData,
 } from "@/lib/pointage";
+import { printWithTitle } from "@/lib/print-title";
 
 type Partner = {
   id: string;
@@ -506,6 +508,8 @@ export function PointageEditor({
           ym,
           project: project || null,
           has_cachet: hasCachet,
+          facture_id: null,
+          facture: null,
           is_active: true,
           updated_at: "",
           entries: entries.map((entry, index) => ({
@@ -525,16 +529,11 @@ export function PointageEditor({
   }
 
   function printPointage() {
-    const style = document.createElement("style");
-    style.textContent =
-      "@page { size: landscape; margin: 0; } .pointage-print-document, .pointage-print-document * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }";
-    document.head.append(style);
-    const cleanup = () => {
-      style.remove();
-      window.removeEventListener("afterprint", cleanup);
-    };
-    window.addEventListener("afterprint", cleanup);
-    window.print();
+    const client = currentClient(partenaireId, manualClientName, partners, sheet) || "Client";
+    printWithTitle(
+      `Pointage-${client}-${ym}`,
+      "@page { size: landscape; margin: 0; } .pointage-print-document, .pointage-print-document * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }",
+    );
   }
 
   function leavePointage() {
@@ -916,12 +915,13 @@ export function PointageEditor({
           <h2 className="font-semibold text-neutral-900">
             Facturation mensuelle
           </h2>
-          <p className="mt-1 text-sm text-neutral-600">
-            Crée une facture brouillon avec les jours et heures supplémentaires
-            de cette feuille.
-          </p>
+          <p className="mt-1 text-sm text-neutral-600">{sheet?.facture_id ? "Ce pointage est fermé et lié à sa facture." : "Crée une facture brouillon avec les jours et heures supplémentaires de cette feuille."}</p>
         </div>
-        {editable && canCreateFacture ? (
+        {sheet?.facture_id && canCreateFacture ? (
+          <Link className="inline-flex min-h-11 items-center rounded-xl bg-emerald-700 px-4 text-sm font-semibold text-white" href={`/factures/${sheet.facture_id}`}><FilePlus2 className="mr-1 size-4" />Voir la facture liée</Link>
+        ) : sheet?.facture_id ? (
+          <p className="text-sm text-neutral-500">Pointage déjà facturé.</p>
+        ) : editable && canCreateFacture ? (
           <button
             className="min-h-11 rounded-xl bg-primary-700 px-4 text-sm font-semibold text-white disabled:opacity-50"
             disabled={

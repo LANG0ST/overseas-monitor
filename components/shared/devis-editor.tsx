@@ -20,6 +20,7 @@ import {
   FilePlus2,
   HardHat,
   Hash,
+  Ship,
   Stamp,
   Trash2,
   Truck,
@@ -30,6 +31,7 @@ import {
   assignDevisNumberAction,
   assignDevisNumberManuallyAction,
   deleteDevisAction,
+  restoreDevisAction,
   saveDevisAction,
   type DevisDocument,
 } from "@/app/(app)/devis/actions";
@@ -38,7 +40,9 @@ import {
   type InvoicePageKind,
 } from "@/components/shared/devis-page";
 import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
+import { documentDraftSignature, useUnsavedDocument } from "@/components/shared/use-unsaved-document";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
+import { printWithTitle } from "@/lib/print-title";
 import {
   calculateTotals,
   roundMoney,
@@ -53,6 +57,7 @@ type Tool =
   | "engin"
   | "overtime"
   | "mobilisation"
+  | "customs"
   | "client"
   | "date"
   | "details"
@@ -70,6 +75,7 @@ const tools: { id: Tool; label: string; Icon: typeof FilePlus2 }[] = [
   { id: "engin", label: "Depuis le parc", Icon: HardHat },
   { id: "overtime", label: "Heures supp.", Icon: Clock3 },
   { id: "mobilisation", label: "Mobilisation", Icon: Truck },
+  { id: "customs", label: "Frais de douane", Icon: Ship },
   { id: "client", label: "Infos client", Icon: UserRound },
   { id: "date", label: "Date et lieu", Icon: CalendarDays },
   { id: "details", label: "Conditions & règlement", Icon: ClipboardList },
@@ -193,24 +199,25 @@ export function DevisEditor({
   const [tvaRate, setTvaRate] = useState(
     normalizeTvaRate(Number(initialDocument.tva_rate)),
   );
-  const [selectedTool, setSelectedTool] = useState<Tool>("line");
+  const [selectedTool, setSelectedTool] = useState<Tool>(initialDocument.is_active ? "line" : "delete");
   const [selectedLine, setSelectedLine] = useState(0);
   const [selectedEngin, setSelectedEngin] = useState("");
   const [manualNumber, setManualNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [savedSignature, setSavedSignature] = useState(() => documentDraftSignature(initialDocument as unknown as Record<string, unknown>, initialDocument.line_items ?? [], normalizeTvaRate(Number(initialDocument.tva_rate)), initialDocument.city || "Casablanca", Boolean(initialDocument.has_cachet)));
   const { confirm, confirmationDialog } = useConfirmDialog();
   const [pages, setPages] = useState<LineItem[][]>(() => [
     initialDocument.line_items ?? [],
   ]);
   const [pageScale, setPageScale] = useState(1);
-  const linePanelTarget =
-    typeof window === "undefined"
-      ? null
-      : window.document.querySelector<HTMLElement>("aside.glass-card.order-3");
+  const [linePanelTarget, setLinePanelTarget] = useState<HTMLElement | null>(null);
   const viewerRef = useRef<HTMLDivElement>(null);
   const measurementRef = useRef<HTMLDivElement>(null);
   const locked = document.is_locked;
+  const currentSignature = documentDraftSignature(document as unknown as Record<string, unknown>, lineItems, tvaRate, city, hasCachet);
+  const dirty = !locked && currentSignature !== savedSignature;
+  useUnsavedDocument(dirty);
   const totals = useMemo(
     () => calculateTotals(lineItems, tvaRate),
     [lineItems, tvaRate],
@@ -339,11 +346,12 @@ export function DevisEditor({
     }
     setCity(result.document.city || "Casablanca");
     setHasCachet(Boolean(result.document.has_cachet));
+    setSavedSignature(documentDraftSignature(result.document as unknown as Record<string, unknown>, result.document.line_items ?? [], normalizeTvaRate(Number(result.document.tva_rate)), result.document.city || "Casablanca", Boolean(result.document.has_cachet)));
     setError(null);
     return true;
   }
 
-  function addLine(kind: "line" | "overtime" | "mobilisation") {
+  function addLine(kind: "line" | "overtime" | "mobilisation" | "customs") {
     if (locked) return;
     const line: LineItem =
       kind === "overtime"
@@ -354,13 +362,13 @@ export function DevisEditor({
             unit_price: 0,
             tva_rate: tvaRate,
           }
-        : kind === "mobilisation"
+        : kind === "mobilisation" || kind === "customs"
           ? {
-              desc: "Mobilisation",
+              desc: kind === "customs" ? "Frais de douane" : "Mobilisation",
               unit: "Fois",
               qty: 1,
               unit_price: 0,
-              tva_rate: tvaRate,
+              tva_rate: 10,
             }
           : {
               desc: "Nouvelle prestation",
@@ -465,19 +473,20 @@ export function DevisEditor({
   }
 
   async function deleteDocument() {
-    if (!(await confirm({ title: "Désactiver ce devis ?", description: "Il restera disponible dans les documents inactifs et pourra être restauré.", confirmLabel: "Désactiver", destructive: true }))) return;
+    const restoring = !document.is_active;
+    if (!(await confirm({ title: restoring ? "Restaurer ce devis ?" : "Désactiver ce devis ?", description: restoring ? "Il redeviendra disponible dans les devis actifs." : "Il restera disponible dans les documents inactifs et pourra être restauré.", confirmLabel: restoring ? "Restaurer" : "Désactiver", destructive: !restoring }))) return;
     startTransition(async () => {
-      const result = await deleteDevisAction(document.id);
-      if (applyResult(result)) router.push("/devis");
+      const result = restoring ? await restoreDevisAction(document.id) : await deleteDevisAction(document.id);
+      if (applyResult(result)) router.push(restoring ? "/devis" : "/devis?inactive=1");
     });
   }
 
   function printInvoice() {
-    window.print();
+    printWithTitle(`Devis-${document.number || `Brouillon-${document.client_name}`}`);
   }
 
   function selectTool(id: Tool) {
-    if (id === "line" || id === "overtime" || id === "mobilisation")
+    if (id === "line" || id === "overtime" || id === "mobilisation" || id === "customs")
       return addLine(id);
     if (id === "delete") return deleteDocument();
     setSelectedTool(id);
@@ -519,7 +528,7 @@ export function DevisEditor({
             <Download className="mr-2 inline" size={16} />
             Télécharger en PDF
           </button>
-          {!locked && !document.number ? (
+          {document.is_active && !locked && !document.number ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -530,7 +539,7 @@ export function DevisEditor({
               Attribuer un numéro
             </button>
           ) : null}
-          {!locked && !document.number && isAdmin ? (
+          {document.is_active && !locked && !document.number && isAdmin ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -541,7 +550,7 @@ export function DevisEditor({
               Numéro manuel
             </button>
           ) : null}
-          {!locked ? (
+          {document.is_active && !locked ? (
             <button
               className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${hasCachet ? "border-primary-700 bg-primary-100 text-primary-900" : "border-neutral-300 bg-white text-ink-900"}`}
               onClick={() => setHasCachet((current) => !current)}
@@ -552,7 +561,7 @@ export function DevisEditor({
               {hasCachet ? "Retirer le cachet" : "Ajouter le cachet"}
             </button>
           ) : null}
-          {!locked ? (
+          {document.is_active && !locked ? (
             <button
               className="rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-sm"
               disabled={pending}
@@ -569,6 +578,7 @@ export function DevisEditor({
           ) : null}
         </div>
       </header>
+      {dirty ? <p className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 print:hidden">Modifications non enregistrées</p> : null}
       {error ? (
         <p className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-900 print:hidden">
           {error}
@@ -584,7 +594,7 @@ export function DevisEditor({
             {tools.map(({ id, label, Icon }) => (
               <button
                 className={`flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-2xl border p-2 text-center text-xs font-semibold transition-colors ${selectedTool === id ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900 hover:bg-primary-50"}`}
-                disabled={locked && id !== "delete"}
+                disabled={(!document.is_active && id !== "delete") || (locked && id !== "delete")}
                 key={id}
                 onClick={() => selectTool(id)}
                 type="button"
@@ -653,7 +663,7 @@ export function DevisEditor({
           {tools.map(({ id, label, Icon }) => (
             <button
               className={`flex min-w-24 flex-col items-center gap-1 rounded-xl px-2 py-2 text-xs font-semibold ${selectedTool === id ? "bg-ink-900 text-white" : "bg-white text-ink-900"}`}
-              disabled={locked && id !== "delete"}
+              disabled={(!document.is_active && id !== "delete") || (locked && id !== "delete")}
               key={id}
               onClick={() => selectTool(id)}
               type="button"
@@ -664,7 +674,7 @@ export function DevisEditor({
           ))}
         </div>
 
-        <aside className="glass-card order-3 rounded-2xl p-5 print:hidden">
+        <aside className="glass-card order-3 rounded-2xl p-5 print:hidden" ref={setLinePanelTarget}>
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-neutral-900">
               {selectedTool === "line"
@@ -874,8 +884,7 @@ export function DevisEditor({
           {selectedTool === "delete" ? (
             <div className="mt-5 space-y-4">
               <p className="text-sm text-neutral-700">
-                Le devis sera désactivé mais restera récupérable dans les
-                inactifs.
+                {document.is_active ? "Le devis sera conservé dans les inactifs." : "Le devis redeviendra disponible dans les actifs."}
               </p>
               <button
                 className="rounded-full border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900"
@@ -883,7 +892,7 @@ export function DevisEditor({
                 onClick={deleteDocument}
                 type="button"
               >
-                Désactiver le devis
+                {document.is_active ? "Désactiver le devis" : "Restaurer le devis"}
               </button>
             </div>
           ) : null}

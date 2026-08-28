@@ -32,8 +32,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       : undefined;
 
   return (
-    <div className="app-canvas p-4 md:p-8 print:bg-white print:p-0">
-      <div className="mx-auto flex w-full max-w-[1600px] gap-6">
+    <div className="app-canvas min-w-0 p-4 md:p-8 print:bg-white print:p-0">
+      <div className="mx-auto flex min-w-0 w-full max-w-[1600px] gap-6">
         <DesktopNavigation allowedResources={allowedResources} avatarUrl={avatarUrl} isAdmin={isAdmin} userName={name} />
         <div className="glass-card min-h-[calc(100dvh-2rem)] min-w-0 flex-1 rounded-3xl p-3 md:min-h-[calc(100dvh-4rem)] md:p-5 print:contents">
           <header className="glass-card flex min-h-14 items-center justify-between rounded-full px-4 py-2 md:px-6 print:hidden">

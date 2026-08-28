@@ -8,6 +8,7 @@ import {
   lockDocument,
   setPaid,
   softDelete,
+  restore,
   updateLineItems,
   type DocumentRow,
   type LineItem,
@@ -86,6 +87,14 @@ export async function setInvoicePaidAction(documentId: string, paid: boolean): P
 export async function deleteInvoiceAction(documentId: string): Promise<ActionResult> {
   try {
     return { ok: true, document: await softDelete(documentId) };
+  } catch (error) {
+    return result(error);
+  }
+}
+
+export async function restoreInvoiceAction(documentId: string): Promise<ActionResult> {
+  try {
+    return { ok: true, document: await restore(documentId) };
   } catch (error) {
     return result(error);
   }

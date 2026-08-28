@@ -7,6 +7,7 @@ import {
   DocumentError,
   lockDocument,
   softDelete,
+  restore,
   updateLineItems,
   type DocumentRow,
   type LineItem,
@@ -116,5 +117,10 @@ export async function saveAvoirAction(
 
 export async function deleteAvoirAction(documentId: string): Promise<ActionResult> {
   try { await softDelete(documentId); return { ok: true, document: await getAvoir(documentId) }; }
+  catch (error) { return result(error); }
+}
+
+export async function restoreAvoirAction(documentId: string): Promise<ActionResult> {
+  try { await restore(documentId); return { ok: true, document: await getAvoir(documentId) }; }
   catch (error) { return result(error); }
 }

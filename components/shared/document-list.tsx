@@ -33,6 +33,8 @@ type ListDocument = {
   is_locked: boolean;
   has_cachet: boolean;
   reference_facture_number: string | null;
+  created_by: string | null;
+  updated_at: string;
 };
 
 function formatAmount(value: number) {
@@ -46,6 +48,10 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium" }).format(
     new Date(`${value}T00:00:00`),
   );
+}
+
+function formatActivity(value: string) {
+  return new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "short" }).format(new Date(value));
 }
 
 function hrefWithFilters(
@@ -93,7 +99,7 @@ export async function DocumentList({
   let query = supabase
     .from("documents")
     .select(
-      "id, number, date, client_name, ttc, paid, is_locked, has_cachet, reference_facture_number",
+      "id, number, date, client_name, ttc, paid, is_locked, has_cachet, reference_facture_number, created_by, updated_at",
     )
     .eq("type", type)
     .eq("is_active", !showInactive);
@@ -135,6 +141,13 @@ export async function DocumentList({
     }
     return true;
   });
+  const creatorIds = isAdmin
+    ? [...new Set(documents.map((document) => document.created_by).filter(Boolean))] as string[]
+    : [];
+  const { data: creators } = creatorIds.length
+    ? await supabase.from("profiles").select("id, name").in("id", creatorIds)
+    : { data: [] };
+  const creatorNames = new Map((creators ?? []).map((creator) => [creator.id, creator.name]));
 
   return (
     <div className="space-y-6">
@@ -278,8 +291,8 @@ export async function DocumentList({
         ) : null}
       </form>
 
-      <div className="hidden overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm md:block">
-        <table className="w-full text-left text-sm">
+      <div className="hidden overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm md:block">
+        <table className="min-w-[900px] w-full text-left text-sm">
           <thead className="bg-ink-900 text-xs uppercase tracking-wide text-white">
             <tr>
               <th className="px-5 py-4">Numéro</th>
@@ -289,6 +302,7 @@ export async function DocumentList({
               <th className="px-5 py-4">Date</th>
               <th className="px-5 py-4">Client</th>
               <th className="px-5 py-4 text-right">TTC</th>
+              <th className="px-5 py-4">Dernière modification</th>
               {type === "facture" ? (
                 <>
                   <th className="px-5 py-4">Statut</th>
@@ -325,6 +339,10 @@ export async function DocumentList({
                 <td className="px-5 py-4 text-right font-medium text-neutral-900">
                   {formatAmount(Number(document.ttc))}
                 </td>
+                <td className="px-5 py-4 text-xs text-neutral-600">
+                  <p>{formatActivity(document.updated_at)}</p>
+                  {isAdmin && document.created_by ? <p className="mt-1">Par {creatorNames.get(document.created_by) || "Utilisateur"}</p> : null}
+                </td>
                 {type === "facture" ? (
                   <>
                     <td className="px-5 py-4">
@@ -347,7 +365,7 @@ export async function DocumentList({
                       )}
                     </td>
                     <td className="px-5 py-4 text-right">
-                      {canAccessAvoirs && document.number && document.is_locked ? (
+                      {!showInactive && canAccessAvoirs && document.number && document.is_locked ? (
                         <CreateAvoirButton
                           factureId={document.id}
                           factureNumber={document.number}
@@ -387,7 +405,7 @@ export async function DocumentList({
               </p>
             </div>
             <div className="mt-3 flex items-center justify-between text-xs text-neutral-600">
-              <span>{formatDate(document.date)}</span>
+              <span>{formatDate(document.date)} · modifié {formatActivity(document.updated_at)}</span>
               {type === "facture" ? (
                 <span
                   className={
@@ -410,6 +428,7 @@ export async function DocumentList({
                 </span>
               ) : null}
             </div>
+            {isAdmin && document.created_by ? <p className="mt-1 text-xs text-neutral-500">Créé par {creatorNames.get(document.created_by) || "Utilisateur"}</p> : null}
           </Link>
         ))}
       </div>

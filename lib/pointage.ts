@@ -23,6 +23,13 @@ export type PointageSheet = {
   ym: string;
   project: string | null;
   has_cachet: boolean;
+  facture_id: string | null;
+  facture: {
+    id: string;
+    number: string | null;
+    is_locked: boolean;
+    is_active: boolean;
+  } | null;
   is_active: boolean;
   updated_at: string;
   entries: PointageEntry[];

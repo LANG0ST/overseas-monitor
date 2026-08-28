@@ -36,6 +36,9 @@ function failDatabase(error: { code?: string; message: string }): never {
   if (error.code === "40001") {
     throw new PointageError("CONCURRENT_UPDATE", error.message);
   }
+  if (error.code === "55000") {
+    throw new PointageError("INVALID_INPUT", error.message);
+  }
   if (error.code === "P0002") {
     throw new PointageError("NOT_FOUND", error.message);
   }
@@ -73,6 +76,8 @@ function mapSheet(
     ym: String(row.ym),
     project: typeof row.project === "string" ? row.project : null,
     has_cachet: Boolean(row.has_cachet),
+    facture_id: typeof row.facture_id === "string" ? row.facture_id : null,
+    facture: null,
     is_active: Boolean(row.is_active),
     updated_at: String(row.updated_at),
     entries,
@@ -98,7 +103,7 @@ export async function getPointageSheet(id: string) {
   const { data: sheet, error: sheetError } = await supabase
     .from("pointage_sheets")
     .select(
-      "id, partenaire_id, client_name, client_ice, client_address, ym, project, has_cachet, is_active, updated_at",
+      "id, partenaire_id, client_name, client_ice, client_address, ym, project, has_cachet, facture_id, is_active, updated_at",
     )
     .eq("id", id)
     .maybeSingle();
@@ -113,10 +118,20 @@ export async function getPointageSheet(id: string) {
     .eq("sheet_id", id)
     .order("created_at");
   if (entriesError) failDatabase(entriesError);
-  return mapSheet(
+  const mapped = mapSheet(
     sheet as Record<string, unknown>,
     (entries ?? []).map((entry) => mapEntry(entry as Record<string, unknown>)),
   );
+  if (mapped.facture_id) {
+    const { data: facture, error: factureError } = await supabase
+      .from("documents")
+      .select("id, number, is_locked, is_active")
+      .eq("id", mapped.facture_id)
+      .maybeSingle();
+    if (factureError) failDatabase(factureError);
+    mapped.facture = facture ?? null;
+  }
+  return mapped;
 }
 
 export async function findPointageSheet(input: {

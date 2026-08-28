@@ -70,6 +70,13 @@
 }
 
 @layer base {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -82,6 +89,9 @@
 
 @layer utilities {
   .app-canvas {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
     min-height: 100dvh;
     background:
       radial-gradient(120% 90% at 15% 0%, oklch(0.96 0.015 248) 0%, transparent 55%),
@@ -104,23 +114,36 @@
   }
 
   .invoice-viewer {
+    min-width: 0;
+    max-width: 100%;
     max-height: calc(100dvh - 13rem);
     overflow: auto;
+    overscroll-behavior: contain;
   }
 
   .invoice-page-viewport {
     flex: 0 0 auto;
+    position: relative;
+    overflow: hidden;
+    contain: layout paint;
   }
 
   .invoice-page-scale {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 793.7008px;
+    height: 1122.5197px;
     transform-origin: top left;
   }
 
   .invoice-measurement {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: -100000px;
     width: 210mm;
+    height: 0;
+    overflow: hidden;
+    contain: strict;
     visibility: hidden;
     pointer-events: none;
   }
@@ -226,6 +249,7 @@ body:has(.pointage-editor) {
 
   .invoice-page-scale {
     display: block !important;
+    position: static !important;
     width: 210mm !important;
     height: 297mm !important;
     transform: none !important;
