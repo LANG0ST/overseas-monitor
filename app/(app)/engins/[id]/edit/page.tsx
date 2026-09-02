@@ -18,7 +18,7 @@ export default async function EditEnginPage({
   const supabase = await createClient();
   const { data: engin } = await supabase
     .from("engins")
-    .select("name, unit, default_price, note")
+    .select("name, category, unit, default_price, note")
     .eq("id", id)
     .maybeSingle();
   if (!engin) notFound();

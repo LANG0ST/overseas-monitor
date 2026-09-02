@@ -1,11 +1,13 @@
 import { ConfirmedForm } from "@/components/shared/confirmed-form";
 import { SubmitButton } from "@/components/shared/submit-button";
+import { ENGIN_CATEGORIES } from "@/lib/engin-categories";
 
 type EnginFormProps = {
   action: (formData: FormData) => void | Promise<void>;
   submitLabel: string;
   engin?: {
     name: string;
+    category: string;
     unit: string;
     default_price: number;
     note: string | null;
@@ -22,7 +24,6 @@ export function EnginForm({
   return (
     <ConfirmedForm
       action={action}
-      encType="multipart/form-data"
       className="glass-card max-w-2xl space-y-5 rounded-3xl p-6 md:p-8"
       confirmationTitle={`${submitLabel} ?`}
       confirmationDescription="Les informations de cet engin seront enregistrées."
@@ -36,6 +37,9 @@ export function EnginForm({
           Un engin actif porte déjà ce nom.
         </p>
       ) : null}
+      {error === "category" ? (
+        <p className="text-sm text-destructive">Choisissez une catégorie valide.</p>
+      ) : null}
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="text-sm font-medium sm:col-span-2">
           Nom
@@ -45,6 +49,19 @@ export function EnginForm({
             defaultValue={engin?.name}
             required
           />
+        </label>
+        <label className="text-sm font-medium sm:col-span-2">
+          Catégorie
+          <select
+            className="mt-1 w-full rounded-xl border bg-white/70 px-3 py-2.5"
+            name="category"
+            defaultValue={engin?.category ?? "Misc"}
+            required
+          >
+            {ENGIN_CATEGORIES.map((category) => (
+              <option key={category}>{category}</option>
+            ))}
+          </select>
         </label>
         <label className="text-sm font-medium">
           Unité
@@ -76,15 +93,6 @@ export function EnginForm({
             className="mt-1 min-h-24 w-full rounded-xl border bg-white/70 px-3 py-2.5"
             name="note"
             defaultValue={engin?.note ?? ""}
-          />
-        </label>
-        <label className="text-sm font-medium sm:col-span-2">
-          Photo
-          <input
-            className="mt-1 block w-full rounded-xl border bg-white/70 px-3 py-2.5 text-sm"
-            name="photo"
-            type="file"
-            accept="image/*"
           />
         </label>
       </div>

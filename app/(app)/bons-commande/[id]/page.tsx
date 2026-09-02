@@ -28,8 +28,9 @@ export default async function BonCommandeDocumentPage({
     supabase.from("profiles").select("role").eq("id", userId).maybeSingle(),
     supabase
       .from("engins")
-      .select("id, name, unit, default_price")
+      .select("id, name, category, unit, default_price")
       .eq("is_active", true)
+      .order("category")
       .order("name"),
   ]);
   if (documentError) throw new Error(documentError.message);

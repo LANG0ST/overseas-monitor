@@ -22,6 +22,7 @@ import {
   savePointageAction,
 } from "@/app/(app)/pointage/actions";
 import { PointageSheet } from "@/components/shared/pointage-sheet";
+import { EnginSelectOptions } from "@/components/shared/engin-select-options";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -49,7 +50,7 @@ type Partner = {
   address: string | null;
 };
 
-type Engin = { id: string; name: string; default_price: number };
+type Engin = { id: string; name: string; category: string; default_price: number };
 type ConfirmKind = "project" | "save" | "invoice" | "remove" | null;
 
 function entryDraft(entry: PointageEntry): PointageEntryDraft {
@@ -717,11 +718,7 @@ export function PointageEditor({
                   value={selectedEnginId}
                 >
                   <option value="">Engin du parc…</option>
-                  {engins.map((engin) => (
-                    <option key={engin.id} value={engin.id}>
-                      {engin.name} · {engin.default_price.toFixed(2)} MAD/j
-                    </option>
-                  ))}
+                  <EnginSelectOptions engins={engins} label={(engin) => `${engin.name} · ${engin.default_price.toFixed(2)} MAD/j`} />
                 </select>
               </label>
               <button

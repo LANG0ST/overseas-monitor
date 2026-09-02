@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { canEdit } from "@/lib/auth/can-edit";
+import { isEnginCategory } from "@/lib/engin-categories";
 import { createClient } from "@/lib/supabase/server";
-import { uploadImage } from "@/lib/supabase/storage";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -31,16 +31,17 @@ export async function createEngin(formData: FormData) {
   await requireEdit();
   const name = text(formData, "name");
   if (!name) redirect("/engins/new?error=name");
+  const category = text(formData, "category");
+  if (!isEnginCategory(category)) redirect("/engins/new?error=category");
 
   const supabase = await createClient();
   if (await nameExists(supabase, name)) redirect("/engins/new?error=duplicate");
-  const photoPath = await uploadImage(supabase, "engin-photos", formData.get("photo"));
   const { error } = await supabase.from("engins").insert({
     name,
+    category,
     unit: text(formData, "unit") || "Jour",
     default_price: price(formData),
     note: text(formData, "note") || null,
-    photo_url: photoPath,
   });
 
   if (error) throw new Error(error.message);
@@ -52,17 +53,18 @@ export async function updateEngin(id: string, formData: FormData) {
   await requireEdit();
   const name = text(formData, "name");
   if (!name) redirect(`/engins/${id}/edit?error=name`);
+  const category = text(formData, "category");
+  if (!isEnginCategory(category)) redirect(`/engins/${id}/edit?error=category`);
 
   const supabase = await createClient();
   if (await nameExists(supabase, name, id)) redirect(`/engins/${id}/edit?error=duplicate`);
-  const photoPath = await uploadImage(supabase, "engin-photos", formData.get("photo"));
   const updates: Record<string, string | number | null> = {
     name,
+    category,
     unit: text(formData, "unit") || "Jour",
     default_price: price(formData),
     note: text(formData, "note") || null,
   };
-  if (photoPath) updates.photo_url = photoPath;
 
   const { error } = await supabase.from("engins").update(updates).eq("id", id);
   if (error) throw new Error(error.message);

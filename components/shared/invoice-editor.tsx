@@ -38,6 +38,7 @@ import {
   type InvoicePageKind,
 } from "@/components/shared/invoice-page";
 import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
+import { EnginSelectOptions } from "@/components/shared/engin-select-options";
 import { documentDraftSignature, useUnsavedDocument } from "@/components/shared/use-unsaved-document";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
 import { printWithTitle } from "@/lib/print-title";
@@ -67,7 +68,7 @@ type Invoice = {
   source_pointage_sheet_id?: string | null;
 };
 
-type Engin = { id: string; name: string; unit: string; default_price: number };
+type Engin = { id: string; name: string; category: string; unit: string; default_price: number };
 type Tool =
   | "line"
   | "engin"
@@ -783,12 +784,7 @@ export function InvoiceEditor({
                   value={selectedEngin}
                 >
                   <option value="">Sélectionner un engin</option>
-                  {engins.map((engin) => (
-                    <option key={engin.id} value={engin.id}>
-                      {engin.name} · {engin.unit} ·{" "}
-                      {formatAmount(Number(engin.default_price))}
-                    </option>
-                  ))}
+                  <EnginSelectOptions engins={engins} label={(engin) => `${engin.name} · ${engin.unit} · ${formatAmount(Number(engin.default_price))}`} />
                 </select>
               </label>
               <button

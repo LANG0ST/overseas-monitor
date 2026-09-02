@@ -36,9 +36,10 @@ export default async function PointageEditorPage({
       .order("name"),
     supabase
       .from("engins")
-      .select("id, name, default_price")
+      .select("id, name, category, default_price")
       .eq("is_active", true)
       .eq("unit", "Jour")
+      .order("category")
       .order("name"),
     supabase
       .from("settings")

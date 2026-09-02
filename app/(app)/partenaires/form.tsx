@@ -23,7 +23,6 @@ export function PartenaireForm({
   return (
     <ConfirmedForm
       action={action}
-      encType="multipart/form-data"
       className="glass-card max-w-2xl space-y-5 rounded-3xl p-6 md:p-8"
       confirmationTitle={`${submitLabel} ?`}
       confirmationDescription="Les informations de ce partenaire seront enregistrées."
@@ -77,15 +76,6 @@ export function PartenaireForm({
             className="mt-1 w-full rounded-xl border bg-white/70 px-3 py-2.5"
             name="representative"
             defaultValue={partenaire?.representative ?? ""}
-          />
-        </label>
-        <label className="text-sm font-medium sm:col-span-2">
-          Logo
-          <input
-            className="mt-1 block w-full rounded-xl border bg-white/70 px-3 py-2.5 text-sm"
-            name="logo"
-            type="file"
-            accept="image/*"
           />
         </label>
       </div>
