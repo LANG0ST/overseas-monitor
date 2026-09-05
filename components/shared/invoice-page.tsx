@@ -104,64 +104,39 @@ export function InvoicePage({
     >
       {showHeader ? (
         <header
-          className="shrink-0 border-b-2 border-primary-900 pb-8"
+          className="shrink-0"
           data-invoice-header
         >
-          <div className="grid grid-cols-[1.15fr_0.85fr] gap-8">
+          <div className="grid grid-cols-[1.15fr_0.85fr] items-center gap-6">
             <div>
               <Image
                 alt="Overseas Services"
-                className="h-auto w-[250px] object-contain"
-                height={88}
+                className="h-auto w-[205px] object-contain"
+                height={50}
                 priority
                 src="/logo.png"
-                width={357}
+                width={293}
               />
-              <ul className="mt-8 space-y-3 text-base leading-relaxed">
-                <li className="flex gap-3">
-                  <span aria-hidden="true" className="text-lg">
-                    •
-                  </span>
-                  <span>
-                    <strong>Nom du client :</strong>{" "}
-                    {document.client_name || "Client non renseigné"}
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span aria-hidden="true" className="text-lg">
-                    •
-                  </span>
-                  <span>
-                    <strong>Adresse :</strong>{" "}
-                    {document.client_address || "Non renseignée"}
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span aria-hidden="true" className="text-lg">
-                    •
-                  </span>
-                  <span>
-                    <strong>ICE :</strong>{" "}
-                    {document.client_ice || "Non renseigné"}
-                  </span>
-                </li>
-              </ul>
             </div>
-            <div className="border-l border-primary-300 pl-8 text-left">
-              <p className="text-xl font-bold leading-tight pt-23">
+            <div className="text-right">
+              <p className="text-xl font-bold leading-tight">
                 Facture N° : {document.number || "Brouillon"}
               </p>
-              <p className="mt-5 text-xl font-semibold italic">
-                {document.city || "Casablanca"}, <br></br>le{" "}
-                {formatDate(document.date)}
+              <p className="mt-1 text-base font-semibold italic">
+                {document.city || "Casablanca"}, le {formatDate(document.date)}
               </p>
             </div>
+          </div>
+          <div className="mt-4 w-fit max-w-full min-w-[80mm] min-h-[18mm] rounded-sm border border-primary-600 px-4 py-2 text-xs leading-snug">
+            <p className="font-bold text-sm">{"Client: "+ document.client_name || "Client non renseigné"}</p>
+            {document.client_address ? <p className="mt-0.5 text-[11px]">{document.client_address}</p> : null}
+            {document.client_ice ? <p className="mt-0.5">ICE : {document.client_ice}</p> : null}
           </div>
         </header>
       ) : null}
 
       <div
-        className={`min-h-0 flex-1 overflow-hidden ${showHeader ? "mt-10" : ""}`}
+        className={`min-h-0 flex-1 overflow-hidden ${showHeader ? "mt-5" : ""}`}
         data-invoice-table
       >
         <table className="w-full table-fixed text-sm">
