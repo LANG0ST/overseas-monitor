@@ -4,6 +4,8 @@ export type LineItem = {
   qty: number;
   unit_price: number;
   tva_rate?: number;
+  period_start?: string;
+  period_end?: string;
 };
 
 export type DocumentTotals = {

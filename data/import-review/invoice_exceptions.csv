@@ -1,0 +1,24 @@
+﻿source_file,exception_type,detected_value,confidence,recommended_action,notes
+FACTURES 2026/AVOIR/AVOIR SUR FACTURE MINGDIAN.pdf,credit_note,AVOIR,high,separate_import_phase,Do not treat this file as a standard invoice during a future document import.
+FACTURES 2026/INV 003 COVEC 第三份五金发票.pdf,duplicate_or_bis_invoice_number,003/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 003 COVEC 第三份五金发票.pdf | FACTURES 2026/INV 003 GOTION (2).pdf
+FACTURES 2026/INV 003 COVEC 第三份五金发票.pdf,image_only_or_no_text,0 extracted characters,high,ocr,Route only this file to OCR; do not OCR the full folder.
+FACTURES 2026/INV 003 GOTION (2).pdf,duplicate_or_bis_invoice_number,003/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 003 COVEC 第三份五金发票.pdf | FACTURES 2026/INV 003 GOTION (2).pdf
+FACTURES 2026/INV 19 AGL.pdf,image_only_or_no_text,0 extracted characters,high,ocr,Route only this file to OCR; do not OCR the full folder.
+FACTURES 2026/INV 20 AGL.pdf,image_only_or_no_text,0 extracted characters,high,ocr,Route only this file to OCR; do not OCR the full folder.
+FACTURES 2026/INV 23 AGL 1 (2).pdf,duplicate_or_bis_invoice_number,023/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 23 AGL 1 (2).pdf | FACTURES 2026/INV 23 BIS WWL MOROCCO.pdf
+FACTURES 2026/INV 23 BIS WWL MOROCCO.pdf,duplicate_or_bis_invoice_number,023/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 23 AGL 1 (2).pdf | FACTURES 2026/INV 23 BIS WWL MOROCCO.pdf
+FACTURES 2026/INV 23 BIS WWL MOROCCO.pdf,missing_client_ice,WORLDWIDE LOGISTICS MOROCCO SHIPPING SERVICE,high,verify_client_ice,No client ICE was found in native PDF text.
+FACTURES 2026/INV 24 AGL 1 (1).pdf,duplicate_or_bis_invoice_number,024/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 24 AGL 1 (1).pdf | FACTURES 2026/INV 24 BIS CHINA CONSTRUCTION OCP OCT-NOV (1).pdf
+FACTURES 2026/INV 24 BIS CHINA CONSTRUCTION OCP OCT-NOV (1).pdf,duplicate_or_bis_invoice_number,024/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 24 AGL 1 (1).pdf | FACTURES 2026/INV 24 BIS CHINA CONSTRUCTION OCP OCT-NOV (1).pdf
+FACTURES 2026/INV 29 BIS MINGDIAN TANGER Déc Modf2.pdf,duplicate_or_bis_invoice_number,029/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 29 BIS MINGDIAN TANGER Déc Modf2.pdf | FACTURES 2026/INV 29 COVEC.pdf
+FACTURES 2026/INV 29 COVEC.pdf,duplicate_or_bis_invoice_number,029/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 29 BIS MINGDIAN TANGER Déc Modf2.pdf | FACTURES 2026/INV 29 COVEC.pdf
+FACTURES 2026/INV 30 BIS MINGDIAN TANGER JAN Modf.pdf,duplicate_or_bis_invoice_number,030/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 30 BIS MINGDIAN TANGER JAN Modf.pdf | FACTURES 2026/INV 30 COVEC.pdf
+FACTURES 2026/INV 30 COVEC.pdf,duplicate_or_bis_invoice_number,030/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 30 BIS MINGDIAN TANGER JAN Modf.pdf | FACTURES 2026/INV 30 COVEC.pdf
+FACTURES 2026/INV 34 AGL.pdf,image_only_or_no_text,0 extracted characters,high,ocr,Route only this file to OCR; do not OCR the full folder.
+FACTURES 2026/INV 43 BIS MINGDIAN TANGER AVRIL.pdf,duplicate_or_bis_invoice_number,043/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 43 BIS MINGDIAN TANGER AVRIL.pdf | FACTURES 2026/INV 43 MINGLAI.pdf
+FACTURES 2026/INV 43 MINGLAI.pdf,duplicate_or_bis_invoice_number,043/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 43 BIS MINGDIAN TANGER AVRIL.pdf | FACTURES 2026/INV 43 MINGLAI.pdf
+FACTURES 2026/INV 43 MINGLAI.pdf,invalid_ice_length,00379735000081,high,verify_client_ice,Printed client ICE contains 14 digits.
+FACTURES 2026/INV 47 AGL Mai.pdf,duplicate_or_bis_invoice_number,047/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 47 AGL Mai.pdf | FACTURES 2026/INV 47 AGL.pdf
+FACTURES 2026/INV 47 AGL Mai.pdf,possible_revised_invoice,047/2026/AI; total 651000,high,compare_versions,"Likely later revision, but requires confirmation before invoice import."
+FACTURES 2026/INV 47 AGL.pdf,duplicate_or_bis_invoice_number,047/2026/AI,high,manual_review,Same numeric invoice prefix appears in: FACTURES 2026/INV 47 AGL Mai.pdf | FACTURES 2026/INV 47 AGL.pdf
+FACTURES 2026/INV 47 AGL.pdf,possible_revised_invoice,047/2026/AI; total 639000,high,compare_versions,The 'Mai' version includes an additional immobilisation line and a different total.

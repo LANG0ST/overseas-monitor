@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { LineItemDesignation } from "@/components/shared/line-item-designation";
+import { COMPANY_ADDRESS } from "@/lib/company-details";
 import type { LineItem } from "@/lib/db/document-calculations";
 
 export type InvoicePageKind = "single" | "first" | "middle" | "last";
@@ -62,7 +64,7 @@ export function InvoiceLineRow({
       onClick={onSelect}
     >
       <td className="break-words px-3 py-3 font-medium text-neutral-900">
-        {line.desc || "Sans désignation"}
+        <LineItemDesignation line={line} />
       </td>
       <td className="break-words px-3 py-3 text-neutral-700">{line.unit}</td>
       <td className="px-3 py-3 text-right text-neutral-900">{line.qty}</td>
@@ -140,7 +142,7 @@ export function BonCommandePage({
             <div className="min-h-28 rounded-2xl border border-primary-600 px-5 py-4">
               <p className="font-bold">ACHETEUR :</p>
               <p className="font-bold">OVERSEAS SERVICES SARL</p>
-              <p>AV 4 EME DMM ROUTE TARGA RES KHALID 2 EME ETAGE N°10, MARRAKECH</p>
+              <p>{COMPANY_ADDRESS}</p>
               <p>ICE : 002629109000015</p>
             </div>
           </div>
@@ -250,10 +252,7 @@ export function BonCommandePage({
             className="invoice-footer mt-auto -mx-[9mm] -mb-[9mm] w-[210mm] shrink-0 border-t-2 border-primary-900 bg-neutral-100 px-[14mm] py-5 text-center text-xs leading-relaxed"
             data-invoice-footer
           >
-            <p>
-              Adresse : AV 4 EME DMM ROUTE TARGA RES KHALID 2 EME ETAGE N°10,
-              MARRAKECH
-            </p>
+            <p>Adresse : {COMPANY_ADDRESS}</p>
             <p className="mt-1 font-semibold">
               IF : 47244543 &nbsp;|&nbsp; RC : 108893 &nbsp;|&nbsp; TP :
               64260589 &nbsp;|&nbsp; ICE : 002629109000015 &nbsp;|&nbsp; CNSS :

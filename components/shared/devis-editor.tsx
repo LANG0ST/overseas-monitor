@@ -41,6 +41,7 @@ import {
 } from "@/components/shared/devis-page";
 import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { EnginSelectOptions } from "@/components/shared/engin-select-options";
+import { LinePropertiesFields } from "@/components/shared/line-properties-fields";
 import { documentDraftSignature, useUnsavedDocument } from "@/components/shared/use-unsaved-document";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
 import { printWithTitle } from "@/lib/print-title";
@@ -676,90 +677,26 @@ export function DevisEditor({
         </div>
 
         <aside className="glass-card order-3 rounded-2xl p-5 print:hidden" ref={setLinePanelTarget}>
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-neutral-900">
-              {selectedTool === "line"
-                ? "Propriétés de la ligne"
-                : tools.find((tool) => tool.id === selectedTool)?.label}
-            </h2>
-            <span className="text-xs text-neutral-500">
-              {locked ? "Lecture seule" : "Édition"}
-            </span>
-          </div>
+          <h2 className="font-semibold text-neutral-900">
+            {selectedTool === "line"
+              ? "Propriétés de la ligne"
+              : tools.find((tool) => tool.id === selectedTool)?.label}
+          </h2>
           {selectedTool === "line" ? (
             <div className="mt-5 space-y-4">
               {selected ? (
-                <>
-                  <label className="block text-sm font-semibold text-neutral-900">
-                    Désignation
-                    <input
-                      className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
-                      disabled={locked}
-                      onChange={(event) =>
-                        updateLine("desc", event.target.value)
-                      }
-                      value={selected.desc}
-                    />
-                  </label>
-                  <label className="block text-sm font-semibold text-neutral-900">
-                    Unité
-                    <select
-                      className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
-                      disabled={locked}
-                      onChange={(event) =>
-                        updateLine("unit", event.target.value)
-                      }
-                      value={selected.unit}
-                    >
-                      {unitOptions.map((unit) => (
-                        <option key={unit} value={unit}>
-                          {unit}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="block text-sm font-semibold text-neutral-900">
-                      Nombre
-                      <input
-                        className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
-                        disabled={locked}
-                        min="0"
-                        onChange={(event) =>
-                          updateLine("qty", event.target.value)
-                        }
-                        type="number"
-                        value={selected.qty}
-                      />
-                    </label>
-                    <label className="block text-sm font-semibold text-neutral-900">
-                      P.U. HT
-                      <input
-                        className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
-                        disabled={locked}
-                        min="0"
-                        onChange={(event) =>
-                          updateLine("unit_price", event.target.value)
-                        }
-                        step="0.01"
-                        type="number"
-                        value={selected.unit_price}
-                      />
-                    </label>
-                  </div>
-                  <button
-                    className="rounded-full border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900"
-                    disabled={locked}
-                    onClick={() =>
-                      setLineItems((current) =>
-                        current.filter((_, index) => index !== selectedLine),
-                      )
-                    }
-                    type="button"
-                  >
-                    Supprimer cette ligne
-                  </button>
-                </>
+                <LinePropertiesFields
+                  defaultTvaRate={tvaRate}
+                  line={selected}
+                  locked={locked}
+                  onChange={updateLine}
+                  onDelete={() =>
+                    setLineItems((current) =>
+                      current.filter((_, index) => index !== selectedLine),
+                    )
+                  }
+                  unitOptions={unitOptions}
+                />
               ) : (
                 <p className="text-sm text-neutral-600">
                   Sélectionnez une ligne ou ajoutez-en une.
@@ -1030,27 +967,6 @@ export function DevisEditor({
             linePanelTarget,
           )
         : null}
-      {linePanelTarget && selectedTool === "line" && selected
-        ? createPortal(
-            <label className="mt-5 block text-sm font-semibold text-neutral-900">
-              TVA de la ligne sélectionnée (%)
-              <select
-                className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
-                disabled={locked}
-                onChange={(event) => updateLine("tva_rate", event.target.value)}
-                value={String(
-                  normalizeTvaRate(Number(selected.tva_rate ?? tvaRate)),
-                )}
-              >
-                <option value="20">20%</option>
-                <option value="10">10%</option>
-                <option value="0">0%</option>
-              </select>
-            </label>,
-            linePanelTarget,
-          )
-        : null}
-
       <div
         aria-hidden="true"
         className="invoice-measurement print:hidden"
