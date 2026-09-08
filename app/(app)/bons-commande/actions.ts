@@ -9,6 +9,7 @@ import {
   softDelete,
   restore,
   updateLineItems,
+  unlockDocument,
   type DocumentRow,
   type LineItem,
 } from "@/lib/db/documents";
@@ -29,7 +30,7 @@ export type BonCommandeDocument = DocumentRow & {
   devis_iban: string;
 };
 
-const select = "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, validity_days, chantier, period_start, period_end, devis_payment_conditions, devis_bank_name, devis_iban";
+const select = "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, validity_days, chantier, period_start, period_end, devis_payment_conditions, devis_bank_name, devis_iban";
 
 async function getBonCommande(id: string) {
   const supabase = await createClient();
@@ -78,6 +79,11 @@ export async function assignBonCommandeNumberAction(documentId: string): Promise
 
 export async function assignBonCommandeNumberManuallyAction(documentId: string, number: string): Promise<ActionResult> {
   try { return { ok: true, document: { ...(await assignNumberManually(documentId, number)), ...(await getBonCommande(documentId)) } }; }
+  catch (error) { return result(error); }
+}
+
+export async function unlockBonCommandeAction(documentId: string): Promise<ActionResult> {
+  try { await unlockDocument(documentId); return { ok: true, document: await getBonCommande(documentId) }; }
   catch (error) { return result(error); }
 }
 

@@ -1,13 +1,44 @@
+import Image from "next/image";
 import { LoginForm } from "./login-form";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
-      <section className="w-full max-w-sm rounded-2xl border bg-card p-8 shadow-sm">
-        <p className="text-sm font-medium text-muted-foreground">Overseas Services</p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight">Connexion</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Accédez à votre espace de travail.</p>
-        <LoginForm />
+    <main className="grid min-h-screen bg-white lg:grid-cols-2">
+      <section className="relative hidden min-h-screen overflow-hidden lg:flex lg:items-center lg:justify-center">
+        <Image
+          alt="Navire porte-conteneurs Overseas Services"
+          className="object-cover"
+          fill
+          priority
+          sizes="50vw"
+          src="/loginBG.png"
+        />
+        <div className="absolute inset-0 bg-ink-950/25" />
+        <Image
+          alt="Overseas Services"
+          className="relative z-10 h-auto w-[70%] max-w-[34rem] brightness-0 invert"
+          height={176}
+          priority
+          src="/logo.png"
+          width={720}
+        />
+      </section>
+
+      <section className="flex min-h-screen items-center justify-center px-6 py-10 sm:px-10 lg:px-16">
+        <div className="w-full max-w-md">
+          <div className="mb-12 flex justify-center lg:hidden">
+            <Image
+              alt="Overseas Services"
+              className="h-auto w-64 sm:w-72"
+              height={148}
+              priority
+              src="/logo.png"
+              width={600}
+            />
+          </div>
+          <h1 className="text-center text-4xl font-semibold tracking-tight text-ink-950">Bienvenue</h1>
+          <LoginForm />
+        </div>
       </section>
     </main>
   );

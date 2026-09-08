@@ -10,7 +10,7 @@ export default async function FacturePage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const { userId, isAdmin } = await getAccessContext();
+  const { userId, isAdmin, isSuperAdmin } = await getAccessContext();
   if (!userId) notFound();
   const [
     { data: document, error: documentError },
@@ -19,7 +19,7 @@ export default async function FacturePage({
     supabase
       .from("documents")
       .select(
-        "id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, paid, is_active, is_locked, source_pointage_sheet_id",
+        "id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, paid, is_active, is_locked, manual_number_only, source_pointage_sheet_id",
       )
       .eq("id", id)
       .maybeSingle(),
@@ -38,6 +38,7 @@ export default async function FacturePage({
     <InvoiceEditor
       initialDocument={document}
       isAdmin={isAdmin}
+      isSuperAdmin={isSuperAdmin}
       engins={engins ?? []}
     />
   );

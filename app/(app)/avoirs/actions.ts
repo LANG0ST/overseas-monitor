@@ -9,6 +9,7 @@ import {
   softDelete,
   restore,
   updateLineItems,
+  unlockDocument,
   type DocumentRow,
   type LineItem,
 } from "@/lib/db/documents";
@@ -24,7 +25,7 @@ export type AvoirDocument = DocumentRow & {
 
 type ActionResult = { ok: true; document: AvoirDocument } | { ok: false; error: string };
 
-const select = "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, motif, reference_facture_number, avoir_payment_method, avoir_payment_reference";
+const select = "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, motif, reference_facture_number, avoir_payment_method, avoir_payment_reference";
 
 async function getAvoir(id: string) {
   const supabase = await createClient();
@@ -84,6 +85,11 @@ export async function assignAvoirNumberAction(documentId: string): Promise<Actio
 
 export async function assignAvoirNumberManuallyAction(documentId: string, number: string): Promise<ActionResult> {
   try { await assignNumberManually(documentId, number); return { ok: true, document: await getAvoir(documentId) }; }
+  catch (error) { return result(error); }
+}
+
+export async function unlockAvoirAction(documentId: string): Promise<ActionResult> {
+  try { await unlockDocument(documentId); return { ok: true, document: await getAvoir(documentId) }; }
   catch (error) { return result(error); }
 }
 

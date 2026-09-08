@@ -19,6 +19,7 @@ import {
   HardHat,
   Hash,
   Ship,
+  LockOpen,
   Stamp,
   Trash2,
   Truck,
@@ -31,6 +32,7 @@ import {
   deleteBonCommandeAction,
   restoreBonCommandeAction,
   saveBonCommandeAction,
+  unlockBonCommandeAction,
   type BonCommandeDocument,
 } from "@/app/(app)/bons-commande/actions";
 import {
@@ -171,10 +173,12 @@ function pageKindFor(index: number, pageCount: number): InvoicePageKind {
 export function BonCommandeEditor({
   initialDocument,
   isAdmin,
+  isSuperAdmin,
   engins,
 }: {
   initialDocument: Invoice;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   engins: Engin[];
 }) {
   const router = useRouter();
@@ -430,15 +434,28 @@ export function BonCommandeEditor({
   }
 
   async function assignManualNumber() {
-    if (locked || document.number) return;
-    const number = window.prompt("Numéro manuel du bon de commande", manualNumber);
-    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à ce bon de commande.`, confirmLabel: "Définir le numéro" }))) return;
+    if (locked || (document.number && !document.manual_number_only)) return;
+    const number = window.prompt("Numéro manuel du bon de commande", document.number || manualNumber);
+    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à ce bon de commande. Un doublon sera refusé.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
     startTransition(async () => {
       applyResult(
         await assignBonCommandeNumberManuallyAction(document.id, number),
         true,
       );
+    });
+  }
+
+  async function unlockBonCommande() {
+    if (!locked || !isSuperAdmin) return;
+    if (!(await confirm({
+      title: "Déverrouiller ce bon de commande ?",
+      description: "Son numéro actuel sera conservé. Vous pourrez corriger le document et modifier ce numéro manuellement avant de le reverrouiller.",
+      confirmLabel: "Déverrouiller",
+      destructive: true,
+    }))) return;
+    startTransition(async () => {
+      applyResult(await unlockBonCommandeAction(document.id));
     });
   }
 
@@ -525,7 +542,7 @@ export function BonCommandeEditor({
             onBrowserPrint={printInvoice}
             pdfDisabled={dirty}
           />
-          {document.is_active && !locked && !document.number ? (
+          {document.is_active && !locked && !document.number && !document.manual_number_only ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -536,7 +553,18 @@ export function BonCommandeEditor({
               Attribuer un numéro
             </button>
           ) : null}
-          {document.is_active && !locked && !document.number && isAdmin ? (
+          {document.is_active && locked && isSuperAdmin ? (
+            <button
+              className="rounded-full border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 shadow-sm"
+              disabled={pending}
+              onClick={unlockBonCommande}
+              type="button"
+            >
+              <LockOpen className="mr-2 inline" size={16} />
+              Déverrouiller le bon
+            </button>
+          ) : null}
+          {document.is_active && !locked && ((!document.number && isAdmin) || (document.manual_number_only && isSuperAdmin)) ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -544,7 +572,7 @@ export function BonCommandeEditor({
               type="button"
             >
               <UserPen className="mr-2 inline" size={16} />
-              Numéro manuel
+              {document.number ? "Modifier le numéro" : "Numéro manuel"}
             </button>
           ) : null}
           {document.is_active && !locked ? (

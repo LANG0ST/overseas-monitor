@@ -10,6 +10,7 @@ import {
   softDelete,
   restore,
   updateLineItems,
+  unlockDocument,
   type DocumentRow,
   type LineItem,
 } from "@/lib/db/documents";
@@ -53,6 +54,14 @@ export async function assignInvoiceNumberAction(documentId: string): Promise<Act
 export async function assignInvoiceNumberManuallyAction(documentId: string, number: string): Promise<ActionResult> {
   try {
     return { ok: true, document: await assignNumberManually(documentId, number) };
+  } catch (error) {
+    return result(error);
+  }
+}
+
+export async function unlockInvoiceAction(documentId: string): Promise<ActionResult> {
+  try {
+    return { ok: true, document: await unlockDocument(documentId) };
   } catch (error) {
     return result(error);
   }

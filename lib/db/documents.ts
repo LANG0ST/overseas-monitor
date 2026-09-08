@@ -29,6 +29,7 @@ export type DocumentRow = {
   ttc: number;
   is_active: boolean;
   is_locked: boolean;
+  manual_number_only?: boolean;
   source_pointage_sheet_id?: string | null;
 };
 
@@ -87,7 +88,11 @@ async function requireUser(supabase: ServerClient) {
   if (profileError) failDatabase(profileError);
   if (!profile) throw new DocumentError("PROFILE_NOT_FOUND", "Votre profil n’est pas configuré.");
   if (!profile.is_active) throw new DocumentError("PERMISSION_DENIED", "Votre compte est désactivé.");
-  return { userId, isAdmin: profile.role === "admin" };
+  return {
+    userId,
+    isAdmin: profile.role === "admin" || profile.role === "superadmin",
+    isSuperAdmin: profile.role === "superadmin",
+  };
 }
 
 async function requireDocumentEdit(supabase: ServerClient, type: DocumentType) {
@@ -101,7 +106,7 @@ async function requireDocumentEdit(supabase: ServerClient, type: DocumentType) {
 async function getDocument(supabase: ServerClient, documentId: string): Promise<DocumentRow> {
   const { data, error } = await supabase
     .from("documents")
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")
     .eq("id", documentId)
     .maybeSingle();
   if (error) failDatabase(error);
@@ -123,12 +128,24 @@ function requireType(type: DocumentType) {
   if (!documentTypes.includes(type)) throw new DocumentError("INVALID_INPUT", "Type de document invalide.");
 }
 
-function normalizeNumber(value: string) {
+function normalizeNumber(type: DocumentType, value: string, documentDate: string) {
   const number = value.trim();
   if (!number || number.length > 100 || /[\r\n]/.test(number)) {
     throw new DocumentError("INVALID_INPUT", "Numéro de document invalide.");
   }
-  return number;
+  if (!/^\d+$/.test(number)) return number;
+  const sequence = BigInt(number).toString();
+  if (type === "bon_commande") {
+    const yearSuffix = documentDate.slice(2, 4);
+    return `BC-${sequence.padStart(4, "0")}/${yearSuffix}`;
+  }
+  const prefix: Record<DocumentType, string> = {
+    facture: "Fact",
+    devis: "Dev",
+    bon_commande: "BC",
+    avoir: "AV",
+  };
+  return `${prefix[type]}-${sequence.padStart(3, "0")}`;
 }
 
 export async function createDraftDocument(
@@ -190,7 +207,7 @@ export async function createDraftDocument(
       created_by: userId,
       source_pointage_sheet_id: initial?.sourcePointageSheetId ?? null,
     })
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")
     .single();
   if (error) failDatabase(error);
   return data as DocumentRow;
@@ -205,6 +222,7 @@ export async function assignNumber(documentId: string) {
   await requireDocumentEdit(supabase, document.type);
   if (document.number) return document;
   if (document.is_locked) throw new DocumentError("LOCKED", "Un numéro ne peut pas être attribué à un document verrouillé.");
+  if (document.manual_number_only) throw new DocumentError("INVALID_INPUT", "Ce document déverrouillé exige un numéro manuel.");
 
   const year = Number(document.date.slice(0, 4));
   const { data: nextNumber, error: numberError } = await supabase.rpc("next_document_number", {
@@ -220,7 +238,7 @@ export async function assignNumber(documentId: string) {
     .eq("id", documentId)
     .is("number", null)
     .eq("is_locked", false)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")
     .maybeSingle();
   if (updateError) failDatabase(updateError);
   if (updated) return updated as DocumentRow;
@@ -232,28 +250,46 @@ export async function assignNumber(documentId: string) {
 
 export async function assignNumberManually(documentId: string, value: string) {
   requireId(documentId);
-  const number = normalizeNumber(value);
   const supabase = await createClient();
   const user = await requireUser(supabase);
   if (!user.isAdmin) throw new DocumentError("PERMISSION_DENIED", "Seul un administrateur peut définir un numéro manuellement.");
   const document = await getDocument(supabase, documentId);
+  const number = normalizeNumber(document.type, value, document.date);
   requireActive(document);
-  if (document.number) throw new DocumentError("ALREADY_NUMBERED", "Ce document possède déjà un numéro.");
+  if (document.number && !document.manual_number_only) {
+    throw new DocumentError("ALREADY_NUMBERED", "Ce document doit être déverrouillé avant de changer son numéro.");
+  }
+  if (document.number && !user.isSuperAdmin) {
+    throw new DocumentError("PERMISSION_DENIED", "Seul un super-administrateur peut modifier un numéro existant.");
+  }
   if (document.is_locked) throw new DocumentError("LOCKED", "Un document verrouillé ne peut pas être renuméroté.");
 
-  const { data: updated, error } = await supabase
+  let update = supabase
     .from("documents")
     .update({ number })
     .eq("id", documentId)
-    .is("number", null)
-    .eq("is_locked", false)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
+    .eq("is_locked", false);
+  update = document.number
+    ? update.eq("number", document.number).eq("manual_number_only", true)
+    : update.is("number", null);
+  const { data: updated, error } = await update
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")
     .maybeSingle();
   if (error) failDatabase(error);
   if (updated) return updated as DocumentRow;
   const concurrent = await getDocument(supabase, documentId);
-  if (concurrent.number) throw new DocumentError("ALREADY_NUMBERED", "Ce document possède déjà un numéro.");
+  if (concurrent.is_locked) throw new DocumentError("LOCKED", "Ce document a été reverrouillé dans un autre onglet.");
   throw new DocumentError("CONCURRENT_UPDATE", "Le document a été modifié dans un autre onglet. Rechargez-le et réessayez.");
+}
+
+export async function unlockDocument(documentId: string) {
+  requireId(documentId);
+  const supabase = await createClient();
+  const user = await requireUser(supabase);
+  if (!user.isSuperAdmin) throw new DocumentError("PERMISSION_DENIED", "Cette action est réservée au super-administrateur.");
+  const { error } = await supabase.rpc("unlock_facture", { p_document_id: documentId });
+  if (error) failDatabase(error);
+  return getDocument(supabase, documentId);
 }
 
 export async function lockDocument(documentId: string) {
@@ -272,7 +308,7 @@ export async function lockDocument(documentId: string) {
     .eq("id", documentId)
     .eq("is_locked", false)
     .not("number", "is", null)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")
     .maybeSingle();
   if (error) failDatabase(error);
   if (updated) return updated as DocumentRow;
@@ -302,7 +338,7 @@ export async function updateLineItems(documentId: string, lineItems: readonly Li
     .update({ line_items: lineItems, tva_rate: rate, ...(date ? { date } : {}), ...(city?.trim() ? { city: city.trim() } : {}), ...(typeof hasCachet === "boolean" ? { has_cachet: hasCachet } : {}), ...totals })
     .eq("id", documentId)
     .eq("is_locked", false)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")
     .maybeSingle();
   if (error) failDatabase(error);
   if (updated) return updated as DocumentRow;
@@ -321,7 +357,7 @@ async function setDocumentActive(documentId: string, isActive: boolean) {
     .from("documents")
     .update({ is_active: isActive })
     .eq("id", documentId)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")
     .maybeSingle();
   if (error) failDatabase(error);
   if (!updated) throw new DocumentError("CONCURRENT_UPDATE", "Le document a été modifié dans un autre onglet. Rechargez-le et réessayez.");
@@ -339,7 +375,7 @@ export async function setPaid(documentId: string, paid: boolean) {
     .from("documents")
     .update({ paid, paid_date: paid ? new Date().toISOString().slice(0, 10) : null })
     .eq("id", documentId)
-    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, source_pointage_sheet_id, paid, paid_date")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id, paid, paid_date")
     .maybeSingle();
   if (error) failDatabase(error);
   if (!updated) throw new DocumentError("CONCURRENT_UPDATE", "Le document a été modifié dans un autre onglet. Rechargez-le et réessayez.");

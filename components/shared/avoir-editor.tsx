@@ -20,6 +20,7 @@ import {
   HardHat,
   Hash,
   Ship,
+  LockOpen,
   Stamp,
   Trash2,
   Truck,
@@ -32,6 +33,7 @@ import {
   deleteAvoirAction,
   restoreAvoirAction,
   saveAvoirAction,
+  unlockAvoirAction,
   type AvoirDocument,
 } from "@/app/(app)/avoirs/actions";
 import {
@@ -173,10 +175,12 @@ function pageKindFor(index: number, pageCount: number): InvoicePageKind {
 export function AvoirEditor({
   initialDocument,
   isAdmin,
+  isSuperAdmin,
   engins,
 }: {
   initialDocument: Invoice;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   engins: Engin[];
 }) {
   const router = useRouter();
@@ -432,15 +436,28 @@ export function AvoirEditor({
   }
 
   async function assignManualNumber() {
-    if (locked || document.number) return;
-    const number = window.prompt("Numéro manuel de l’avoir", manualNumber);
-    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à cet avoir.`, confirmLabel: "Définir le numéro" }))) return;
+    if (locked || (document.number && !document.manual_number_only)) return;
+    const number = window.prompt("Numéro manuel de l’avoir", document.number || manualNumber);
+    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à cet avoir. Un doublon sera refusé.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
     startTransition(async () => {
       applyResult(
         await assignAvoirNumberManuallyAction(document.id, number),
         true,
       );
+    });
+  }
+
+  async function unlockAvoir() {
+    if (!locked || !isSuperAdmin) return;
+    if (!(await confirm({
+      title: "Déverrouiller cet avoir ?",
+      description: "Son numéro actuel sera conservé. Vous pourrez corriger le document et modifier ce numéro manuellement avant de le reverrouiller.",
+      confirmLabel: "Déverrouiller",
+      destructive: true,
+    }))) return;
+    startTransition(async () => {
+      applyResult(await unlockAvoirAction(document.id));
     });
   }
 
@@ -517,7 +534,7 @@ export function AvoirEditor({
             onBrowserPrint={printInvoice}
             pdfDisabled={dirty}
           />
-          {document.is_active && !locked && !document.number ? (
+          {document.is_active && !locked && !document.number && !document.manual_number_only ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -528,7 +545,18 @@ export function AvoirEditor({
               Attribuer un numéro
             </button>
           ) : null}
-          {document.is_active && !locked && !document.number && isAdmin ? (
+          {document.is_active && locked && isSuperAdmin ? (
+            <button
+              className="rounded-full border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 shadow-sm"
+              disabled={pending}
+              onClick={unlockAvoir}
+              type="button"
+            >
+              <LockOpen className="mr-2 inline" size={16} />
+              Déverrouiller l’avoir
+            </button>
+          ) : null}
+          {document.is_active && !locked && ((!document.number && isAdmin) || (document.manual_number_only && isSuperAdmin)) ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -536,7 +564,7 @@ export function AvoirEditor({
               type="button"
             >
               <UserPen className="mr-2 inline" size={16} />
-              Numéro manuel
+              {document.number ? "Modifier le numéro" : "Numéro manuel"}
             </button>
           ) : null}
           {document.is_active && !locked ? (

@@ -17,6 +17,7 @@ export const getAccessContext = cache(async () => {
       userId: null,
       name: "Utilisateur",
       isAdmin: false,
+      isSuperAdmin: false,
       isActive: false,
       allowedResources: [] as Resource[],
       userMetadata: undefined as Record<string, unknown> | undefined,
@@ -29,7 +30,8 @@ export const getAccessContext = cache(async () => {
     .eq("id", userId)
     .maybeSingle();
   const isActive = !profileError && Boolean(profile?.is_active);
-  const isAdmin = isActive && profile?.role === "admin";
+  const isSuperAdmin = isActive && profile?.role === "superadmin";
+  const isAdmin = isSuperAdmin || (isActive && profile?.role === "admin");
   let allowedResources: Resource[] = [];
 
   if (isAdmin) {
@@ -54,6 +56,7 @@ export const getAccessContext = cache(async () => {
     userId,
     name: profile?.name || "Utilisateur",
     isAdmin,
+    isSuperAdmin,
     isActive,
     allowedResources,
     userMetadata: claims.user_metadata as Record<string, unknown> | undefined,

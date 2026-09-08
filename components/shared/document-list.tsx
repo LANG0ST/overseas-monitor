@@ -84,9 +84,9 @@ export async function DocumentList({
   const canAccessAvoirs = type === "facture" && allowedResources.includes("avoirs");
   const supabase = await createClient();
   const draftScope =
-    type === "facture" && filters.drafts === "mine"
+    filters.drafts === "mine"
       ? "mine"
-      : type === "facture" && filters.drafts === "all" && isAdmin
+      : filters.drafts === "all" && isAdmin
         ? "all"
         : null;
 
@@ -106,12 +106,10 @@ export async function DocumentList({
     .eq("type", type)
     .eq("is_active", !showInactive);
 
-  if (type === "facture") {
-    query = draftScope
-      ? query.is("number", null)
-      : query.not("number", "is", null);
-    if (draftScope === "mine" && userId) query = query.eq("created_by", userId);
-  }
+  query = draftScope
+    ? query.is("number", null)
+    : query.not("number", "is", null);
+  if (draftScope === "mine" && userId) query = query.eq("created_by", userId);
 
   if (from) query = query.gte("date", from);
   if (to) query = query.lte("date", to);
@@ -166,8 +164,7 @@ export async function DocumentList({
         </div>
       </div>
 
-      {type === "facture" ? (
-        <nav aria-label="Vues des factures" className="flex flex-wrap gap-2">
+      <nav aria-label={`Vues des ${title.toLocaleLowerCase("fr")}`} className="flex flex-wrap gap-2">
           <Link
             className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold shadow-sm ${draftScope === null ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
             href={hrefWithFilters(path, filters, {
@@ -176,7 +173,7 @@ export async function DocumentList({
               page: undefined,
             })}
           >
-            Factures
+            {title}
           </Link>
           <Link
             className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold shadow-sm ${draftScope === "mine" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
@@ -201,7 +198,6 @@ export async function DocumentList({
             </Link>
           ) : null}
         </nav>
-      ) : null}
 
       <form
         className="glass-card grid gap-4 rounded-2xl p-5 md:grid-cols-2 xl:grid-cols-5"
@@ -296,9 +292,9 @@ export async function DocumentList({
               <th className="px-5 py-4">Client</th>
               <th className="px-5 py-4 text-right">TTC</th>
               <th className="px-5 py-4">Dernière modification</th>
+              <th className="px-5 py-4">Statut</th>
               {type === "facture" ? (
                 <>
-                  <th className="px-5 py-4">Statut</th>
                   <th className="px-5 py-4 text-right">Action</th>
                 </>
               ) : null}
@@ -336,9 +332,7 @@ export async function DocumentList({
                   <p>{formatActivity(document.updated_at)}</p>
                   {isAdmin && document.created_by ? <p className="mt-1">Par {creatorNames.get(document.created_by) || "Utilisateur"}</p> : null}
                 </td>
-                {type === "facture" ? (
-                  <>
-                    <td className="px-5 py-4">
+                <td className="px-5 py-4">
                       {draftScope ? (
                         <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-700">
                           Brouillon
@@ -346,6 +340,10 @@ export async function DocumentList({
                       ) : !document.is_locked ? (
                         <span className="rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-900">
                           Numérotée
+                        </span>
+                      ) : type !== "facture" ? (
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
+                          Verrouillé
                         </span>
                       ) : document.paid ? (
                         <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
@@ -356,7 +354,9 @@ export async function DocumentList({
                           Impayée
                         </span>
                       )}
-                    </td>
+                </td>
+                {type === "facture" ? (
+                  <>
                     <td className="px-5 py-4 text-right">
                       {!showInactive && canAccessAvoirs && document.number && document.is_locked ? (
                         <CreateAvoirButton
@@ -399,27 +399,29 @@ export async function DocumentList({
             </div>
             <div className="mt-3 flex items-center justify-between text-xs text-neutral-600">
               <span>{formatDate(document.date)} · modifié {formatActivity(document.updated_at)}</span>
-              {type === "facture" ? (
-                <span
+              <span
                   className={
                     draftScope
                       ? "font-semibold text-neutral-700"
                       : !document.is_locked
                         ? "font-semibold text-primary-900"
-                        : document.paid
+                        : type !== "facture"
+                          ? "font-semibold text-green-800"
+                          : document.paid
                           ? "font-semibold text-green-800"
                           : "font-semibold text-amber-900"
                   }
-                >
+              >
                   {draftScope
                     ? "Brouillon"
                     : !document.is_locked
                       ? "Numérotée"
-                      : document.paid
+                      : type !== "facture"
+                        ? "Verrouillé"
+                        : document.paid
                         ? "Payée"
                         : "Impayée"}
-                </span>
-              ) : null}
+              </span>
             </div>
             {isAdmin && document.created_by ? <p className="mt-1 text-xs text-neutral-500">Créé par {creatorNames.get(document.created_by) || "Utilisateur"}</p> : null}
           </Link>

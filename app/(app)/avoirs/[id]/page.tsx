@@ -10,7 +10,7 @@ export default async function AvoirDocumentPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const { userId, isAdmin } = await getAccessContext();
+  const { userId, isAdmin, isSuperAdmin } = await getAccessContext();
   if (!userId) notFound();
 
   const [
@@ -20,7 +20,7 @@ export default async function AvoirDocumentPage({
     supabase
       .from("documents")
       .select(
-        "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, motif, reference_facture_number, avoir_payment_method, avoir_payment_reference",
+        "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, motif, reference_facture_number, avoir_payment_method, avoir_payment_reference",
       )
       .eq("id", id)
       .maybeSingle(),
@@ -41,6 +41,7 @@ export default async function AvoirDocumentPage({
       engins={engins ?? []}
       initialDocument={document}
       isAdmin={isAdmin}
+      isSuperAdmin={isSuperAdmin}
     />
   );
 }

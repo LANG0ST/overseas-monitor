@@ -7,7 +7,7 @@ import { DesktopNavigation, MobileNavigation } from "@/components/shared/app-nav
 import { getAccessContext } from "@/lib/auth/can-edit";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const { userId, name, isAdmin, allowedResources, userMetadata } = await getAccessContext();
+  const { userId, name, isAdmin, isSuperAdmin, allowedResources, userMetadata } = await getAccessContext();
   if (!userId) {
     redirect("/login");
   }
@@ -20,7 +20,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="app-canvas min-w-0 p-4 md:p-8 print:bg-white print:p-0">
       <div className="mx-auto flex min-w-0 w-full max-w-[1600px] gap-6">
-        <DesktopNavigation allowedResources={allowedResources} avatarUrl={avatarUrl} isAdmin={isAdmin} userName={name} />
+        <DesktopNavigation allowedResources={allowedResources} avatarUrl={avatarUrl} isAdmin={isAdmin} isSuperAdmin={isSuperAdmin} userName={name} />
         <div className="glass-card min-h-[calc(100dvh-2rem)] min-w-0 flex-1 rounded-3xl p-3 md:min-h-[calc(100dvh-4rem)] md:p-5 print:contents">
           <header className="glass-card flex min-h-14 items-center justify-between rounded-full px-4 py-2 md:px-6 print:hidden">
             <Link aria-label="Accueil Overseas Services" className="flex h-10 items-center" href="/dashboard">
@@ -41,7 +41,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div className="min-w-0 px-1 py-6 pb-24 md:px-4 md:pb-6 print:p-0">{children}</div>
         </div>
       </div>
-      <MobileNavigation allowedResources={allowedResources} avatarUrl={avatarUrl} isAdmin={isAdmin} userName={name} />
+      <MobileNavigation allowedResources={allowedResources} avatarUrl={avatarUrl} isAdmin={isAdmin} isSuperAdmin={isSuperAdmin} userName={name} />
     </div>
   );
 }

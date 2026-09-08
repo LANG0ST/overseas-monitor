@@ -20,6 +20,7 @@ import {
   HardHat,
   Hash,
   Ship,
+  LockOpen,
   Stamp,
   Trash2,
   Truck,
@@ -32,6 +33,7 @@ import {
   deleteDevisAction,
   restoreDevisAction,
   saveDevisAction,
+  unlockDevisAction,
   type DevisDocument,
 } from "@/app/(app)/devis/actions";
 import {
@@ -173,10 +175,12 @@ function pageKindFor(index: number, pageCount: number): InvoicePageKind {
 export function DevisEditor({
   initialDocument,
   isAdmin,
+  isSuperAdmin,
   engins,
 }: {
   initialDocument: Invoice;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   engins: Engin[];
 }) {
   const router = useRouter();
@@ -432,15 +436,28 @@ export function DevisEditor({
   }
 
   async function assignManualNumber() {
-    if (locked || document.number) return;
-    const number = window.prompt("Numéro manuel du devis", manualNumber);
-    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à ce devis.`, confirmLabel: "Définir le numéro" }))) return;
+    if (locked || (document.number && !document.manual_number_only)) return;
+    const number = window.prompt("Numéro manuel du devis", document.number || manualNumber);
+    if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à ce devis. Un doublon sera refusé.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
     startTransition(async () => {
       applyResult(
         await assignDevisNumberManuallyAction(document.id, number),
         true,
       );
+    });
+  }
+
+  async function unlockDevis() {
+    if (!locked || !isSuperAdmin) return;
+    if (!(await confirm({
+      title: "Déverrouiller ce devis ?",
+      description: "Son numéro actuel sera conservé. Vous pourrez corriger le document et modifier ce numéro manuellement avant de le reverrouiller.",
+      confirmLabel: "Déverrouiller",
+      destructive: true,
+    }))) return;
+    startTransition(async () => {
+      applyResult(await unlockDevisAction(document.id));
     });
   }
 
@@ -529,7 +546,7 @@ export function DevisEditor({
             onBrowserPrint={printInvoice}
             pdfDisabled={dirty}
           />
-          {document.is_active && !locked && !document.number ? (
+          {document.is_active && !locked && !document.number && !document.manual_number_only ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -540,7 +557,18 @@ export function DevisEditor({
               Attribuer un numéro
             </button>
           ) : null}
-          {document.is_active && !locked && !document.number && isAdmin ? (
+          {document.is_active && locked && isSuperAdmin ? (
+            <button
+              className="rounded-full border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 shadow-sm"
+              disabled={pending}
+              onClick={unlockDevis}
+              type="button"
+            >
+              <LockOpen className="mr-2 inline" size={16} />
+              Déverrouiller le devis
+            </button>
+          ) : null}
+          {document.is_active && !locked && ((!document.number && isAdmin) || (document.manual_number_only && isSuperAdmin)) ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -548,7 +576,7 @@ export function DevisEditor({
               type="button"
             >
               <UserPen className="mr-2 inline" size={16} />
-              Numéro manuel
+              {document.number ? "Modifier le numéro" : "Numéro manuel"}
             </button>
           ) : null}
           {document.is_active && !locked ? (

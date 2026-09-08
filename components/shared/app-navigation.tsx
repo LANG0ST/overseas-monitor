@@ -32,6 +32,7 @@ type AppNavigationProps = {
   allowedResources: Resource[];
   avatarUrl?: string;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   userName: string;
 };
 
@@ -50,7 +51,7 @@ function isFactureEditorPath(pathname: string) {
   );
 }
 
-export function DesktopNavigation({ allowedResources, avatarUrl, isAdmin, userName }: AppNavigationProps) {
+export function DesktopNavigation({ allowedResources, avatarUrl, isAdmin, isSuperAdmin, userName }: AppNavigationProps) {
   const pathname = usePathname();
   if (isFactureEditorPath(pathname)) return null;
   const visibleNavigation = navigation.filter((item) => item.resource === null || allowedResources.includes(item.resource));
@@ -70,7 +71,7 @@ export function DesktopNavigation({ allowedResources, avatarUrl, isAdmin, userNa
         )}
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-neutral-900">{userName}</p>
-          <p className="mt-0.5 text-xs text-neutral-500">{isAdmin ? "Administrateur" : "Utilisateur"}</p>
+          <p className="mt-0.5 text-xs text-neutral-500">{isSuperAdmin ? "Super-administrateur" : isAdmin ? "Administrateur" : "Utilisateur"}</p>
         </div>
       </div>
       {items.map(({ href, label, icon: Icon }) => {

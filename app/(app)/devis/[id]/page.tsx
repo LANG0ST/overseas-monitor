@@ -10,7 +10,7 @@ export default async function DevisDocumentPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const { userId, isAdmin } = await getAccessContext();
+  const { userId, isAdmin, isSuperAdmin } = await getAccessContext();
   if (!userId) notFound();
   const [
     { data: document, error: documentError },
@@ -19,7 +19,7 @@ export default async function DevisDocumentPage({
     supabase
       .from("documents")
       .select(
-        "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, validity_days, chantier, period_start, period_end, devis_fuel_driver, devis_driver, devis_payment_conditions, devis_bank_name, devis_iban",
+        "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, validity_days, chantier, period_start, period_end, devis_fuel_driver, devis_driver, devis_payment_conditions, devis_bank_name, devis_iban",
       )
       .eq("id", id)
       .maybeSingle(),
@@ -37,6 +37,7 @@ export default async function DevisDocumentPage({
     <DevisEditor
       initialDocument={document}
       isAdmin={isAdmin}
+      isSuperAdmin={isSuperAdmin}
       engins={engins ?? []}
     />
   );

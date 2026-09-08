@@ -36,7 +36,7 @@ export async function updatePermissionAction(input: {
     .select("role, is_active")
     .eq("id", adminId)
     .maybeSingle();
-  if (adminError || !admin || admin.role !== "admin" || !admin.is_active) {
+  if (adminError || !admin || !["admin", "superadmin"].includes(admin.role) || !admin.is_active) {
     return { ok: false, error: "Cette action est réservée aux administrateurs." };
   }
 
