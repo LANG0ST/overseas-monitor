@@ -30,6 +30,8 @@ export function DocumentExportActions({
         <a
           className={actionClassName}
           href={`/api/documents/${kind}/${documentId}/pdf`}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <Download className="mr-2 inline" size={16} />
           Télécharger en PDF

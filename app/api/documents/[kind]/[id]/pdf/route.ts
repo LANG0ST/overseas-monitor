@@ -1,4 +1,5 @@
-import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium";
+import puppeteer from "puppeteer-core";
 import type { NextRequest } from "next/server";
 import { safePrintName } from "@/lib/print-title";
 import { createClient } from "@/lib/supabase/server";
@@ -54,10 +55,23 @@ export async function GET(
 
   let browser;
   try {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    const isProduction = process.env.NODE_ENV === "production";
+    browser = await puppeteer.launch(
+      isProduction
+        ? {
+            args: await puppeteer.defaultArgs({
+              args: chromium.args,
+              headless: "shell",
+            }),
+            executablePath: await chromium.executablePath(),
+            headless: "shell",
+          }
+        : {
+            channel: "chrome",
+            headless: true,
+            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+          },
+    );
     const page = await browser.newPage();
     const documentUrl = new URL(`/${definition.path}/${id}`, request.nextUrl.origin);
     const cookies = request.headers
@@ -113,7 +127,7 @@ export async function GET(
     return new Response(Buffer.from(pdf), {
       headers: {
         "Cache-Control": "private, no-store",
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Disposition": `inline; filename="${filename}"`,
         "Content-Type": "application/pdf",
       },
     });
