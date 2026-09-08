@@ -113,7 +113,7 @@ export async function GET(
     return new Response(Buffer.from(pdf), {
       headers: {
         "Cache-Control": "private, no-store",
-        "Content-Disposition": `inline; filename="${filename}"`,
+        "Content-Disposition": `attachment; filename="${filename}"`,
         "Content-Type": "application/pdf",
       },
     });
