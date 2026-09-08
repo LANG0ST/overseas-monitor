@@ -16,6 +16,7 @@ export type DevisPageDocument = {
   period_start: string | null;
   period_end: string | null;
   devis_fuel_driver: string;
+  devis_driver: string;
   devis_payment_conditions: string;
   devis_bank_name: string;
   devis_iban: string;
@@ -147,13 +148,15 @@ export function DevisPage({
             <div className="min-h-28 rounded-2xl border border-primary-600 px-5 py-4">
               <p className="font-bold">CLIENT :</p>
               <p className="font-bold">{document.client_name || "Client non renseigné"}</p>
-              <p>{document.client_address || "Adresse non renseignée"}</p>
+              {document.client_address ? <p>{document.client_address}</p> : null}
               <p>ICE : {document.client_ice || "Non renseigné"}</p>
             </div>
           </div>
-          <p className="mt-5 text-red-500 pt-4 text-center text-sm font-semibold">
-            Période : {formatDate(document.period_start) || "—"} à {formatDate(document.period_end) || "—"}
-          </p>
+          {document.period_start || document.period_end ? (
+            <p className="mt-5 text-red-500 pt-4 text-center text-sm font-semibold">
+              Période : {formatDate(document.period_start) || "—"} à {formatDate(document.period_end) || "—"}
+            </p>
+          ) : null}
         </header>
       ) : null}
 
@@ -198,7 +201,7 @@ export function DevisPage({
       {showTotals ? (
         <>
           <div
-            className=" grid grid-cols-[1fr_230px] items-start gap-7 shrink-0"
+            className="grid grid-cols-[minmax(0,1fr)_300px] items-start gap-5 shrink-0"
             data-invoice-totals
           >
             <div className="relative">
@@ -213,7 +216,7 @@ export function DevisPage({
                     <th className="py-1 text-left font-medium text-neutral-700">
                       Total HT
                     </th>
-                    <td className="py-1 text-right font-semibold text-neutral-900">
+                    <td className="whitespace-nowrap py-1 text-right font-semibold text-neutral-900">
                       {formatAmount(totals.ht)}
                     </td>
                   </tr>
@@ -222,7 +225,7 @@ export function DevisPage({
                       <th className="py-1 text-left font-medium text-neutral-700">
                         TVA {rate}%
                       </th>
-                      <td className="py-1 text-right font-semibold text-neutral-900">
+                      <td className="whitespace-nowrap py-1 text-right font-semibold text-neutral-900">
                         {formatAmount(amount)}
                       </td>
                     </tr>
@@ -231,7 +234,7 @@ export function DevisPage({
                     <th className=" text-left text-lg font-bold text-primary-900">
                       Total TTC
                     </th>
-                    <td className="text-right text-lg font-bold text-primary-900">
+                    <td className="whitespace-nowrap text-right text-lg font-bold text-primary-900">
                       {formatAmount(totals.ttc)}
                     </td>
                   </tr>
@@ -249,8 +252,8 @@ export function DevisPage({
                 jour (08h00 – 18h00) ; Durée décomptée en jours ouvrés (lundi au samedi) —
                 dimanches et jours fériés travaillés facturés ; tout jour dû est
                 un jour facturé. Mobilisation et démobilisation à la charge du
-                client sauf mention contraire. Carburant et conducteur :{" "}
-                {document.devis_fuel_driver}.
+                client sauf mention contraire. Carburant :{" "}
+                {document.devis_fuel_driver}. Conducteur : {document.devis_driver}.
               </p>
             </div>
             <div>

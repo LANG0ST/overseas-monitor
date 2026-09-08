@@ -24,13 +24,12 @@ export type BonCommandeDocument = DocumentRow & {
   period_start: string | null;
   period_end: string | null;
   chantier: string | null;
-  devis_fuel_driver: string;
   devis_payment_conditions: string;
   devis_bank_name: string;
   devis_iban: string;
 };
 
-const select = "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, validity_days, chantier, period_start, period_end, devis_fuel_driver, devis_payment_conditions, devis_bank_name, devis_iban";
+const select = "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, validity_days, chantier, period_start, period_end, devis_payment_conditions, devis_bank_name, devis_iban";
 
 async function getBonCommande(id: string) {
   const supabase = await createClient();
@@ -94,7 +93,6 @@ export async function saveBonCommandeAction(
     validity_days: number;
     period_start: string | null;
     period_end: string | null;
-    fuel_driver: string;
     payment_conditions: string;
     bank_name: string;
     iban: string;
@@ -113,7 +111,6 @@ export async function saveBonCommandeAction(
       validity_days: details.validity_days,
       period_start: details.period_start,
       period_end: details.period_end,
-      devis_fuel_driver: details.fuel_driver,
       devis_payment_conditions: details.payment_conditions,
       devis_bank_name: details.bank_name,
       devis_iban: details.iban,

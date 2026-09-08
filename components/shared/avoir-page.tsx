@@ -143,7 +143,7 @@ export function AvoirPage({
               <p className="font-bold">
                 {document.client_name || "Client non renseigné"}
               </p>
-              <p>{document.client_address || "Adresse non renseignée"}</p>
+              {document.client_address ? <p>{document.client_address}</p> : null}
               <p>ICE : {document.client_ice || "Non renseigné"}</p>
             </div>
           </div>
@@ -199,7 +199,7 @@ export function AvoirPage({
       {showTotals ? (
         <>
           <div
-            className=" grid grid-cols-[1fr_230px] items-start gap-7 shrink-0"
+            className="grid grid-cols-[minmax(0,1fr)_300px] items-start gap-5 shrink-0"
             data-invoice-totals
           >
             <div className="relative">
@@ -214,7 +214,7 @@ export function AvoirPage({
                     <th className="py-1 text-left font-medium text-neutral-700">
                       Total HT
                     </th>
-                    <td className="py-1 text-right font-semibold text-neutral-900">
+                    <td className="whitespace-nowrap py-1 text-right font-semibold text-neutral-900">
                       {formatAmount(totals.ht)}
                     </td>
                   </tr>
@@ -223,7 +223,7 @@ export function AvoirPage({
                       <th className="py-1 text-left font-medium text-neutral-700">
                         TVA {rate}%
                       </th>
-                      <td className="py-1 text-right font-semibold text-neutral-900">
+                      <td className="whitespace-nowrap py-1 text-right font-semibold text-neutral-900">
                         {formatAmount(amount)}
                       </td>
                     </tr>
@@ -232,7 +232,7 @@ export function AvoirPage({
                     <th className=" text-left text-lg font-bold text-primary-900">
                       Total TTC
                     </th>
-                    <td className="text-right text-lg font-bold text-primary-900">
+                    <td className="whitespace-nowrap text-right text-lg font-bold text-primary-900">
                       {formatAmount(totals.ttc)}
                     </td>
                   </tr>

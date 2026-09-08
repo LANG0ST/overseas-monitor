@@ -1,22 +1,15 @@
 import { forbidden, notFound } from "next/navigation";
 import { PermissionsMatrix, type PermissionStaffRow } from "@/components/shared/permissions-matrix";
+import { getAccessContext } from "@/lib/auth/can-edit";
 import { resources, type Resource } from "@/lib/auth/resources";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function PermissionsPage() {
   const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims();
-  const userId = claimsData?.claims?.sub;
+  const { userId, isActive, isAdmin } = await getAccessContext();
   if (!userId) notFound();
-
-  const { data: currentProfile, error: currentProfileError } = await supabase
-    .from("profiles")
-    .select("role, is_active")
-    .eq("id", userId)
-    .maybeSingle();
-  if (currentProfileError) throw new Error(currentProfileError.message);
-  if (!currentProfile || !currentProfile.is_active) notFound();
-  if (currentProfile.role !== "admin") forbidden();
+  if (!isActive) notFound();
+  if (!isAdmin) forbidden();
 
   const { data: staff, error: staffError } = await supabase
     .from("profiles")

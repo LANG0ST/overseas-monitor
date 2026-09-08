@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { AvoirEditor } from "@/components/shared/avoir-editor";
+import { getAccessContext } from "@/lib/auth/can-edit";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AvoirDocumentPage({
@@ -9,13 +10,11 @@ export default async function AvoirDocumentPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims();
-  const userId = claimsData?.claims?.sub;
+  const { userId, isAdmin } = await getAccessContext();
   if (!userId) notFound();
 
   const [
     { data: document, error: documentError },
-    { data: profile, error: profileError },
     { data: engins, error: enginsError },
   ] = await Promise.all([
     supabase
@@ -25,7 +24,6 @@ export default async function AvoirDocumentPage({
       )
       .eq("id", id)
       .maybeSingle(),
-    supabase.from("profiles").select("role").eq("id", userId).maybeSingle(),
     supabase
       .from("engins")
       .select("id, name, category, unit, default_price")
@@ -35,7 +33,6 @@ export default async function AvoirDocumentPage({
   ]);
 
   if (documentError) throw new Error(documentError.message);
-  if (profileError) throw new Error(profileError.message);
   if (enginsError) throw new Error(enginsError.message);
   if (!document || document.type !== "avoir") notFound();
 
@@ -43,7 +40,7 @@ export default async function AvoirDocumentPage({
     <AvoirEditor
       engins={engins ?? []}
       initialDocument={document}
-      isAdmin={profile?.role === "admin"}
+      isAdmin={isAdmin}
     />
   );
 }

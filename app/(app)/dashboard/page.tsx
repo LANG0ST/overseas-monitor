@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ClipboardList, FilePlus2, FileText, Gauge } from "lucide-react";
-import { getAccessibleResources } from "@/lib/auth/can-edit";
+import { getAccessContext } from "@/lib/auth/can-edit";
 import type { Resource } from "@/lib/auth/resources";
 import { createClient } from "@/lib/supabase/server";
 
@@ -18,6 +18,12 @@ const documentInfo = {
   avoir: { label: "Avoir", path: "/avoirs" },
 } as const;
 
+type DashboardInvoiceTotals = {
+  monthly_ttc: number | string;
+  unpaid_total: number | string;
+  unpaid_count: number | string;
+};
+
 function formatAmount(amount: number) {
   return new Intl.NumberFormat("fr-MA", { style: "currency", currency: "MAD" }).format(amount);
 }
@@ -28,13 +34,7 @@ function formatUpdatedAt(value: string) {
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims();
-  const userId = claimsData?.claims?.sub;
-  const [{ data: profile }, allowedResources] = await Promise.all([
-    userId ? supabase.from("profiles").select("role").eq("id", userId).maybeSingle() : Promise.resolve({ data: null }),
-    getAccessibleResources(),
-  ]);
-  const isAdmin = profile?.role === "admin";
+  const { userId, isAdmin, allowedResources } = await getAccessContext();
   const visibleActions = actions.filter((action) => allowedResources.includes(action.resource as Resource));
   const allowedTypes: string[] = visibleActions.flatMap((action) => action.type ? [action.type] : []);
   if (allowedResources.includes("avoirs")) allowedTypes.push("avoir");
@@ -54,8 +54,8 @@ export default async function DashboardPage() {
     : null;
   if (pointagePromise && isAdmin) pointagePromise = pointagePromise.is("facture_id", null);
   const invoicesPromise = isAdmin
-    ? supabase.from("documents").select("ttc, paid").eq("type", "facture").eq("is_active", true).not("number", "is", null).gte("date", monthStart).lte("date", today.toISOString().slice(0, 10))
-    : Promise.resolve({ data: [] });
+    ? supabase.rpc("dashboard_invoice_totals", { p_from: monthStart, p_to: today.toISOString().slice(0, 10) }).maybeSingle()
+    : Promise.resolve({ data: null });
 
   const [recentResult, draftsResult, pointageResult, invoicesResult] = await Promise.all([
     recentPromise,
@@ -64,10 +64,10 @@ export default async function DashboardPage() {
     invoicesPromise,
   ]);
   const recent = recentResult.data ?? [];
-  const invoices = invoicesResult.data ?? [];
-  const monthlyTtc = invoices.reduce((sum, invoice) => sum + Number(invoice.ttc ?? 0), 0);
-  const unpaid = invoices.filter((invoice) => !invoice.paid);
-  const unpaidTotal = unpaid.reduce((sum, invoice) => sum + Number(invoice.ttc ?? 0), 0);
+  const invoiceTotals = invoicesResult.data as DashboardInvoiceTotals | null;
+  const monthlyTtc = Number(invoiceTotals?.monthly_ttc ?? 0);
+  const unpaidTotal = Number(invoiceTotals?.unpaid_total ?? 0);
+  const unpaidCount = Number(invoiceTotals?.unpaid_count ?? 0);
 
   const creatorIds = isAdmin ? [...new Set(recent.map((document) => document.created_by).filter(Boolean))] as string[] : [];
   const { data: creators } = creatorIds.length
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
       {isAdmin ? (
         <section aria-label="Statistiques utiles" className="grid gap-3 sm:grid-cols-3">
           <div className="glass-card rounded-2xl p-5"><p className="text-sm text-neutral-500">TTC facturé ce mois</p><p className="mt-2 text-2xl font-semibold text-neutral-900">{formatAmount(monthlyTtc)}</p></div>
-          <div className="glass-card rounded-2xl p-5"><p className="text-sm text-neutral-500">Impayé ce mois</p><p className="mt-2 text-2xl font-semibold text-neutral-900">{formatAmount(unpaidTotal)}</p><p className="mt-1 text-xs text-neutral-500">{unpaid.length} facture{unpaid.length === 1 ? "" : "s"}</p></div>
+          <div className="glass-card rounded-2xl p-5"><p className="text-sm text-neutral-500">Impayé ce mois</p><p className="mt-2 text-2xl font-semibold text-neutral-900">{formatAmount(unpaidTotal)}</p><p className="mt-1 text-xs text-neutral-500">{unpaidCount} facture{unpaidCount === 1 ? "" : "s"}</p></div>
           <div className="glass-card rounded-2xl p-5"><p className="text-sm text-neutral-500">Pointages à facturer</p><p className="mt-2 text-2xl font-semibold text-neutral-900">{pointageResult.count ?? 0}</p></div>
         </section>
       ) : (

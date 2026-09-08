@@ -33,7 +33,7 @@ export function LinePropertiesFields({
         />
       </label>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <label className="min-w-0 text-sm font-semibold text-neutral-900">
           Unité
           <select
@@ -60,19 +60,20 @@ export function LinePropertiesFields({
             value={line.qty}
           />
         </label>
-        <label className="min-w-0 text-sm font-semibold text-neutral-900">
-          P.U. HT
-          <input
-            className="mt-1 min-w-0 w-full rounded-xl border border-neutral-300 bg-white px-2 py-2 text-sm"
-            disabled={locked}
-            min="0"
-            onChange={(event) => onChange("unit_price", event.target.value)}
-            step="0.01"
-            type="number"
-            value={line.unit_price}
-          />
-        </label>
       </div>
+
+      <label className="block text-sm font-semibold text-neutral-900">
+        P.U. HT
+        <input
+          className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
+          disabled={locked}
+          min="0"
+          onChange={(event) => onChange("unit_price", event.target.value)}
+          step="0.01"
+          type="number"
+          value={line.unit_price}
+        />
+      </label>
 
       <fieldset>
         <legend className="text-sm font-semibold text-neutral-900">Période</legend>

@@ -4,27 +4,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOut } from "@/app/(auth)/login/actions";
 import { DesktopNavigation, MobileNavigation } from "@/components/shared/app-navigation";
-import { getAccessibleResources } from "@/lib/auth/can-edit";
-import { createClient } from "@/lib/supabase/server";
+import { getAccessContext } from "@/lib/auth/can-edit";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims();
-
-  if (!claimsData?.claims) {
+  const { userId, name, isAdmin, allowedResources, userMetadata } = await getAccessContext();
+  if (!userId) {
     redirect("/login");
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("name, role")
-    .eq("id", claimsData.claims.sub)
-    .maybeSingle();
-
-  const name = profile?.name || "Utilisateur";
-  const isAdmin = profile?.role === "admin";
-  const allowedResources = await getAccessibleResources();
-  const userMetadata = claimsData.claims.user_metadata as Record<string, unknown> | undefined;
   const avatarUrl = typeof userMetadata?.avatar_url === "string"
     ? userMetadata.avatar_url
     : typeof userMetadata?.picture === "string"

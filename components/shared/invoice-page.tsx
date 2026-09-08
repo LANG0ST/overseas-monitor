@@ -178,7 +178,7 @@ export function InvoicePage({
       {showTotals ? (
         <>
           <div
-            className="mt-3 grid grid-cols-[1fr_230px] items-start gap-7 shrink-0"
+            className="mt-3 grid grid-cols-[minmax(0,1fr)_300px] items-start gap-5 shrink-0"
             data-invoice-totals
           >
             <div className="relative">
@@ -202,7 +202,7 @@ export function InvoicePage({
                     <th className="py-1 text-left font-medium text-neutral-700">
                       Total HT
                     </th>
-                    <td className="py-1 text-right font-semibold text-neutral-900">
+                    <td className="whitespace-nowrap py-1 text-right font-semibold text-neutral-900">
                       {formatAmount(totals.ht)}
                     </td>
                   </tr>
@@ -211,7 +211,7 @@ export function InvoicePage({
                       <th className="py-1 text-left font-medium text-neutral-700">
                         TVA {rate}%
                       </th>
-                      <td className="py-1 text-right font-semibold text-neutral-900">
+                      <td className="whitespace-nowrap py-1 text-right font-semibold text-neutral-900">
                         {formatAmount(amount)}
                       </td>
                     </tr>
@@ -220,7 +220,7 @@ export function InvoicePage({
                     <th className="pt-2 text-left text-lg font-bold text-primary-900">
                       Total TTC
                     </th>
-                    <td className="pt-2 text-right text-lg font-bold text-primary-900">
+                    <td className="whitespace-nowrap pt-2 text-right text-lg font-bold text-primary-900">
                       {formatAmount(totals.ttc)}
                     </td>
                   </tr>

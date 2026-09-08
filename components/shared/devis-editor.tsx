@@ -16,7 +16,6 @@ import {
   ClipboardList,
   Clock3,
   DatabaseArrowDownIcon,
-  Download,
   FilePlus2,
   HardHat,
   Hash,
@@ -41,6 +40,7 @@ import {
 } from "@/components/shared/devis-page";
 import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { EnginSelectOptions } from "@/components/shared/engin-select-options";
+import { DocumentExportActions } from "@/components/shared/document-export-actions";
 import { LinePropertiesFields } from "@/components/shared/line-properties-fields";
 import { documentDraftSignature, useUnsavedDocument } from "@/components/shared/use-unsaved-document";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
@@ -461,7 +461,8 @@ export function DevisEditor({
             validity_days: document.validity_days ?? 30,
             period_start: document.period_start,
             period_end: document.period_end,
-            fuel_driver: document.devis_fuel_driver,
+            fuel: document.devis_fuel_driver,
+            driver: document.devis_driver,
             payment_conditions: document.devis_payment_conditions,
             bank_name: document.devis_bank_name,
             iban: document.devis_iban,
@@ -522,14 +523,12 @@ export function DevisEditor({
               Brouillon
             </span>
           )}
-          <button
-            className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
-            onClick={printInvoice}
-            type="button"
-          >
-            <Download className="mr-2 inline" size={16} />
-            Télécharger en PDF
-          </button>
+          <DocumentExportActions
+            documentId={document.id}
+            kind="devis"
+            onBrowserPrint={printInvoice}
+            pdfDisabled={dirty}
+          />
           {document.is_active && !locked && !document.number ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
@@ -904,23 +903,42 @@ export function DevisEditor({
                   />
                 </label>
               </div>
-              <label className="block text-sm font-semibold text-neutral-900">
-                Carburant et conducteur
-                <select
-                  className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
-                  disabled={locked}
-                  onChange={(event) =>
-                    setDocument((current) => ({
-                      ...current,
-                      devis_fuel_driver: event.target.value,
-                    }))
-                  }
-                  value={document.devis_fuel_driver}
-                >
-                  <option value="inclus">Inclus</option>
-                  <option value="non inclus">Non inclus</option>
-                </select>
-              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="block text-sm font-semibold text-neutral-900">
+                  Carburant
+                  <select
+                    className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
+                    disabled={locked}
+                    onChange={(event) =>
+                      setDocument((current) => ({
+                        ...current,
+                        devis_fuel_driver: event.target.value,
+                      }))
+                    }
+                    value={document.devis_fuel_driver}
+                  >
+                    <option value="inclus">Inclus</option>
+                    <option value="non inclus">Non inclus</option>
+                  </select>
+                </label>
+                <label className="block text-sm font-semibold text-neutral-900">
+                  Conducteur
+                  <select
+                    className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
+                    disabled={locked}
+                    onChange={(event) =>
+                      setDocument((current) => ({
+                        ...current,
+                        devis_driver: event.target.value,
+                      }))
+                    }
+                    value={document.devis_driver}
+                  >
+                    <option value="inclus">Inclus</option>
+                    <option value="non inclus">Non inclus</option>
+                  </select>
+                </label>
+              </div>
               <label className="block text-sm font-semibold text-neutral-900">
                 Conditions de règlement
                 <input

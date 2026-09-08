@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CreateAvoirButton } from "@/components/shared/create-avoir-button";
-import { canEdit } from "@/lib/auth/can-edit";
+import { getAccessContext } from "@/lib/auth/can-edit";
 import type { DocumentType } from "@/lib/db/documents";
 import { createClient } from "@/lib/supabase/server";
 
@@ -12,7 +12,10 @@ export type DocumentListFilters = {
   search?: string;
   paid?: string;
   drafts?: string;
+  page?: string;
 };
+
+const PAGE_SIZE = 25;
 
 type DocumentListProps = {
   type: DocumentType;
@@ -77,18 +80,9 @@ export async function DocumentList({
   filters,
 }: DocumentListProps) {
   const showInactive = filters.inactive === "1";
-  const canAccessAvoirs = type === "facture" ? await canEdit("avoirs") : false;
+  const { userId, isAdmin, allowedResources } = await getAccessContext();
+  const canAccessAvoirs = type === "facture" && allowedResources.includes("avoirs");
   const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims();
-  const userId = claimsData?.claims?.sub;
-  const { data: profile } = userId
-    ? await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", userId)
-        .maybeSingle()
-    : { data: null };
-  const isAdmin = profile?.role === "admin";
   const draftScope =
     type === "facture" && filters.drafts === "mine"
       ? "mine"
@@ -96,10 +90,18 @@ export async function DocumentList({
         ? "all"
         : null;
 
+  const from = filters.from && /^\d{4}-\d{2}-\d{2}$/.test(filters.from) ? filters.from : "";
+  const to = filters.to && /^\d{4}-\d{2}-\d{2}$/.test(filters.to) ? filters.to : "";
+  const search = filters.search?.replace(/[^\p{L}\p{N}\s\-_/]/gu, " ").trim() ?? "";
+  const client = filters.client?.trim() ?? "";
+  const requestedPage = Number.parseInt(filters.page ?? "1", 10);
+  const page = Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+
   let query = supabase
     .from("documents")
     .select(
       "id, number, date, client_name, ttc, paid, is_locked, has_cachet, reference_facture_number, created_by, updated_at",
+      { count: "exact" },
     )
     .eq("type", type)
     .eq("is_active", !showInactive);
@@ -111,36 +113,23 @@ export async function DocumentList({
     if (draftScope === "mine" && userId) query = query.eq("created_by", userId);
   }
 
-  const { data, error } = await query.order("date", { ascending: false });
+  if (from) query = query.gte("date", from);
+  if (to) query = query.lte("date", to);
+  if (client) query = query.ilike("client_name", `%${client}%`);
+  if (search) query = query.or(`number.ilike.%${search}%,client_name.ilike.%${search}%`);
+  if (type === "facture" && draftScope === null && filters.paid && filters.paid !== "all") {
+    query = query.eq("paid", filters.paid === "paid");
+  }
+
+  const rangeStart = (page - 1) * PAGE_SIZE;
+  const { data, error, count } = await query
+    .order("date", { ascending: false })
+    .range(rangeStart, rangeStart + PAGE_SIZE - 1);
 
   if (error) throw new Error(error.message);
-  const search = filters.search?.trim().toLocaleLowerCase("fr") ?? "";
-  const client = filters.client?.trim().toLocaleLowerCase("fr") ?? "";
-  const from =
-    filters.from && /^\d{4}-\d{2}-\d{2}$/.test(filters.from)
-      ? filters.from
-      : "";
-  const to =
-    filters.to && /^\d{4}-\d{2}-\d{2}$/.test(filters.to) ? filters.to : "";
-  const documents = ((data ?? []) as ListDocument[]).filter((document) => {
-    const number = document.number?.toLocaleLowerCase("fr") ?? "";
-    const name = document.client_name.toLocaleLowerCase("fr");
-    if (from && document.date < from) return false;
-    if (to && document.date > to) return false;
-    if (client && !name.includes(client)) return false;
-    if (search && !number.includes(search) && !name.includes(search))
-      return false;
-    if (
-      type === "facture" &&
-      draftScope === null &&
-      filters.paid &&
-      filters.paid !== "all"
-    ) {
-      if (filters.paid === "paid" && !document.paid) return false;
-      if (filters.paid === "unpaid" && document.paid) return false;
-    }
-    return true;
-  });
+  const documents = (data ?? []) as ListDocument[];
+  const total = count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const creatorIds = isAdmin
     ? [...new Set(documents.map((document) => document.created_by).filter(Boolean))] as string[]
     : [];
@@ -163,6 +152,7 @@ export async function DocumentList({
             className="inline-flex min-h-11 items-center rounded-full border border-neutral-300 bg-white px-4 text-sm font-medium text-ink-900 shadow-sm"
             href={hrefWithFilters(path, filters, {
               inactive: showInactive ? undefined : "1",
+              page: undefined,
             })}
           >
             {showInactive ? "Voir les actifs" : "Voir les inactifs"}
@@ -183,6 +173,7 @@ export async function DocumentList({
             href={hrefWithFilters(path, filters, {
               drafts: undefined,
               paid: filters.paid,
+              page: undefined,
             })}
           >
             Factures
@@ -192,6 +183,7 @@ export async function DocumentList({
             href={hrefWithFilters(path, filters, {
               drafts: "mine",
               paid: undefined,
+              page: undefined,
             })}
           >
             Mes brouillons
@@ -202,6 +194,7 @@ export async function DocumentList({
               href={hrefWithFilters(path, filters, {
                 drafts: "all",
                 paid: undefined,
+                page: undefined,
               })}
             >
               Tous les brouillons
@@ -437,9 +430,24 @@ export async function DocumentList({
           Aucun document ne correspond à ces critères.
         </p>
       ) : null}
-      <p className="text-sm text-neutral-700">
-        {documents.length} document{documents.length === 1 ? "" : "s"}
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-neutral-700">
+        <p>{total} document{total === 1 ? "" : "s"}</p>
+        {totalPages > 1 ? (
+          <nav aria-label="Pagination des documents" className="flex items-center gap-2">
+            {page > 1 ? (
+              <Link className="rounded-full border border-neutral-300 bg-white px-4 py-2 font-semibold text-ink-900" href={hrefWithFilters(path, filters, { page: String(page - 1) })}>
+                Précédent
+              </Link>
+            ) : null}
+            <span>Page {Math.min(page, totalPages)} sur {totalPages}</span>
+            {page < totalPages ? (
+              <Link className="rounded-full border border-neutral-300 bg-white px-4 py-2 font-semibold text-ink-900" href={hrefWithFilters(path, filters, { page: String(page + 1) })}>
+                Suivant
+              </Link>
+            ) : null}
+          </nav>
+        ) : null}
+      </div>
     </div>
   );
 }

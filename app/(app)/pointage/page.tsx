@@ -1,5 +1,5 @@
 import { PointageDashboard, type PointageDashboardRow } from "@/components/shared/pointage-dashboard";
-import { canEdit } from "@/lib/auth/can-edit";
+import { getAccessContext } from "@/lib/auth/can-edit";
 import { roundMoney } from "@/lib/db/document-calculations";
 import { entryTotals, isValidMonth, type DayValues } from "@/lib/pointage";
 import { createClient } from "@/lib/supabase/server";
@@ -38,11 +38,11 @@ export default async function PointagePage({
   const params = await searchParams;
   const ym = isValidMonth(params.ym ?? "") ? String(params.ym) : currentMonth();
   const supabase = await createClient();
+  const accessPromise = getAccessContext();
   const [
     { data: sheets, error: sheetsError },
     { data: settings, error: settingsError },
-    editable,
-    canCreateFacture,
+    access,
   ] = await Promise.all([
     supabase
       .from("pointage_sheets")
@@ -51,51 +51,56 @@ export default async function PointagePage({
       .eq("is_active", true)
       .order("client_name"),
     supabase.from("settings").select("ot_reference_hours").eq("id", 1).maybeSingle(),
-    canEdit("pointage"),
-    canEdit("factures"),
+    accessPromise,
   ]);
   if (sheetsError) throw new Error(sheetsError.message);
   if (settingsError) throw new Error(settingsError.message);
 
   const sheetRows = (sheets ?? []) as SheetRow[];
   const sheetIds = sheetRows.map((sheet) => sheet.id);
-  let entries: EntryRow[] = [];
   const factureIds = sheetRows.map((sheet) => sheet.facture_id).filter(Boolean) as string[];
-  const { data: factures, error: facturesError } = factureIds.length
-    ? await supabase.from("documents").select("id, number, is_locked, is_active").in("id", factureIds)
-    : { data: [], error: null };
+  const [
+    { data: factures, error: facturesError },
+    { data: entryData, error: entriesError },
+  ] = await Promise.all([
+    factureIds.length
+      ? supabase.from("documents").select("id, number, is_locked, is_active").in("id", factureIds)
+      : Promise.resolve({ data: [], error: null }),
+    sheetIds.length
+      ? supabase.from("pointage_entries").select("sheet_id, unit_price, days, overtime_hours").in("sheet_id", sheetIds).eq("is_active", true)
+      : Promise.resolve({ data: [], error: null }),
+  ]);
   if (facturesError) throw new Error(facturesError.message);
+  if (entriesError) throw new Error(entriesError.message);
   const facturesById = new Map((factures ?? []).map((facture) => [facture.id, facture]));
-  if (sheetIds.length > 0) {
-    const { data, error } = await supabase
-      .from("pointage_entries")
-      .select("sheet_id, unit_price, days, overtime_hours")
-      .in("sheet_id", sheetIds)
-      .eq("is_active", true);
-    if (error) throw new Error(error.message);
-    entries = (data ?? []) as EntryRow[];
-  }
 
   const otReferenceHours = Number(settings?.ot_reference_hours ?? 9);
+  const totalsBySheet = new Map<string, { days: number; overtimeHours: number; totalHt: number }>();
+  for (const entry of (entryData ?? []) as EntryRow[]) {
+    const total = entryTotals({
+      days: entry.days ?? {},
+      overtime_hours: entry.overtime_hours ?? {},
+      unit_price: Number(entry.unit_price),
+    }, otReferenceHours);
+    const accumulated = totalsBySheet.get(entry.sheet_id) ?? { days: 0, overtimeHours: 0, totalHt: 0 };
+    accumulated.days += total.days;
+    accumulated.overtimeHours += total.overtimeHours;
+    accumulated.totalHt += total.totalHt;
+    totalsBySheet.set(entry.sheet_id, accumulated);
+  }
   const rows: PointageDashboardRow[] = sheetRows.map((sheet) => {
-    const totals = entries
-      .filter((entry) => entry.sheet_id === sheet.id)
-      .map((entry) => entryTotals({
-        days: entry.days ?? {},
-        overtime_hours: entry.overtime_hours ?? {},
-        unit_price: Number(entry.unit_price),
-      }, otReferenceHours));
+    const totals = totalsBySheet.get(sheet.id) ?? { days: 0, overtimeHours: 0, totalHt: 0 };
     return {
       id: sheet.id,
       clientName: sheet.client_name,
       project: sheet.project,
-      totalDays: totals.reduce((total, entry) => total + entry.days, 0),
-      overtimeHours: totals.reduce((total, entry) => total + entry.overtimeHours, 0),
-      estimatedHt: roundMoney(totals.reduce((total, entry) => total + entry.totalHt, 0)),
+      totalDays: totals.days,
+      overtimeHours: totals.overtimeHours,
+      estimatedHt: roundMoney(totals.totalHt),
       updatedAt: sheet.updated_at,
       facture: sheet.facture_id ? (facturesById.get(sheet.facture_id) ?? { id: sheet.facture_id, number: null, is_locked: false, is_active: true }) : null,
     };
   });
 
-  return <PointageDashboard canCreateFacture={editable && canCreateFacture} rows={rows} ym={ym} />;
+  return <PointageDashboard canCreateFacture={access.allowedResources.includes("pointage") && access.allowedResources.includes("factures")} rows={rows} ym={ym} />;
 }

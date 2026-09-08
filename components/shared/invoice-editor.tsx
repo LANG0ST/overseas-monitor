@@ -14,7 +14,6 @@ import {
   CalendarDays,
   Clock3,
   DatabaseArrowDownIcon,
-  Download,
   FilePlus2,
   HardHat,
   Hash,
@@ -39,6 +38,7 @@ import {
 } from "@/components/shared/invoice-page";
 import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { EnginSelectOptions } from "@/components/shared/engin-select-options";
+import { DocumentExportActions } from "@/components/shared/document-export-actions";
 import { LinePropertiesFields } from "@/components/shared/line-properties-fields";
 import { documentDraftSignature, useUnsavedDocument } from "@/components/shared/use-unsaved-document";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
@@ -526,14 +526,12 @@ export function InvoiceEditor({
               Brouillon
             </span>
           )}
-          <button
-            className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
-            onClick={printInvoice}
-            type="button"
-          >
-            <Download className="mr-2 inline" size={16} />
-            Télécharger en PDF
-          </button>
+          <DocumentExportActions
+            documentId={document.id}
+            kind="facture"
+            onBrowserPrint={printInvoice}
+            pdfDisabled={dirty}
+          />
           {document.is_active && !locked && !document.number ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
@@ -749,10 +747,12 @@ export function InvoiceEditor({
                 <strong className="text-neutral-900">ICE :</strong>{" "}
                 {document.client_ice || "Non renseigné"}
               </p>
-              <p>
-                <strong className="text-neutral-900">Adresse :</strong>{" "}
-                {document.client_address || "Non renseignée"}
-              </p>
+              {document.client_address ? (
+                <p>
+                  <strong className="text-neutral-900">Adresse :</strong>{" "}
+                  {document.client_address}
+                </p>
+              ) : null}
               <p className="rounded-xl bg-primary-50 p-3 text-xs">
                 Ces informations sont un instantané pris à la création de la
                 facture.

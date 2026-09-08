@@ -16,7 +16,6 @@ import {
   ClipboardList,
   Clock3,
   DatabaseArrowDownIcon,
-  Download,
   FilePlus2,
   HardHat,
   Hash,
@@ -41,6 +40,7 @@ import {
 } from "@/components/shared/avoir-page";
 import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { EnginSelectOptions } from "@/components/shared/engin-select-options";
+import { DocumentExportActions } from "@/components/shared/document-export-actions";
 import { LinePropertiesFields } from "@/components/shared/line-properties-fields";
 import { documentDraftSignature, useUnsavedDocument } from "@/components/shared/use-unsaved-document";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
@@ -511,14 +511,12 @@ export function AvoirEditor({
               Brouillon
             </span>
           )}
-          <button
-            className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
-            onClick={printInvoice}
-            type="button"
-          >
-            <Download className="mr-2 inline" size={16} />
-            Télécharger en PDF
-          </button>
+          <DocumentExportActions
+            documentId={document.id}
+            kind="avoir"
+            onBrowserPrint={printInvoice}
+            pdfDisabled={dirty}
+          />
           {document.is_active && !locked && !document.number ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
