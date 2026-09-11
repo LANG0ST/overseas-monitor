@@ -33,6 +33,30 @@ export type DocumentRow = {
   source_pointage_sheet_id?: string | null;
 };
 
+export type DocumentSnapshotData = Pick<
+  DocumentRow,
+  | "number"
+  | "date"
+  | "city"
+  | "has_cachet"
+  | "client_name"
+  | "client_ice"
+  | "client_address"
+  | "line_items"
+  | "tva_rate"
+  | "ht"
+  | "tva"
+  | "ttc"
+> & Record<string, unknown>;
+
+export type DocumentSnapshot = {
+  id: string;
+  document_id: string;
+  snapshot: DocumentSnapshotData;
+  reason: "save" | "restore";
+  created_at: string;
+};
+
 type ServerClient = Awaited<ReturnType<typeof createClient>>;
 type SupabaseError = { code?: string; message: string };
 
@@ -345,6 +369,121 @@ export async function updateLineItems(documentId: string, lineItems: readonly Li
   const concurrent = await getDocument(supabase, documentId);
   if (concurrent.is_locked) throw new DocumentError("LOCKED", "Les lignes d’un document verrouillé ne sont pas modifiables.");
   throw new DocumentError("CONCURRENT_UPDATE", "Le document a été modifié dans un autre onglet. Rechargez-le et réessayez.");
+}
+
+export async function createDocumentSnapshot(
+  documentId: string,
+  reason: DocumentSnapshot["reason"] = "save",
+) {
+  requireId(documentId);
+  const supabase = await createClient();
+  const { userId } = await requireUser(supabase);
+  const document = await getDocument(supabase, documentId);
+  requireActive(document);
+  await requireDocumentEdit(supabase, document.type);
+  if (document.is_locked) {
+    throw new DocumentError("LOCKED", "Les snapshots sont inaccessibles après verrouillage.");
+  }
+  const { data: snapshotDocument, error: documentError } = await supabase
+    .from("documents")
+    .select("*")
+    .eq("id", documentId)
+    .single();
+  if (documentError) failDatabase(documentError);
+
+  const { data, error } = await supabase
+    .from("document_snapshots")
+    .insert({
+      document_id: documentId,
+      snapshot: snapshotDocument,
+      reason,
+      created_by: userId,
+    })
+    .select("id, document_id, snapshot, reason, created_at")
+    .single();
+  if (error) failDatabase(error);
+  return data as DocumentSnapshot;
+}
+
+export async function listDocumentSnapshots(documentId: string) {
+  requireId(documentId);
+  const supabase = await createClient();
+  await requireUser(supabase);
+  const document = await getDocument(supabase, documentId);
+  requireActive(document);
+  await requireDocumentEdit(supabase, document.type);
+  if (document.is_locked) {
+    throw new DocumentError("LOCKED", "Les snapshots sont inaccessibles après verrouillage.");
+  }
+
+  const { data, error } = await supabase
+    .from("document_snapshots")
+    .select("id, document_id, snapshot, reason, created_at")
+    .eq("document_id", documentId)
+    .order("created_at", { ascending: false });
+  if (error) failDatabase(error);
+  return (data ?? []) as DocumentSnapshot[];
+}
+
+export async function restoreDocumentSnapshot(documentId: string, snapshotId: string) {
+  requireId(documentId);
+  requireId(snapshotId);
+  const supabase = await createClient();
+  await requireUser(supabase);
+  const document = await getDocument(supabase, documentId);
+  requireActive(document);
+  await requireDocumentEdit(supabase, document.type);
+  if (document.is_locked) {
+    throw new DocumentError("LOCKED", "Déverrouillez le document avant de restaurer un snapshot.");
+  }
+
+  const { data: row, error: snapshotError } = await supabase
+    .from("document_snapshots")
+    .select("snapshot")
+    .eq("id", snapshotId)
+    .eq("document_id", documentId)
+    .maybeSingle();
+  if (snapshotError) failDatabase(snapshotError);
+  if (!row) throw new DocumentError("NOT_FOUND", "Snapshot introuvable.");
+
+  const snapshot = row.snapshot as unknown as DocumentSnapshotData;
+  if (!snapshot || snapshot.type !== document.type || !Array.isArray(snapshot.line_items)) {
+    throw new DocumentError("INVALID_INPUT", "Ce snapshot est invalide.");
+  }
+  const rate = Number(snapshot.tva_rate);
+  const totals = calculateTotals(snapshot.line_items, rate);
+  const update: Record<string, unknown> = {
+    date: snapshot.date,
+    city: snapshot.city,
+    has_cachet: Boolean(snapshot.has_cachet),
+    client_name: snapshot.client_name,
+    client_ice: snapshot.client_ice,
+    client_address: snapshot.client_address,
+    line_items: snapshot.line_items,
+    tva_rate: rate,
+    ...totals,
+  };
+  const detailFields: Record<DocumentType, string[]> = {
+    facture: [],
+    devis: ["validity_days", "chantier", "period_start", "period_end", "devis_fuel_driver", "devis_driver", "devis_payment_conditions", "devis_bank_name", "devis_iban"],
+    bon_commande: ["validity_days", "chantier", "period_start", "period_end", "devis_payment_conditions", "devis_bank_name", "devis_iban"],
+    avoir: ["motif", "reference_facture_number", "avoir_payment_method", "avoir_payment_reference"],
+  };
+  for (const field of detailFields[document.type]) update[field] = snapshot[field] ?? null;
+  const { data: restored, error } = await supabase
+    .from("documents")
+    .update(update)
+    .eq("id", documentId)
+    .eq("type", document.type)
+    .eq("is_locked", false)
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")
+    .maybeSingle();
+  if (error) failDatabase(error);
+  if (!restored) {
+    throw new DocumentError("CONCURRENT_UPDATE", "La facture a été verrouillée ou modifiée dans un autre onglet.");
+  }
+  await createDocumentSnapshot(documentId, "restore");
+  return restored as DocumentRow;
 }
 
 async function setDocumentActive(documentId: string, isActive: boolean) {

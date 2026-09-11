@@ -3,20 +3,27 @@
 import {
   assignNumber,
   assignNumberManually,
+  createDocumentSnapshot,
   createDraftDocument,
   DocumentError,
   lockDocument,
   softDelete,
   restore,
+  restoreDocumentSnapshot,
+  listDocumentSnapshots,
   updateLineItems,
   unlockDocument,
   type DocumentRow,
+  type DocumentSnapshot,
   type LineItem,
 } from "@/lib/db/documents";
 import { createClient } from "@/lib/supabase/server";
 
 type ActionResult =
   | { ok: true; document: BonCommandeDocument }
+  | { ok: false; error: string };
+export type BonCommandeSnapshotsResult =
+  | { ok: true; snapshots: DocumentSnapshot[] }
   | { ok: false; error: string };
 
 export type BonCommandeDocument = DocumentRow & {
@@ -40,7 +47,7 @@ async function getBonCommande(id: string) {
   return data as BonCommandeDocument;
 }
 
-function result(error: unknown): ActionResult {
+function result(error: unknown): { ok: false; error: string } {
   if (error instanceof DocumentError) return { ok: false, error: error.message };
   return { ok: false, error: "Une erreur inattendue est survenue. Réessayez." };
 }
@@ -128,9 +135,20 @@ export async function saveBonCommandeAction(
     }
     const { error } = await supabase.from("documents").update(update).eq("id", documentId).eq("is_locked", false);
     if (error) throw error;
+    await createDocumentSnapshot(documentId);
     if (shouldLock) await lockDocument(documentId);
     return { ok: true, document: await getBonCommande(documentId) };
   } catch (error) { return result(error); }
+}
+
+export async function listBonCommandeSnapshotsAction(documentId: string): Promise<BonCommandeSnapshotsResult> {
+  try { return { ok: true, snapshots: await listDocumentSnapshots(documentId) }; }
+  catch (error) { return result(error); }
+}
+
+export async function restoreBonCommandeSnapshotAction(documentId: string, snapshotId: string): Promise<ActionResult> {
+  try { await restoreDocumentSnapshot(documentId, snapshotId); return { ok: true, document: await getBonCommande(documentId) }; }
+  catch (error) { return result(error); }
 }
 
 export async function deleteBonCommandeAction(documentId: string): Promise<ActionResult> {

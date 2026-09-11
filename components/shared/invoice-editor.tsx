@@ -17,7 +17,10 @@ import {
   FilePlus2,
   HardHat,
   Hash,
+  History,
+  Lock,
   Ship,
+  Stamp,
   LockOpen,
   Trash2,
   Truck,
@@ -32,6 +35,8 @@ import {
   restoreInvoiceAction,
   saveInvoiceAction,
   setInvoicePaidAction,
+  listInvoiceSnapshotsAction,
+  restoreInvoiceSnapshotAction,
   unlockInvoiceAction,
 } from "@/app/(app)/factures/actions";
 import {
@@ -41,6 +46,7 @@ import {
 import { useConfirmDialog } from "@/components/shared/use-confirm-dialog";
 import { EnginSelectOptions } from "@/components/shared/engin-select-options";
 import { DocumentExportActions } from "@/components/shared/document-export-actions";
+import { DocumentSnapshotsPanel, formatSnapshotDate } from "@/components/shared/document-snapshots-panel";
 import { LinePropertiesFields } from "@/components/shared/line-properties-fields";
 import { documentDraftSignature, useUnsavedDocument } from "@/components/shared/use-unsaved-document";
 import { amountInFrenchWords } from "@/lib/format/amount-in-words";
@@ -50,6 +56,7 @@ import {
   roundMoney,
   type LineItem,
 } from "@/lib/db/document-calculations";
+import type { DocumentSnapshot } from "@/lib/db/documents";
 
 type Invoice = {
   id: string;
@@ -83,6 +90,8 @@ type Tool =
   | "date"
   | "totals"
   | "payment"
+  | "cachet"
+  | "snapshots"
   | "delete";
 type ActionResult =
   | { ok: true; document: Invoice }
@@ -100,7 +109,20 @@ const tools: { id: Tool; label: string; Icon: typeof FilePlus2 }[] = [
   { id: "client", label: "Infos client", Icon: UserRound },
   { id: "date", label: "Date et lieu", Icon: CalendarDays },
   { id: "payment", label: "Règlement", Icon: WalletCards },
+  { id: "cachet", label: "Ajouter le cachet", Icon: Stamp },
+  { id: "snapshots", label: "SNAPSHOTS", Icon: History },
   { id: "delete", label: "Supprimer", Icon: Trash2 },
+];
+const toolGroups: { label: string; tools: Tool[] }[] = [
+  {
+    label: "Prestations",
+    tools: ["line", "engin", "overtime", "mobilisation", "customs"],
+  },
+  {
+    label: "Document",
+    tools: ["client", "date", "cachet", "snapshots"],
+  },
+  { label: "Suivi", tools: ["payment", "delete"] },
 ];
 
 function formatAmount(value: number) {
@@ -214,8 +236,11 @@ export function InvoiceEditor({
   const [selectedLine, setSelectedLine] = useState(0);
   const [selectedEngin, setSelectedEngin] = useState("");
   const [manualNumber, setManualNumber] = useState("");
+  const [snapshots, setSnapshots] = useState<DocumentSnapshot[]>([]);
+  const [previewSnapshotId, setPreviewSnapshotId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [snapshotsPending, startSnapshotsTransition] = useTransition();
   const [savedSignature, setSavedSignature] = useState(() => documentDraftSignature(initialDocument as unknown as Record<string, unknown>, initialDocument.line_items ?? [], normalizeTvaRate(Number(initialDocument.tva_rate)), initialDocument.city || "Casablanca", Boolean(initialDocument.has_cachet)));
   const { confirm, confirmationDialog } = useConfirmDialog();
   const [pages, setPages] = useState<LineItem[][]>(() => [
@@ -233,27 +258,32 @@ export function InvoiceEditor({
     () => calculateTotals(lineItems, tvaRate),
     [lineItems, tvaRate],
   );
-  const tvaBreakdown = useMemo(
-    () =>
-      [0, 10, 20].flatMap((rate) => {
-        const matchingLines = lineItems.filter(
-          (line) => Number(line.tva_rate ?? tvaRate) === rate,
-        );
-        const amount = roundMoney(
-          matchingLines.reduce(
-            (sum, line) =>
-              sum + roundMoney((line.qty * line.unit_price * rate) / 100),
-            0,
-          ),
-        );
-        return matchingLines.length > 0 ? [{ rate, amount }] : [];
-      }),
-    [lineItems, tvaRate],
-  );
-  const amountWords = useMemo(
-    () => amountInFrenchWords(totals.ttc),
-    [totals.ttc],
-  );
+  const previewSnapshot = snapshots.find((item) => item.id === previewSnapshotId) ?? null;
+  const viewerDocument = previewSnapshot
+    ? ({ ...document, ...previewSnapshot.snapshot } as Invoice)
+    : document;
+  const viewerLineItems = previewSnapshot?.snapshot.line_items ?? lineItems;
+  const viewerTvaRate = previewSnapshot
+    ? normalizeTvaRate(Number(previewSnapshot.snapshot.tva_rate))
+    : tvaRate;
+  const viewerHasCachet = previewSnapshot
+    ? Boolean(previewSnapshot.snapshot.has_cachet)
+    : hasCachet;
+  const viewerTotals = calculateTotals(viewerLineItems, viewerTvaRate);
+  const viewerTvaBreakdown = [0, 10, 20].flatMap((rate) => {
+    const matchingLines = viewerLineItems.filter(
+      (line) => Number(line.tva_rate ?? viewerTvaRate) === rate,
+    );
+    const amount = roundMoney(
+      matchingLines.reduce(
+        (sum, line) =>
+          sum + roundMoney((line.qty * line.unit_price * rate) / 100),
+        0,
+      ),
+    );
+    return matchingLines.length > 0 ? [{ rate, amount }] : [];
+  });
+  const viewerAmountWords = amountInFrenchWords(viewerTotals.ttc);
 
   useLayoutEffect(() => {
     const viewer = viewerRef.current;
@@ -290,13 +320,13 @@ export function InvoiceEditor({
         middle: measureCapacity(container, "middle"),
         last: measureCapacity(container, "last"),
       };
-      if (lineItems.length === 0) setPages([[]]);
+      if (viewerLineItems.length === 0) setPages([[]]);
       else if (
-        rowHeights.length === lineItems.length &&
+        rowHeights.length === viewerLineItems.length &&
         Object.values(capacities).every((capacity) => capacity > 0)
       )
-        setPages(splitMeasuredPages(lineItems, rowHeights, capacities));
-      else setPages([lineItems]);
+        setPages(splitMeasuredPages(viewerLineItems, rowHeights, capacities));
+      else setPages([viewerLineItems]);
     };
     const scheduleMeasurement = () => {
       if (cancelled) return;
@@ -311,13 +341,13 @@ export function InvoiceEditor({
       window.cancelAnimationFrame(secondFrame);
     };
   }, [
-    amountWords,
-    document.client_address,
-    document.client_ice,
-    document.client_name,
-    lineItems,
-    totals.ttc,
-    tvaRate,
+    viewerAmountWords,
+    viewerDocument.client_address,
+    viewerDocument.client_ice,
+    viewerDocument.client_name,
+    viewerLineItems,
+    viewerTotals.ttc,
+    viewerTvaRate,
   ]);
 
   useLayoutEffect(() => {
@@ -466,21 +496,68 @@ export function InvoiceEditor({
     });
   }
 
+  function persistInvoice(shouldLock: boolean) {
+    return saveInvoiceAction(
+      document.id,
+      lineItems,
+      tvaRate,
+      shouldLock,
+      document.date,
+      city,
+      hasCachet,
+    );
+  }
+
+  async function refreshSnapshots() {
+    const result = await listInvoiceSnapshotsAction(document.id);
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+    setSnapshots(result.snapshots);
+    setError(null);
+  }
+
   async function save() {
     if (locked) return;
-    if (!(await confirm({ title: document.number ? "Enregistrer et verrouiller ?" : "Enregistrer le brouillon ?", description: document.number ? "La facture ne sera plus modifiable après son verrouillage." : "Les modifications de cette facture seront enregistrées en brouillon.", confirmLabel: "Enregistrer" }))) return;
+    if (!(await confirm({ title: "Enregistrer la facture ?", description: "Les modifications seront enregistrées et un nouveau snapshot sera créé.", confirmLabel: "Enregistrer" }))) return;
     startTransition(async () => {
-      applyResult(
-        await saveInvoiceAction(
-          document.id,
-          lineItems,
-          tvaRate,
-          Boolean(document.number),
-          document.date,
-          city,
-          hasCachet,
-        ),
-      );
+      if (applyResult(await persistInvoice(false)) && selectedTool === "snapshots") {
+        await refreshSnapshots();
+      }
+    });
+  }
+
+  async function lockInvoice() {
+    if (locked || !document.number) return;
+    if (!(await confirm({
+      title: "Verrouiller définitivement cette facture ?",
+      description: "La version actuelle sera enregistrée, ajoutée aux snapshots puis rendue non modifiable.",
+      confirmLabel: "Verrouiller",
+    }))) return;
+    startTransition(async () => {
+      if (applyResult(await persistInvoice(true))) {
+        setPreviewSnapshotId(null);
+        setSelectedTool("payment");
+      }
+    });
+  }
+
+  async function restoreSnapshot(snapshot: DocumentSnapshot) {
+    if (locked) return;
+    if (!(await confirm({
+      title: "Restaurer cette version ?",
+      description: dirty
+        ? "Vos modifications actuelles non enregistrées seront remplacées par ce snapshot."
+        : "Le contenu actuel de la facture sera remplacé par ce snapshot.",
+      confirmLabel: "Restaurer",
+      destructive: true,
+    }))) return;
+    startTransition(async () => {
+      if (applyResult(await restoreInvoiceSnapshotAction(document.id, snapshot.id))) {
+        setPreviewSnapshotId(null);
+        await refreshSnapshots();
+      }
     });
   }
 
@@ -506,10 +583,23 @@ export function InvoiceEditor({
   }
 
   function selectTool(id: Tool) {
+    if (id !== "snapshots") setPreviewSnapshotId(null);
     if (id === "line" || id === "overtime" || id === "mobilisation" || id === "customs")
       return addLine(id);
+    if (id === "cachet") return setHasCachet((current) => !current);
     if (id === "delete") return deleteDocument();
     setSelectedTool(id);
+    if (id === "snapshots") {
+      setPreviewSnapshotId(null);
+      startSnapshotsTransition(refreshSnapshots);
+    }
+  }
+
+  function isToolDisabled(id: Tool) {
+    return (
+      (!document.is_active && id !== "delete") ||
+      (locked && id !== "payment" && id !== "delete")
+    );
   }
 
   const selected = lineItems[selectedLine];
@@ -519,7 +609,14 @@ export function InvoiceEditor({
       : UNIT_OPTIONS;
 
   return (
-    <div className="invoice-editor space-y-5">
+    <div
+      className="invoice-editor space-y-5"
+      onPointerDownCapture={(event) => {
+        if (previewSnapshot && !(event.target as Element).closest("[data-snapshot-panel]")) {
+          setPreviewSnapshotId(null);
+        }
+      }}
+    >
       {confirmationDialog}
       <header className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <div>
@@ -548,7 +645,8 @@ export function InvoiceEditor({
             documentId={document.id}
             kind="facture"
             onBrowserPrint={printInvoice}
-            pdfDisabled={dirty}
+            pdfDisabled={dirty || Boolean(previewSnapshot)}
+            pdfDisabledTitle={previewSnapshot ? "Revenez à la version actuelle avant de télécharger le PDF" : undefined}
           />
           {document.is_active && !locked && !document.number && !document.manual_number_only ? (
             <button
@@ -585,26 +683,24 @@ export function InvoiceEditor({
           ) : null}
           {document.is_active && !locked ? (
             <button
-              className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${hasCachet ? "border-primary-700 bg-primary-100 text-primary-900" : "border-neutral-300 bg-white text-ink-900"}`}
-              onClick={() => setHasCachet((current) => !current)}
-              type="button"
-            >
-              {hasCachet ? "Retirer le cachet" : "Ajouter le cachet"}
-            </button>
-          ) : null}
-          {document.is_active && !locked ? (
-            <button
               className="rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-sm"
               disabled={pending}
               onClick={save}
               type="button"
             >
               <DatabaseArrowDownIcon className="mr-2 inline" size={16} />
-              {pending
-                ? "Enregistrement…"
-                : document.number
-                  ? "Enregistrer et verrouiller"
-                  : "Enregistrer"}
+              {pending ? "Enregistrement…" : "Enregistrer"}
+            </button>
+          ) : null}
+          {document.is_active && !locked && document.number ? (
+            <button
+              className="rounded-full border border-[#0063B8] bg-[#0063B8] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:border-[#00549c] hover:bg-[#00549c] disabled:opacity-50"
+              disabled={pending}
+              onClick={lockInvoice}
+              type="button"
+            >
+              <Lock className="mr-2 inline" size={16} />
+              Verrouiller
             </button>
           ) : null}
         </div>
@@ -616,25 +712,35 @@ export function InvoiceEditor({
         </p>
       ) : null}
 
-      <div className="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)_300px]">
+      <div className="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)_340px]">
         <aside className="hidden space-y-3 print:hidden xl:block">
-          <p className="px-1 text-xs font-bold uppercase tracking-wide text-neutral-700">
-            Outils facture
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            {tools.map(({ id, label, Icon }) => (
-              <button
-                className={`flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-2xl border p-2 text-center text-xs font-semibold transition-colors ${selectedTool === id ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900 hover:bg-primary-50"}`}
-                disabled={(!document.is_active && id !== "delete") || (locked && id !== "payment" && id !== "delete")}
-                key={id}
-                onClick={() => selectTool(id)}
-                type="button"
-              >
-                <Icon size={20} strokeWidth={1.8} />
-                <span>{label}</span>
-              </button>
-            ))}
-          </div>
+          {toolGroups.map((group) => (
+            <section className="space-y-2" key={group.label}>
+              <p className="px-1 text-[10px] font-bold uppercase tracking-[0.14em] text-neutral-500">
+                {group.label}
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {group.tools.map((id) => {
+                  const tool = tools.find((item) => item.id === id);
+                  if (!tool) return null;
+                  const { label, Icon } = tool;
+                  const disabled = isToolDisabled(id);
+                  return (
+                    <button
+                      className={`flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-2xl border p-2 text-center text-xs font-semibold transition-colors ${disabled ? "cursor-not-allowed border-neutral-200 bg-neutral-100 text-neutral-400 opacity-70" : selectedTool === id || (id === "cachet" && hasCachet) ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900 hover:bg-primary-50"}`}
+                      disabled={disabled}
+                      key={id}
+                      onClick={() => selectTool(id)}
+                      type="button"
+                    >
+                      <Icon size={20} strokeWidth={1.8} />
+                      <span>{id === "cachet" && hasCachet ? "Retirer le cachet" : label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </aside>
 
         <div
@@ -642,7 +748,11 @@ export function InvoiceEditor({
           ref={viewerRef}
         >
           <div className="mb-3 flex items-center justify-between px-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600 print:hidden">
-            <span>Aperçu PDF</span>
+            <span>
+              {previewSnapshot
+                ? `Aperçu · SNAPSHOT-${formatSnapshotDate(previewSnapshot.created_at)}`
+                : "Aperçu PDF · version actuelle"}
+            </span>
             <span>
               A4 · {Math.round(pageScale * 100)} % · {pages.length} page
               {pages.length > 1 ? "s" : ""}
@@ -668,20 +778,20 @@ export function InvoiceEditor({
                     style={{ transform: `scale(${pageScale})` }}
                   >
                     <InvoicePage
-                      amountWords={amountWords}
-                      document={document}
+                      amountWords={viewerAmountWords}
+                      document={viewerDocument}
                       lineItems={page}
                       lineOffset={lineOffset}
                       pageKind={pageKind}
                       selectedLine={selectedLine}
-                      totals={totals}
-                      tvaBreakdown={tvaBreakdown}
-                      hasCachet={hasCachet}
-                      tvaRate={tvaRate}
-                      onSelectLine={(lineIndex) => {
-                        setSelectedLine(lineIndex);
-                        setSelectedTool("line");
-                      }}
+                      totals={viewerTotals}
+                      tvaBreakdown={viewerTvaBreakdown}
+                      hasCachet={viewerHasCachet}
+                      tvaRate={viewerTvaRate}
+                      onSelectLine={previewSnapshot ? undefined : (lineIndex) => {
+                          setSelectedLine(lineIndex);
+                          setSelectedTool("line");
+                        }}
                     />
                   </div>
                 </div>
@@ -691,18 +801,21 @@ export function InvoiceEditor({
         </div>
 
         <div className="order-2 flex gap-2 overflow-x-auto rounded-2xl border border-neutral-200 bg-white p-2 shadow-sm print:hidden xl:hidden">
-          {tools.map(({ id, label, Icon }) => (
-            <button
-              className={`flex min-w-24 flex-col items-center gap-1 rounded-xl px-2 py-2 text-xs font-semibold ${selectedTool === id ? "bg-ink-900 text-white" : "bg-white text-ink-900"}`}
-              disabled={(!document.is_active && id !== "delete") || (locked && id !== "payment" && id !== "delete")}
-              key={id}
-              onClick={() => selectTool(id)}
-              type="button"
-            >
-              <Icon size={19} />
-              <span>{label}</span>
-            </button>
-          ))}
+          {tools.map(({ id, label, Icon }) => {
+            const disabled = isToolDisabled(id);
+            return (
+              <button
+                className={`flex min-w-24 flex-col items-center gap-1 rounded-xl px-2 py-2 text-xs font-semibold ${disabled ? "cursor-not-allowed bg-neutral-100 text-neutral-400 opacity-70" : selectedTool === id || (id === "cachet" && hasCachet) ? "bg-ink-900 text-white" : "bg-white text-ink-900"}`}
+                disabled={disabled}
+                key={id}
+                onClick={() => selectTool(id)}
+                type="button"
+              >
+                <Icon size={19} />
+                <span>{id === "cachet" && hasCachet ? "Retirer le cachet" : label}</span>
+              </button>
+            );
+          })}
         </div>
 
         <aside className="glass-card order-3 rounded-2xl p-5 print:hidden" ref={setLinePanelTarget}>
@@ -711,6 +824,16 @@ export function InvoiceEditor({
               ? "Propriétés de la ligne"
               : tools.find((tool) => tool.id === selectedTool)?.label}
           </h2>
+          {selectedTool === "snapshots" && !locked ? (
+            <DocumentSnapshotsPanel
+              currentLineItems={lineItems}
+              onRestore={restoreSnapshot}
+              onSelect={setPreviewSnapshotId}
+              pending={snapshotsPending || pending}
+              selectedSnapshotId={previewSnapshotId}
+              snapshots={snapshots}
+            />
+          ) : null}
           {selectedTool === "line" ? (
             <div className="mt-5 space-y-4">
               {selected ? (
@@ -893,48 +1016,48 @@ export function InvoiceEditor({
         ref={measurementRef}
       >
         <InvoicePage
-          amountWords={amountWords}
-          document={document}
-          lineItems={lineItems}
+          amountWords={viewerAmountWords}
+          document={viewerDocument}
+          lineItems={viewerLineItems}
           measurementId="single"
           pageKind="single"
-          totals={totals}
-          tvaBreakdown={tvaBreakdown}
-          hasCachet={hasCachet}
-          tvaRate={tvaRate}
+          totals={viewerTotals}
+          tvaBreakdown={viewerTvaBreakdown}
+          hasCachet={viewerHasCachet}
+          tvaRate={viewerTvaRate}
         />
         <InvoicePage
-          amountWords={amountWords}
-          document={document}
-          lineItems={lineItems}
+          amountWords={viewerAmountWords}
+          document={viewerDocument}
+          lineItems={viewerLineItems}
           measurementId="first"
           pageKind="first"
-          totals={totals}
-          tvaBreakdown={tvaBreakdown}
-          hasCachet={hasCachet}
-          tvaRate={tvaRate}
+          totals={viewerTotals}
+          tvaBreakdown={viewerTvaBreakdown}
+          hasCachet={viewerHasCachet}
+          tvaRate={viewerTvaRate}
         />
         <InvoicePage
-          amountWords={amountWords}
-          document={document}
-          lineItems={lineItems}
+          amountWords={viewerAmountWords}
+          document={viewerDocument}
+          lineItems={viewerLineItems}
           measurementId="middle"
           pageKind="middle"
-          totals={totals}
-          tvaBreakdown={tvaBreakdown}
-          hasCachet={hasCachet}
-          tvaRate={tvaRate}
+          totals={viewerTotals}
+          tvaBreakdown={viewerTvaBreakdown}
+          hasCachet={viewerHasCachet}
+          tvaRate={viewerTvaRate}
         />
         <InvoicePage
-          amountWords={amountWords}
-          document={document}
-          lineItems={lineItems}
+          amountWords={viewerAmountWords}
+          document={viewerDocument}
+          lineItems={viewerLineItems}
           measurementId="last"
           pageKind="last"
-          totals={totals}
-          tvaBreakdown={tvaBreakdown}
-          hasCachet={hasCachet}
-          tvaRate={tvaRate}
+          totals={viewerTotals}
+          tvaBreakdown={viewerTvaBreakdown}
+          hasCachet={viewerHasCachet}
+          tvaRate={viewerTvaRate}
         />
       </div>
     </div>

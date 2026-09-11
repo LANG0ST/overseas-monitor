@@ -4,10 +4,16 @@ const nextConfig: NextConfig = {
   experimental: {
     authInterrupts: true,
   },
-  serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+  serverExternalPackages: ["@react-pdf/renderer"],
   outputFileTracingIncludes: {
     "/api/documents/*/*/pdf": [
-      "./node_modules/@sparticuz/chromium/bin/**/*",
+      "./public/logo.png",
+      "./public/cachet.png",
+      "./node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf",
+      "./node_modules/geist/dist/fonts/geist-sans/Geist-Medium.ttf",
+      "./node_modules/geist/dist/fonts/geist-sans/Geist-SemiBold.ttf",
+      "./node_modules/geist/dist/fonts/geist-sans/Geist-Bold.ttf",
+      "./node_modules/geist/dist/fonts/geist-sans/Geist-SemiBoldItalic.ttf",
     ],
   },
 };

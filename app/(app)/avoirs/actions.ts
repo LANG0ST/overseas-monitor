@@ -3,14 +3,18 @@
 import {
   assignNumber,
   assignNumberManually,
+  createDocumentSnapshot,
   createDraftDocument,
   DocumentError,
   lockDocument,
   softDelete,
   restore,
+  restoreDocumentSnapshot,
+  listDocumentSnapshots,
   updateLineItems,
   unlockDocument,
   type DocumentRow,
+  type DocumentSnapshot,
   type LineItem,
 } from "@/lib/db/documents";
 import { createClient } from "@/lib/supabase/server";
@@ -24,6 +28,9 @@ export type AvoirDocument = DocumentRow & {
 };
 
 type ActionResult = { ok: true; document: AvoirDocument } | { ok: false; error: string };
+export type AvoirSnapshotsResult =
+  | { ok: true; snapshots: DocumentSnapshot[] }
+  | { ok: false; error: string };
 
 const select = "id, type, number, date, city, has_cachet, partenaire_id, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, motif, reference_facture_number, avoir_payment_method, avoir_payment_reference";
 
@@ -35,7 +42,7 @@ async function getAvoir(id: string) {
   return data as AvoirDocument;
 }
 
-function result(error: unknown): ActionResult {
+function result(error: unknown): { ok: false; error: string } {
   if (error instanceof DocumentError) return { ok: false, error: error.message };
   return { ok: false, error: "Une erreur inattendue est survenue. Réessayez." };
 }
@@ -116,9 +123,20 @@ export async function saveAvoirAction(
       avoir_payment_reference: details.paymentReference.trim() || null,
     }).eq("id", documentId).eq("is_locked", false);
     if (error) throw error;
+    await createDocumentSnapshot(documentId);
     if (shouldLock) await lockDocument(documentId);
     return { ok: true, document: await getAvoir(documentId) };
   } catch (error) { return result(error); }
+}
+
+export async function listAvoirSnapshotsAction(documentId: string): Promise<AvoirSnapshotsResult> {
+  try { return { ok: true, snapshots: await listDocumentSnapshots(documentId) }; }
+  catch (error) { return result(error); }
+}
+
+export async function restoreAvoirSnapshotAction(documentId: string, snapshotId: string): Promise<ActionResult> {
+  try { await restoreDocumentSnapshot(documentId, snapshotId); return { ok: true, document: await getAvoir(documentId) }; }
+  catch (error) { return result(error); }
 }
 
 export async function deleteAvoirAction(documentId: string): Promise<ActionResult> {

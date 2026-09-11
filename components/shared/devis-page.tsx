@@ -73,15 +73,15 @@ export function InvoiceLineRow({
       <td className="break-words px-3 py-3 font-medium text-neutral-900">
         <LineItemDesignation line={line} />
       </td>
-      <td className="break-words px-3 py-3 text-neutral-700">{line.unit}</td>
-      <td className="px-3 py-3 text-right text-neutral-900">{line.qty}</td>
-      <td className="px-3 py-3 text-right text-neutral-900">
+      <td className="break-words px-2 py-3 text-neutral-700">{line.unit}</td>
+      <td className="px-2 py-3 text-right text-neutral-900">{line.qty}</td>
+      <td className="px-2 py-3 text-right text-neutral-900">
         {line.tva_rate ?? 20}%
       </td>
-      <td className="px-3 py-3 text-right text-neutral-900">
+      <td className="px-2 py-3 text-right text-neutral-900">
         {formatAmount(line.unit_price)}
       </td>
-      <td className="px-3 py-3 text-right font-medium text-neutral-900">
+      <td className="px-2 py-3 text-right font-medium text-neutral-900">
         {formatAmount(line.qty * line.unit_price)}
       </td>
     </tr>
@@ -171,11 +171,11 @@ export function DevisPage({
           >
             <tr>
               <th className="w-[33%] px-3 py-3">Désignation</th>
-              <th className="w-[11%] px-3 py-3">Unité</th>
-              <th className="w-[9%] px-3 py-3 text-right">Nombre</th>
-              <th className="w-[11%] px-3 py-3 text-right">TVA</th>
-              <th className="w-[17%] px-3 py-3 text-right">P.U. HT</th>
-              <th className="w-[19%] px-3 py-3 text-right">Montant HT</th>
+              <th className="w-[8%] px-2 py-3">Unité</th>
+              <th className="w-[9%] px-2 py-3 text-right">Nombre</th>
+              <th className="w-[8%] px-2 py-3 text-right">TVA</th>
+              <th className="w-[21%] px-2 py-3 text-right">P.U. HT</th>
+              <th className="w-[21%] px-2 py-3 text-right">Montant HT</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-primary-200">

@@ -1,18 +1,17 @@
-import chromium from "@sparticuz/chromium";
-import puppeteer from "puppeteer-core";
-import type { NextRequest } from "next/server";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { safePrintName } from "@/lib/print-title";
+import { renderDocumentPdf, type PdfDocumentData } from "@/lib/pdf/document-pdf";
 import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const DOCUMENT_KINDS = {
-  facture: { path: "factures", type: "facture", label: "Facture" },
-  devis: { path: "devis", type: "devis", label: "Devis" },
-  avoir: { path: "avoirs", type: "avoir", label: "Avoir" },
+  facture: { type: "facture", label: "Facture" },
+  devis: { type: "devis", label: "Devis" },
+  avoir: { type: "avoir", label: "Avoir" },
   "bon-commande": {
-    path: "bons-commande",
     type: "bon_commande",
     label: "Bon-de-commande",
   },
@@ -25,7 +24,7 @@ function isDocumentKind(value: string): value is DocumentKind {
 }
 
 export async function GET(
-  request: NextRequest,
+  _request: Request,
   context: RouteContext<"/api/documents/[kind]/[id]/pdf">,
 ) {
   const { kind, id } = await context.params;
@@ -42,7 +41,7 @@ export async function GET(
 
   const { data: document, error } = await supabase
     .from("documents")
-    .select("id, type, number, client_name")
+    .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, period_start, period_end, devis_fuel_driver, devis_driver, devis_payment_conditions, devis_bank_name, devis_iban, reference_facture_number, motif, avoir_payment_method, avoir_payment_reference")
     .eq("id", id)
     .maybeSingle();
 
@@ -53,72 +52,14 @@ export async function GET(
     return new Response("Document introuvable.", { status: 404 });
   }
 
-  let browser;
   try {
-    const isProduction = process.env.NODE_ENV === "production";
-    browser = await puppeteer.launch(
-      isProduction
-        ? {
-            args: await puppeteer.defaultArgs({
-              args: chromium.args,
-              headless: "shell",
-            }),
-            executablePath: await chromium.executablePath(),
-            headless: "shell",
-          }
-        : {
-            channel: "chrome",
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
-          },
-    );
-    const page = await browser.newPage();
-    const documentUrl = new URL(`/${definition.path}/${id}`, request.nextUrl.origin);
-    const cookies = request.headers
-      .get("cookie")
-      ?.split(";")
-      .flatMap((entry) => {
-        const separator = entry.indexOf("=");
-        if (separator < 1) return [];
-        return [{
-          name: entry.slice(0, separator).trim(),
-          value: entry.slice(separator + 1).trim(),
-          url: request.nextUrl.origin,
-        }];
-      });
-    if (cookies?.length) await page.setCookie(...cookies);
-
-    await page.goto(documentUrl.toString(), {
-      waitUntil: "networkidle2",
-      timeout: 45_000,
-    });
-
-    await page.waitForSelector(".invoice-pages .invoice-page", {
-      timeout: 15_000,
-    });
-    await page.evaluate(async () => {
-      await globalThis.document.fonts.ready;
-    });
-
-    // Page splitting is measured client-side. Wait until its count has stopped
-    // changing before asking Chromium to print the final A4 layout.
-    let previousCount = -1;
-    for (let attempt = 0; attempt < 10; attempt += 1) {
-      const count = await page.$$eval(
-        ".invoice-pages .invoice-page",
-        (elements) => elements.length,
-      );
-      if (count === previousCount) break;
-      previousCount = count;
-      await new Promise((resolve) => setTimeout(resolve, 200));
-    }
-
-    await page.emulateMediaType("print");
-    const pdf = await page.pdf({
-      format: "A4",
-      margin: { top: 0, right: 0, bottom: 0, left: 0 },
-      preferCSSPageSize: true,
-      printBackground: true,
+    const [logo, cachet] = await Promise.all([
+      readFile(path.join(process.cwd(), "public", "logo.png")),
+      readFile(path.join(process.cwd(), "public", "cachet.png")),
+    ]);
+    const pdf = await renderDocumentPdf(document as PdfDocumentData, {
+      logo: `data:image/png;base64,${logo.toString("base64")}`,
+      cachet: `data:image/png;base64,${cachet.toString("base64")}`,
     });
 
     const identifier = document.number || `Brouillon-${document.client_name}`;
@@ -134,7 +75,5 @@ export async function GET(
   } catch (pdfError) {
     console.error("PDF generation failed", pdfError);
     return new Response("La génération du PDF a échoué.", { status: 500 });
-  } finally {
-    await browser?.close();
   }
 }

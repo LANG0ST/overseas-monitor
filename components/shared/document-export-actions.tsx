@@ -8,11 +8,13 @@ export function DocumentExportActions({
   documentId,
   onBrowserPrint,
   pdfDisabled = false,
+  pdfDisabledTitle = "Enregistrez les modifications avant de télécharger le PDF",
 }: {
   kind: "facture" | "devis" | "avoir" | "bon-commande";
   documentId: string;
   onBrowserPrint: () => void;
   pdfDisabled?: boolean;
+  pdfDisabledTitle?: string;
 }) {
   return (
     <>
@@ -20,7 +22,7 @@ export function DocumentExportActions({
         <button
           className={`${actionClassName} cursor-not-allowed opacity-50`}
           disabled
-          title="Enregistrez les modifications avant de télécharger le PDF"
+          title={pdfDisabledTitle}
           type="button"
         >
           <Download className="mr-2 inline" size={16} />

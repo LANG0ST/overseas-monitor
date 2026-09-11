@@ -3,20 +3,27 @@
 import {
   assignNumber,
   assignNumberManually,
+  createDocumentSnapshot,
   createDraftDocument,
   DocumentError,
   lockDocument,
   softDelete,
   restore,
+  restoreDocumentSnapshot,
+  listDocumentSnapshots,
   updateLineItems,
   unlockDocument,
   type DocumentRow,
+  type DocumentSnapshot,
   type LineItem,
 } from "@/lib/db/documents";
 import { createClient } from "@/lib/supabase/server";
 
 type ActionResult =
   | { ok: true; document: DevisDocument }
+  | { ok: false; error: string };
+export type DevisSnapshotsResult =
+  | { ok: true; snapshots: DocumentSnapshot[] }
   | { ok: false; error: string };
 
 export type DevisDocument = DocumentRow & {
@@ -42,7 +49,7 @@ async function getDevis(id: string) {
   return data as DevisDocument;
 }
 
-function result(error: unknown): ActionResult {
+function result(error: unknown): { ok: false; error: string } {
   if (error instanceof DocumentError) return { ok: false, error: error.message };
   return { ok: false, error: "Une erreur inattendue est survenue. Réessayez." };
 }
@@ -134,9 +141,20 @@ export async function saveDevisAction(
     }
     const { error } = await supabase.from("documents").update(update).eq("id", documentId).eq("is_locked", false);
     if (error) throw error;
+    await createDocumentSnapshot(documentId);
     if (shouldLock) await lockDocument(documentId);
     return { ok: true, document: await getDevis(documentId) };
   } catch (error) { return result(error); }
+}
+
+export async function listDevisSnapshotsAction(documentId: string): Promise<DevisSnapshotsResult> {
+  try { return { ok: true, snapshots: await listDocumentSnapshots(documentId) }; }
+  catch (error) { return result(error); }
+}
+
+export async function restoreDevisSnapshotAction(documentId: string, snapshotId: string): Promise<ActionResult> {
+  try { await restoreDocumentSnapshot(documentId, snapshotId); return { ok: true, document: await getDevis(documentId) }; }
+  catch (error) { return result(error); }
 }
 
 export async function deleteDevisAction(documentId: string): Promise<ActionResult> {
