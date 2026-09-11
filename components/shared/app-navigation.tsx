@@ -3,8 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   ClipboardList,
+  Ellipsis,
   FileText,
   LayoutDashboard,
   ReceiptText,
@@ -101,33 +103,98 @@ export function DesktopNavigation({ allowedResources, avatarUrl, isAdmin, isSupe
 
 export function MobileNavigation({ allowedResources, isAdmin }: AppNavigationProps) {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
   if (isFactureEditorPath(pathname)) return null;
   const visibleNavigation = navigation.filter((item) => item.resource === null || allowedResources.includes(item.resource));
   const items = isAdmin
     ? [...visibleNavigation, { href: "/permissions", label: "Permissions", icon: ShieldCheck, resource: null }]
     : visibleNavigation;
+  const primaryHrefs = new Set(["/dashboard", "/factures", "/devis", "/bons-commande"]);
+  const primaryItems = items.filter((item) => primaryHrefs.has(item.href));
+  const secondaryItems = items.filter((item) => !primaryHrefs.has(item.href));
+  const secondaryActive = secondaryItems.some((item) => isActivePath(pathname, item.href));
 
   return (
-    <nav aria-label="Navigation mobile" className="glass-card fixed inset-x-3 bottom-3 z-20 flex gap-1 overflow-x-auto rounded-2xl p-2 md:hidden print:hidden">
-      {items.map(({ href, label, icon: Icon }) => {
-        const active = isActivePath(pathname, href);
-
-        return (
-          <Link
-            aria-current={active ? "page" : undefined}
-            aria-label={label}
+    <>
+      {menuOpen ? (
+        <button
+          aria-label="Fermer le menu"
+          className="fixed inset-0 z-20 bg-ink-900/20 md:hidden print:hidden"
+          onClick={() => setMenuOpen(false)}
+          type="button"
+        />
+      ) : null}
+      <nav
+        aria-label="Navigation mobile"
+        className="fixed inset-x-3 bottom-3 z-30 grid grid-cols-5 gap-1 rounded-2xl border border-neutral-200 bg-white p-2 shadow-xl md:hidden print:hidden"
+      >
+        {primaryItems.map(({ href, label, icon: Icon }) => {
+          const active = isActivePath(pathname, href);
+          const shortLabel = href === "/dashboard" ? "Accueil" : href === "/bons-commande" ? "Bons" : label;
+          return (
+            <Link
+              aria-current={active ? "page" : undefined}
+              aria-label={label}
+              className={cn(
+                "flex min-w-0 flex-col items-center gap-1 rounded-xl px-1 py-2 text-[10px] font-semibold transition-colors",
+                active ? "bg-ink-900 text-white" : "text-neutral-600 hover:bg-neutral-100",
+              )}
+              href={href}
+              key={href}
+              onClick={() => setMenuOpen(false)}
+            >
+              <Icon size={20} strokeWidth={1.75} />
+              <span className="w-full truncate text-center">{shortLabel}</span>
+            </Link>
+          );
+        })}
+        <div className="relative min-w-0">
+          {menuOpen ? (
+            <div className="absolute bottom-full right-0 mb-3 w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 shadow-2xl">
+              {secondaryItems.map(({ href, label, icon: Icon }) => {
+                const active = isActivePath(pathname, href);
+                return (
+                  <Link
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition-colors",
+                      active ? "bg-ink-900 text-white" : "text-neutral-700 hover:bg-neutral-100",
+                    )}
+                    href={href}
+                    key={href}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <Icon size={19} strokeWidth={1.75} />
+                    <span>{label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : null}
+          <button
+            aria-expanded={menuOpen}
+            aria-haspopup="menu"
+            aria-label="Plus de pages"
             className={cn(
-              "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-2 text-[11px] font-medium transition-colors",
-              active ? "bg-ink-900 text-white" : "text-neutral-600"
+              "flex h-full w-full min-w-0 flex-col items-center gap-1 rounded-xl px-1 py-2 text-[10px] font-semibold transition-colors",
+              menuOpen || secondaryActive ? "bg-ink-900 text-white" : "text-neutral-600 hover:bg-neutral-100",
             )}
-            href={href}
-            key={href}
+            onClick={() => setMenuOpen((open) => !open)}
+            type="button"
           >
-            <Icon size={19} strokeWidth={1.75} />
-            <span className="max-w-14 truncate">{label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+            <Ellipsis size={21} strokeWidth={2} />
+            <span>Plus</span>
+          </button>
+        </div>
+      </nav>
+    </>
   );
 }
