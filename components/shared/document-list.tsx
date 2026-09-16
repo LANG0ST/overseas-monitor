@@ -148,10 +148,10 @@ export async function DocumentList({
             {title}
           </h1>
         </div>
-        <div className="flex gap-2">
+        <div className="grid w-full gap-2 sm:flex sm:w-auto sm:flex-wrap sm:justify-end">
           {type === "facture" ? (
             <a
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-emerald-700 bg-emerald-700 px-4 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-emerald-700 bg-emerald-700 px-4 text-center text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
               href="/api/reports/factures.xlsx"
             >
               <FileSpreadsheet className="size-4" />
@@ -159,7 +159,7 @@ export async function DocumentList({
             </a>
           ) : null}
           <Link
-            className="inline-flex min-h-11 items-center rounded-full border border-neutral-300 bg-white px-4 text-sm font-medium text-ink-900 shadow-sm"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-4 text-center text-sm font-medium text-ink-900 shadow-sm"
             href={hrefWithFilters(path, filters, {
               inactive: showInactive ? undefined : "1",
               page: undefined,
@@ -168,7 +168,7 @@ export async function DocumentList({
             {showInactive ? "Voir les actifs" : "Voir les inactifs"}
           </Link>
           <Link
-            className="inline-flex min-h-11 items-center rounded-full bg-ink-900 px-4 text-sm font-semibold text-white shadow-sm"
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink-900 px-4 text-center text-sm font-semibold text-white shadow-sm"
             href={`${path}/new`}
           >
             {newLabel}
@@ -176,9 +176,9 @@ export async function DocumentList({
         </div>
       </div>
 
-      <nav aria-label={`Vues des ${title.toLocaleLowerCase("fr")}`} className="flex flex-wrap gap-2">
+      <nav aria-label={`Vues des ${title.toLocaleLowerCase("fr")}`} className="grid w-full gap-2 sm:flex sm:flex-wrap">
           <Link
-            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold shadow-sm ${draftScope === null ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+            className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === null ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
             href={hrefWithFilters(path, filters, {
               drafts: undefined,
               paid: filters.paid,
@@ -188,7 +188,7 @@ export async function DocumentList({
             {title}
           </Link>
           <Link
-            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold shadow-sm ${draftScope === "mine" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+            className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === "mine" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
             href={hrefWithFilters(path, filters, {
               drafts: "mine",
               paid: undefined,
@@ -199,7 +199,7 @@ export async function DocumentList({
           </Link>
           {isAdmin ? (
             <Link
-              className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold shadow-sm ${draftScope === "all" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+              className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === "all" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
               href={hrefWithFilters(path, filters, {
                 drafts: "all",
                 paid: undefined,
