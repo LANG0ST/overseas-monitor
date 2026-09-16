@@ -1,0 +1,4029 @@
+[
+  {
+    "source_file": "FACTURES 2026/INV 001 MINGDIAN COBCO.pdf",
+    "number": "001/2026/AI",
+    "date": "2025-01-05",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "CHARIOT ELEVATEUR 5T",
+        "unit": "JOUR",
+        "qty": 31.0,
+        "unit_price": 1000.0
+      },
+      {
+        "desc": "PELLE SUR PNEUS AVEC MARTEAU",
+        "unit": "JOUR",
+        "qty": 13.0,
+        "unit_price": 1538.46
+      },
+      {
+        "desc": "CAMION 8*4",
+        "unit": "JOUR",
+        "qty": 3.35,
+        "unit_price": 1884.61
+      }
+    ],
+    "ht": 57313.42,
+    "tva": 11462.68,
+    "ttc": 68776.1,
+    "line_ht": 57313.42,
+    "line_tva": 11462.69,
+    "issues": [
+      "printed date year differs from invoice number: 2025-01-05"
+    ]
+  },
+  {
+    "source_file": "FACTURES 2026/INV 002 MINGDIAN COBCO.pdf",
+    "number": "002/2026/AI",
+    "date": "2025-01-05",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "CHARIOT ELEVATEUR 5T",
+        "unit": "JOUR",
+        "qty": 30.0,
+        "unit_price": 1000.0
+      },
+      {
+        "desc": "PELLE SUR PNEUS AVEC MARTEAU",
+        "unit": "JOUR",
+        "qty": 10.0,
+        "unit_price": 1538.46
+      },
+      {
+        "desc": "FRAIS MOBILISATION PELLE SUR PNEUS 1 ENTRER 1 SORTIE",
+        "unit": "FF",
+        "qty": 2.0,
+        "unit_price": 2000.0
+      }
+    ],
+    "ht": 49384.6,
+    "tva": 9876.92,
+    "ttc": 59261.52,
+    "line_ht": 49384.6,
+    "line_tva": 9876.92,
+    "issues": [
+      "printed date year differs from invoice number: 2025-01-05"
+    ]
+  },
+  {
+    "source_file": "FACTURES 2026/INV 003 COVEC 第三份五金发票.pdf",
+    "number": "003/2026/AL",
+    "date": "2026-01-06",
+    "client_ice": "001596313000044",
+    "line_items": [
+      {
+        "desc": "Disjoncteur différentiel intégré 450/4P",
+        "unit": "PIECE",
+        "qty": 1,
+        "unit_price": 8300,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Disjoncteur différentiel 2p 40A",
+        "unit": "PIECE",
+        "qty": 5,
+        "unit_price": 305,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Projecteur de grue 2000 W",
+        "unit": "PIECE",
+        "qty": 15,
+        "unit_price": 3650,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Module de protection différentiel 250/4P",
+        "unit": "PIECE",
+        "qty": 3,
+        "unit_price": 1600,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Module de protection différentiel 160/4P",
+        "unit": "PIECE",
+        "qty": 4,
+        "unit_price": 1600,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Module de protection différentiel 100/4P",
+        "unit": "PIECE",
+        "qty": 1,
+        "unit_price": 1400,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Chaussure de sécurité N°41",
+        "unit": "PAIRES",
+        "qty": 4,
+        "unit_price": 180,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Chaussure de sécurité N°42",
+        "unit": "PAIRES",
+        "qty": 2,
+        "unit_price": 180,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Chaussure de sécurité ARMA TK N°43",
+        "unit": "PAIRES",
+        "qty": 2,
+        "unit_price": 180,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Chaussure de sécurité N°45",
+        "unit": "PAIRES",
+        "qty": 1,
+        "unit_price": 180,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Botte plastique",
+        "unit": "PAIRE",
+        "qty": 17,
+        "unit_price": 87,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Imperméable veste+pantalon",
+        "unit": "PIECE",
+        "qty": 60,
+        "unit_price": 144,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Pompe submersible turbine à deux canaux",
+        "unit": "PIECE",
+        "qty": 2,
+        "unit_price": 2950,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Huile hydraulique 20L",
+        "unit": "SET",
+        "qty": 2,
+        "unit_price": 1176,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Bande de signalisation R/B MAC 70MMX200M",
+        "unit": "PIECE",
+        "qty": 1,
+        "unit_price": 36,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Fourreau de protection pour pompe SV 5X2.5",
+        "unit": "ML",
+        "qty": 200,
+        "unit_price": 33,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Botte plastique N°36",
+        "unit": "PAIRES",
+        "qty": 1,
+        "unit_price": 150,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Parapluie",
+        "unit": "PIECE",
+        "qty": 20,
+        "unit_price": 96,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Frais de service",
+        "unit": "F",
+        "qty": 1,
+        "unit_price": 2200,
+        "tva_rate": 20
+      }
+    ],
+    "ht": 108072.0,
+    "tva": 21614.4,
+    "ttc": 129686.4,
+    "line_ht": 108072.0,
+    "line_tva": 21614.4,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 003 GOTION (2).pdf",
+    "number": "003/2026/AI",
+    "date": "2026-01-05",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION JOURNALIERE D’UNE GRUE MOBILE 130T",
+        "unit": "JOURS",
+        "qty": 11.0,
+        "unit_price": 19000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION D’UNE GRUE MOBILE 130T",
+        "unit": "HEURES",
+        "qty": 2.0,
+        "unit_price": 2111.11,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION GRUE 130T",
+        "unit": "ALLER-RETOUR",
+        "qty": 1.0,
+        "unit_price": 22000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION JOURNALIERE D’UN CAMION PLATEAU",
+        "unit": "JOURS",
+        "qty": 11.0,
+        "unit_price": 1500.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 251722.22,
+    "tva": 0.0,
+    "ttc": 251722.22,
+    "line_ht": 251722.22,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 005 ZHONGLI CONSTRUCTION.pdf",
+    "number": "005/2026/AI",
+    "date": "2026-01-12",
+    "client_ice": "003069395000031",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION JOURNALIERE DE 3 CAMIONS",
+        "unit": "JOURS",
+        "qty": 26.0,
+        "unit_price": 1700.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 44200.0,
+    "tva": 8840.0,
+    "ttc": 53040.0,
+    "line_ht": 44200.0,
+    "line_tva": 8840.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 010 ALMADEN MOROCCO (1).pdf",
+    "number": "010/2026/AI",
+    "date": "2026-01-20",
+    "client_ice": "001921213000036",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION FORFAITAIRE D’UN CHARIOT ELEVATEUR 12T",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 46000.0
+      }
+    ],
+    "ht": 46000.0,
+    "tva": 9200.0,
+    "ttc": 55200.0,
+    "line_ht": 46000.0,
+    "line_tva": 9200.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 013 AGL.pdf",
+    "number": "013/2026/AI",
+    "date": "2026-01-29",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "MISE A DISPOSITION CLARK",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 25000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "MISE A DISPOSITION DE MAGASINIER ET ESPACE DE STOCKAGE",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 12145.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 37145.0,
+    "tva": 7429.0,
+    "ttc": 44574.0,
+    "line_ht": 37145.0,
+    "line_tva": 7429.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 014 AGL.pdf",
+    "number": "014/2026/AI",
+    "date": "2026-01-29",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "MISE A DISPOSITION MANITOU",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 30000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "SANGLES 10 TONNES",
+        "unit": "PIECES",
+        "qty": 20.0,
+        "unit_price": 402.35,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 38047.0,
+    "tva": 7609.4,
+    "ttc": 45656.4,
+    "line_ht": 38047.0,
+    "line_tva": 7609.4,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 06 AGL.pdf",
+    "number": "006/2026/AI",
+    "date": "2026-01-06",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "CALES EN BOIS",
+        "unit": "PIECES",
+        "qty": 30.0,
+        "unit_price": 180.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 5400.0,
+    "tva": 1080.0,
+    "ttc": 6480.0,
+    "line_ht": 5400.0,
+    "line_tva": 1080.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 07 AGL.pdf",
+    "number": "007/2026/AI",
+    "date": "2026-01-06",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "HEURES SUPPLEMENTAIRES DU MAGASINIER",
+        "unit": "HEURES",
+        "qty": 16.0,
+        "unit_price": 269.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "SANGLES",
+        "unit": "PIECES",
+        "qty": 5.0,
+        "unit_price": 167.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 5139.0,
+    "tva": 1027.8,
+    "ttc": 6166.8,
+    "line_ht": 5139.0,
+    "line_tva": 1027.8,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 08 AGL.pdf",
+    "number": "008/2026/AI",
+    "date": "2026-01-06",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "MISE A DISPOSITION MANITO",
+        "unit": "JOURS",
+        "qty": 10.0,
+        "unit_price": 5800.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 58000.0,
+    "tva": 11600.0,
+    "ttc": 69600.0,
+    "line_ht": 58000.0,
+    "line_tva": 11600.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 09 AGL.pdf",
+    "number": "009/2026/AI",
+    "date": "2026-01-06",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "HEURES SUPPLEMENTAIRES DU MAGASINIER",
+        "unit": "HEURES",
+        "qty": 20.0,
+        "unit_price": 269.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "MISE A DISPOSITION GRUE 70T",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 19304.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 24684.0,
+    "tva": 4936.8,
+    "ttc": 29620.8,
+    "line_ht": 24684.0,
+    "line_tva": 4936.8,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 11 COVEC.pdf",
+    "number": "011/2026/AI",
+    "date": "2026-01-01",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Travaux de terrassement et évacuation de déblai à ouvrage 1006- 0137-1006-0114-2800 : camion 8*4",
+        "unit": "JOUR",
+        "qty": 356.0,
+        "unit_price": 1600.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 2571 : une GRUE MOBILE 25TN",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 50000.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 2571 : une GRUE MOBILE 25TN",
+        "unit": "JOUR",
+        "qty": 0.5,
+        "unit_price": 1924.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur CAT 318",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 43000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur CAT 318",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 42000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur FIAT HITACHI",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 42000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur FIAT HITACHI 1 dimanche",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 320) 0137",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 55000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 322) 0114",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 55000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 322) 0066",
+        "unit": "JOUR",
+        "qty": 23.0,
+        "unit_price": 2115.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 325) 2800",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 60000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 322) 2000",
+        "unit": "JOUR",
+        "qty": 17.0,
+        "unit_price": 2115.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB AVEC MARTEAU MOHAMEDIA )",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 40000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB AVEC MARTEAU MOHAMEDIA )1 dimache",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 1538.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- ROSAGE à OUVRAGE MOHAMEDIA-CASA)CAMION CITERNE",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 26000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- ROSAGE à OUVRAGE MOHAMEDIA-CASA)CAMION CITERNE 1 DIMANCHE",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 1000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- ROSAGE à OUVRAGE MOHAMEDIA-CASA)CAMION CITERNE",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 26000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- levage à OUVRAGE MOHAMEDIA-CASA)CAMION GRUE",
+        "unit": "U",
+        "qty": 8.0,
+        "unit_price": 1923.0
+      },
+      {
+        "desc": "Travaux de TRANSPORTATION (Transportation PORTCHAR 100 TN )TRANSPORTATION DE MACHINE DE FORAGE DE MOHAMEDIA A casa .",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 6000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (Transportation du avec un camion plateau BT4 ; MOHAMEDIA A 0713 ) 25/23 nov",
+        "unit": "U",
+        "qty": 2.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "Travaux de déviation de circulation Chariot élévateur 5TN 9 DEC / 26 DEC / 29 DEC",
+        "unit": "U",
+        "qty": 3.0,
+        "unit_price": 1300.0
+      }
+    ],
+    "ht": 1126599.0,
+    "tva": 225319.8,
+    "ttc": 1351918.8,
+    "line_ht": 1126599.0,
+    "line_tva": 225319.8,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 12 CHINA CONSTRUCTION OCP.pdf",
+    "number": "012/2026/AI",
+    "date": "2026-01-22",
+    "client_ice": "002086799000041",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE GRUE MOBILE 75T",
+        "unit": "MOIS",
+        "qty": 0.615,
+        "unit_price": 145000.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 89230.77,
+    "tva": 17846.15,
+    "ttc": 107076.92,
+    "line_ht": 89175.0,
+    "line_tva": 17835.0,
+    "issues": [
+      "line mismatch: LOCATION MENSUELLE GRUE MOBILE 75T qty=0.615 price=145000.00 printed=89230.77",
+      "line HT differs from stated HT: lines=89175.00 stated=89230.77",
+      "line TVA differs from stated TVA: lines=17835.00 stated=17846.15"
+    ]
+  },
+  {
+    "source_file": "FACTURES 2026/INV 15 ZHONGLI CONSTRUCTION (2).pdf",
+    "number": "015/2026/AI",
+    "date": "2026-02-11",
+    "client_ice": "003069395000031",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION JOURNALIERE DE 3 CAMIONS",
+        "unit": "JOURS",
+        "qty": 65.0,
+        "unit_price": 1700.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "LOCATION DE 5 CAMIONS",
+        "unit": "HEURES",
+        "qty": 49.0,
+        "unit_price": 189.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 119761.0,
+    "tva": 23952.2,
+    "ttc": 143713.2,
+    "line_ht": 119761.0,
+    "line_tva": 23952.2,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 16 AGL.pdf",
+    "number": "016/2026/AI",
+    "date": "2026-02-12",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transport d’un MAIN SHAFT (33000 kg) du Jbel Lahdid à Agreda",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 171000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "Stationnement de Camion",
+        "unit": "Jour",
+        "qty": 2.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 175000.0,
+    "tva": 0.0,
+    "ttc": 175000.0,
+    "line_ht": 175000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 17 AGL.pdf",
+    "number": "017/2026/AI",
+    "date": "2026-02-13",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Empotage/Dépotage de 4 Camions plateau sur le site de Safi",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 34650.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "MISE A DISPOSITION DE MAGASINIER",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 7000.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 41650.0,
+    "tva": 8330.0,
+    "ttc": 49980.0,
+    "line_ht": 41650.0,
+    "line_tva": 8330.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 18 COVEC .pdf",
+    "number": "018/2026/AI",
+    "date": "2026-02-01",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Travaux de terrassement et évacuation de déblai à ouvrage 1006-0137-1006-0114-2800 : camion 8*4",
+        "unit": "JOUR",
+        "qty": 358.0,
+        "unit_price": 1600.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 2571 : GRUE MOBILE 25TN",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 50000.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 2571 : GRUE MOBILE 25TN heures supp",
+        "unit": "JOUR",
+        "qty": 20.0,
+        "unit_price": 213.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 0137 : GRUE MOBILE 35TN",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 60000.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 0137 : GRUE MOBILE 35TN night shift 25%",
+        "unit": "JOUR",
+        "qty": 24.0,
+        "unit_price": 320.0
+      },
+      {
+        "desc": "Travaux de déviation de circulation Chariot élévateur 5TN",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 1300.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à BOUSKOURA Excavateur CAT 318 2009",
+        "unit": "JOUR",
+        "qty": 15.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur CAT 318 26000",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 42000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur CAT 318 1 DIMANCHE",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur CAT 318 heures supp",
+        "unit": "HEURE",
+        "qty": 20.0,
+        "unit_price": 179.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur FIAT HITACHI 2800",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 42000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur FIAT HITACHI 1 dimanche",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur FIAT HITACHI supp hours",
+        "unit": "HEURE",
+        "qty": 15.0,
+        "unit_price": 179.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 320) 2600",
+        "unit": "JOUR",
+        "qty": 16.0,
+        "unit_price": 2115.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 320) 2000",
+        "unit": "JOUR",
+        "qty": 17.0,
+        "unit_price": 2115.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 320) 0066",
+        "unit": "JOUR",
+        "qty": 4.0,
+        "unit_price": 2115.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 322) 0137",
+        "unit": "JOUR",
+        "qty": 19.0,
+        "unit_price": 2115.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à casa Excavateur sur Chenille CAT 325) 0066",
+        "unit": "JOUR",
+        "qty": 14.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- ROSAGE à OUVRAGE MOHAMEDIA-CASA) CAMION CITERNE",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 26000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- TRANSPORTATION MOHAMEDIA-CASA) CAMION GRUE",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 50000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- ROSAGE à OUVRAGE MOHAMEDIA-CASA) CAMION CITERNE",
+        "unit": "M",
+        "qty": 1.0,
+        "unit_price": 26000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB AVEC MARTEAU MOHAMEDIA)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 40000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB AVEC MARTEAU MOHAMEDIA)",
+        "unit": "JOUR",
+        "qty": 2.0,
+        "unit_price": 1538.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB AVEC MARTEAU MOHAMEDIA) heures supp",
+        "unit": "HEURE",
+        "qty": 26.0,
+        "unit_price": 170.0
+      },
+      {
+        "desc": "Travaux de Terrassement (Transportation du avec un camion plateau BT4 24/26 JANV",
+        "unit": "U",
+        "qty": 2.0,
+        "unit_price": 1500.0
+      }
+    ],
+    "ht": 1116896.0,
+    "tva": 223379.2,
+    "ttc": 1340275.2,
+    "line_ht": 1116896.0,
+    "line_tva": 223379.2,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 19 AGL.pdf",
+    "number": "019/2026/AI",
+    "date": "2026-02-23",
+    "client_ice": "001527059000033",
+    "line_items": [
+      {
+        "desc": "Démobilisation de Clarck",
+        "unit": "PIECES",
+        "qty": 1,
+        "unit_price": 2000,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Cales",
+        "unit": "PIECES",
+        "qty": 20,
+        "unit_price": 100,
+        "tva_rate": 20
+      }
+    ],
+    "ht": 4000.0,
+    "tva": 800.0,
+    "ttc": 4800.0,
+    "line_ht": 4000.0,
+    "line_tva": 800.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 21 GOTION.pdf",
+    "number": "021/2026/AI",
+    "date": "2026-02-26",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION JOURNALIERE D’UNE GRUE MOBILE 160T",
+        "unit": "JOURS",
+        "qty": 4.0,
+        "unit_price": 17000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOB/DEMOB GRUE MOBILE 160T",
+        "unit": "ALLER-RETOUR",
+        "qty": 1.0,
+        "unit_price": 20000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION JOURNALIERE D’UNE GRUE 200T",
+        "unit": "JOURS",
+        "qty": 5.0,
+        "unit_price": 20000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOB/DEMOB GRUE MOBILE 200T",
+        "unit": "ALLER-RETOUR",
+        "qty": 1.0,
+        "unit_price": 23000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION JOURNALIERE D’UN PORTE-CHAR",
+        "unit": "JOURS",
+        "qty": 5.0,
+        "unit_price": 5000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 236000.0,
+    "tva": 0.0,
+    "ttc": 236000.0,
+    "line_ht": 236000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 22 ZHONGLI CONSTRUCTION.pdf",
+    "number": "022/2026/AI",
+    "date": "2026-03-06",
+    "client_ice": "003069395000031",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION JOURNALIERE DE 5 CAMIONS",
+        "unit": "JOURS",
+        "qty": 46.0,
+        "unit_price": 1700.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "LOCATION DE 5 CAMIONS",
+        "unit": "HEURES",
+        "qty": 20.0,
+        "unit_price": 189.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 81980.0,
+    "tva": 16396.0,
+    "ttc": 98376.0,
+    "line_ht": 81980.0,
+    "line_tva": 16396.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 23 AGL 1 (2).pdf",
+    "number": "023/2026/AI",
+    "date": "2026-03-09",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "ROUND TRIP AGREDA-BOUJDOUR (MAIN SHAFT REF 10185475) BOUJDOUR-SEGUERO (MAIN SHAFT REF JL2106)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 260000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "EXTRA COST (UNLOADING /LOADING AND TRUCKING)",
+        "unit": "UN",
+        "qty": 1.0,
+        "unit_price": 60000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "TRUCK DETENTION",
+        "unit": "DAY",
+        "qty": 1.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 322000.0,
+    "tva": 0.0,
+    "ttc": 322000.0,
+    "line_ht": 322000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 23 BIS WWL MOROCCO.pdf",
+    "number": "023/2026/AI/BIS",
+    "date": "2026-03-11",
+    "client_ice": null,
+    "manual_client_name": "WORLDWIDE LOGISTICS MOROCCO SHIPPING SERVICE",
+    "line_items": [
+      {
+        "desc": "CUSTOMS CLEARANCE",
+        "unit": "Un",
+        "qty": 1.0,
+        "unit_price": 4198.5,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "TRANSPORTATION CASABLANCA/TANGER",
+        "unit": "Un",
+        "qty": 1.0,
+        "unit_price": 16327.5,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "HANDLING: -Loading onto the truck and moving to the storage area. -Discharging in the storage area. -Loading onto the final truck for transportation.",
+        "unit": "Un",
+        "qty": 1.0,
+        "unit_price": 3265.5,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "TRUCK DETENTION",
+        "unit": "Un",
+        "qty": 1.0,
+        "unit_price": 2000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "STORAGE",
+        "unit": "Un",
+        "qty": 1.0,
+        "unit_price": 4209.82,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "THC",
+        "unit": "Un",
+        "qty": 1.0,
+        "unit_price": 4104.76,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 34106.08,
+    "tva": 5158.3,
+    "ttc": 39264.38,
+    "line_ht": 34106.08,
+    "line_tva": 5158.3,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 24 AGL 1 (1).pdf",
+    "number": "024/2026/AI",
+    "date": "2026-03-09",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Round Trip Boujdour-Seguero (Main Shaft Ref Jl2101239) Ambressa-Boujdour (Gear Box Ref 100436991)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 260000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "Extra Cost (Unloading /Loading And Trucking)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 51000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 311000.0,
+    "tva": 0.0,
+    "ttc": 311000.0,
+    "line_ht": 311000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 24 BIS CHINA CONSTRUCTION OCP OCT-NOV (1).pdf",
+    "number": "024/2026/AI/BIS",
+    "date": "2026-03-12",
+    "client_ice": "002086799000041",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE GRUE MOBILE 80T",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 145000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "MOBILISATION GRUE 80T",
+        "unit": "ALLER-RETOUR",
+        "qty": 2.0,
+        "unit_price": 8000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "LOCATION MENSUELLE NACELLE 26M",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 34000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "MOBILISATION NACELLE 26M",
+        "unit": "ALLER-RETOUR",
+        "qty": 2.0,
+        "unit_price": 4500.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 204000.0,
+    "tva": 40800.0,
+    "ttc": 244800.0,
+    "line_ht": 204000.0,
+    "line_tva": 40800.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 25 MINGDIAN COBCO JANVIER FEVRIER.pdf",
+    "number": "025/2026/AI",
+    "date": "2026-03-13",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "CHARIOT ELEVATEUR 5T",
+        "unit": "JOUR",
+        "qty": 60.0,
+        "unit_price": 1000.0
+      },
+      {
+        "desc": "PELLE SUR PNEUS AVEC MARTEAU",
+        "unit": "JOUR",
+        "qty": 31.0,
+        "unit_price": 2000.0
+      },
+      {
+        "desc": "FRAIS MOBILISATION PELLE SUR PNEUS 1 ENTRER 1 SORTIE",
+        "unit": "FF",
+        "qty": 2.0,
+        "unit_price": 2000.0
+      }
+    ],
+    "ht": 126000.0,
+    "tva": 25200.0,
+    "ttc": 151200.0,
+    "line_ht": 126000.0,
+    "line_tva": 25200.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 26 PLANET COM TRANS.pdf",
+    "number": "026/2026/AI",
+    "date": "2026-03-16",
+    "client_ice": "001868774000077",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION JOURNALIERE GRUE 50T",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 7000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "MOBILISATION",
+        "unit": "Aller-retour",
+        "qty": 2.0,
+        "unit_price": 4500.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 30000.0,
+    "tva": 6000.0,
+    "ttc": 36000.0,
+    "line_ht": 30000.0,
+    "line_tva": 6000.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 27 AGL 2026.pdf",
+    "number": "027/2026/AI",
+    "date": "2026-03-12",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "ROUND TRIP AGREDA-BOUJDOUR (MAIN SHAFT REF 10185472) BOUJDOUR-SEGUERO (MAIN SHAFT REF JL2102222-1-41)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 260000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "TRUCK DETENTION",
+        "unit": "DAY",
+        "qty": 2.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 264000.0,
+    "tva": 0.0,
+    "ttc": 264000.0,
+    "line_ht": 264000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 28 AGL 2026.pdf",
+    "number": "028/2026/AI",
+    "date": "2026-03-12",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "ROUND TRIP AGREDA-BOUJDOUR (MAIN SHAFT REF 10179310) BOUJDOUR-SEGUERO (MAIN SHAFT REF JL2102199-2-34)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 260000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "TRUCK DETENTION",
+        "unit": "DAY",
+        "qty": 2.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 264000.0,
+    "tva": 0.0,
+    "ttc": 264000.0,
+    "line_ht": 264000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 29 BIS MINGDIAN TANGER Déc Modf2.pdf",
+    "number": "029/2026/AI/BIS",
+    "date": "2026-03-19",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "NIVELEUSE",
+        "unit": "JOUR",
+        "qty": 25.5,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "NIVELEUSE",
+        "unit": "H",
+        "qty": 3.0,
+        "unit_price": 255.55
+      },
+      {
+        "desc": "CHARGEUSE 950G",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "CHARGEUSE 950H",
+        "unit": "JOUR",
+        "qty": 1.5,
+        "unit_price": 2500.0
+      },
+      {
+        "desc": "CAMION GRUE (MOBILISATION CITERNE GASOIL)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 8000.0
+      },
+      {
+        "desc": "进出场费 Frais d'entrée et de sortie (Entrée Chargeuse 950 G)",
+        "unit": "次 Fois",
+        "qty": 1.0,
+        "unit_price": 2000.0
+      }
+    ],
+    "ht": 80066.65,
+    "tva": 16013.33,
+    "ttc": 96079.98,
+    "line_ht": 80066.65,
+    "line_tva": 16013.33,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 29 COVEC.pdf",
+    "number": "029/2026/AI",
+    "date": "2026-04-18",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Travaux de terrassement et évacuation de déblai à ouvrage CASA / MOHAMEDIA / BOUSKOURA : camion 8*4",
+        "unit": "JOUR",
+        "qty": 144.0,
+        "unit_price": 1600.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 2571 : GRUE MOBILE 25TN",
+        "unit": "JOUR",
+        "qty": 12.0,
+        "unit_price": 1923.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 2800 : GRUE MOBILE 40TN",
+        "unit": "JOUR",
+        "qty": 13.0,
+        "unit_price": 2615.0
+      },
+      {
+        "desc": "Travaux de pieux sur fondations à ouvrage 0137 : GRUE MOBILE 35TN",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 60000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à BOUSKOURA Excavateur CAT 318 2009",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 42000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur CAT 318 26000",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 42000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur CAT 318 26000",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 42000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur FIAT HITACHI 2800",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 42000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage à Mohammedia Excavateur FIAT HITACHI 2800",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- ROSAGE à OUVRAGE MOHAMEDIA-CASA) CAMION CITERNE",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 26000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- ROSAGE à OUVRAGE MOHAMEDIA-CASA) CAMION CITERNE",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 26000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- ROSAGE à OUVRAGE MOHAMEDIA-CASA) CAMION CITERNE 1",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 1000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- TRANSPORTATION MOHAMEDIA-CASA) CAMION GRUE",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 50000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement- TRANSPORTATION MOHAMEDIA-CASA) CAMION GRUE",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 1923.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB AVEC MARTEAU MOHAMEDIA)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 40000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB AVEC MARTEAU MOHAMEDIA) 1 dimachne",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 1538.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB AVEC MARTEAU MOHAMEDIA) heure supp",
+        "unit": "HEURE",
+        "qty": 18.0,
+        "unit_price": 170.0
+      },
+      {
+        "desc": "Travaux de Terrassement (terrassement-levage tractopelle JCB ) MOHAMEDIA",
+        "unit": "jour",
+        "qty": 16.0,
+        "unit_price": 1300.0
+      },
+      {
+        "desc": "Travaux de Terrassement (Transportation du avec un PORTCHAR 100 TN MACHINE DE FORAGE",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 6000.0
+      },
+      {
+        "desc": "Travaux de Terrassement (Transportation du avec un PORTCHAR ET CAMION PLATEAU",
+        "unit": "U",
+        "qty": 7.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "Travaux de déviation de circulation Chariot élévateur 5TN",
+        "unit": "U",
+        "qty": 2.0,
+        "unit_price": 1300.0
+      }
+    ],
+    "ht": 709737.0,
+    "tva": 141947.4,
+    "ttc": 851684.4,
+    "line_ht": 709737.0,
+    "line_tva": 141947.4,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 30 BIS MINGDIAN TANGER JAN Modf.pdf",
+    "number": "030/2026/AI/BIS",
+    "date": "2026-03-19",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "NIVELEUSE",
+        "unit": "JOUR",
+        "qty": 12.5,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "CHARGEUSE 950G",
+        "unit": "JOUR",
+        "qty": 9.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "CHARGEUSE 950H",
+        "unit": "JOUR",
+        "qty": 22.0,
+        "unit_price": 2500.0
+      },
+      {
+        "desc": "CHARGEUSE 950 H",
+        "unit": "H",
+        "qty": 20.0,
+        "unit_price": 277.77
+      },
+      {
+        "desc": "PELLE SUR CHENILLES",
+        "unit": "JOUR",
+        "qty": 19.5,
+        "unit_price": 2000.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLES",
+        "unit": "H",
+        "qty": 12.0,
+        "unit_price": 222.22
+      },
+      {
+        "desc": "进出场费 Frais d'entrée et de sortie (Sortie Chargeuse 950 G) (Entrée pelle sur chenilles 1)",
+        "unit": "次 Fois",
+        "qty": 2.0,
+        "unit_price": 2000.0
+      }
+    ],
+    "ht": 155672.04,
+    "tva": 31134.408,
+    "ttc": 186806.448,
+    "line_ht": 155672.04,
+    "line_tva": 31134.41,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 30 COVEC.pdf",
+    "number": "030/2026/AI",
+    "date": "2026-05-09",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Locatio des camion d'évacuation de déblai à ouvrage CASA",
+        "unit": "JOUR",
+        "qty": 294.0,
+        "unit_price": 1600.0
+      },
+      {
+        "desc": "Locatio des camion d'évacuation de déblai à ouvrage CASA",
+        "unit": "HEURE",
+        "qty": 16.0,
+        "unit_price": 177.0
+      },
+      {
+        "desc": "Locatio des camion d'évacuation de déblai à ouvrage CASA",
+        "unit": "JOUR",
+        "qty": 39.0,
+        "unit_price": 1700.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 40TN ouvrage 2800",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 68000.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 35 TN ouvrage 0137",
+        "unit": "JOUR",
+        "qty": 24.0,
+        "unit_price": 2307.0
+      },
+      {
+        "desc": "Location chargeuse a la base de vie",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu CAT 318 2009",
+        "unit": "JOUR",
+        "qty": 22.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu FIAT HITACHI 2800",
+        "unit": "JOUR",
+        "qty": 18.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu FIAT HITACHI 2682",
+        "unit": "JOUR",
+        "qty": 24.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 322 2700 CASA",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE VOLVO 2700 CASA",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE VOLVO 2700 CASA",
+        "unit": "HEURE",
+        "qty": 6.0,
+        "unit_price": 230.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 325 2700 CASA",
+        "unit": "JOUR",
+        "qty": 5.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location CAMION CITERNE ( CASABLANCA )",
+        "unit": "JOUR",
+        "qty": 21.0,
+        "unit_price": 1000.0
+      },
+      {
+        "desc": "Location CAMION CITERNE ( MOHAMEDIA )",
+        "unit": "JOUR",
+        "qty": 12.0,
+        "unit_price": 1000.0
+      },
+      {
+        "desc": "Location CAMION CITERNE ( MOHAMEDIA ) 1",
+        "unit": "HEURE",
+        "qty": 5.0,
+        "unit_price": 111.0
+      },
+      {
+        "desc": "Location camion grue",
+        "unit": "JOUR",
+        "qty": 22.0,
+        "unit_price": 1923.0
+      },
+      {
+        "desc": "Location camion grue ( HEURE SUPP )",
+        "unit": "HEURE",
+        "qty": 4.0,
+        "unit_price": 213.0
+      },
+      {
+        "desc": "Location JCB AVEC MATREAU( MOHAMEDIA )",
+        "unit": "JOUR",
+        "qty": 23.0,
+        "unit_price": 1538.0
+      },
+      {
+        "desc": "Location JCB AVEC MATREAU ( MOHAMEDIA )",
+        "unit": "HEURE",
+        "qty": 8.0,
+        "unit_price": 170.0
+      },
+      {
+        "desc": "Location JCB AVEC GODGET( MOHAMEDIA )",
+        "unit": "JOUR",
+        "qty": 13.0,
+        "unit_price": 1300.0
+      },
+      {
+        "desc": "Travaux de déviation de circulation Chariot élévateur 5TN",
+        "unit": "U",
+        "qty": 5.0,
+        "unit_price": 1300.0
+      }
+    ],
+    "ht": 934223.0,
+    "tva": 186844.6,
+    "ttc": 1121067.6,
+    "line_ht": 934223.0,
+    "line_tva": 186844.6,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 31 MINGDIAN TANGER FEV.pdf",
+    "number": "031/2026/AI",
+    "date": "2026-03-19",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "NIVELEUSE",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "CHARGEUSE 950 H",
+        "unit": "JOUR",
+        "qty": 14.0,
+        "unit_price": 2500.0
+      },
+      {
+        "desc": "CHARGEUSE 950 H",
+        "unit": "H",
+        "qty": 4.0,
+        "unit_price": 277.77
+      },
+      {
+        "desc": "PELLE SUR CHENILLES",
+        "unit": "JOUR",
+        "qty": 19.0,
+        "unit_price": 2000.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLES",
+        "unit": "HEURES",
+        "qty": 5.0,
+        "unit_price": 222.22
+      },
+      {
+        "desc": "CAMION 8*4",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 1700.0
+      },
+      {
+        "desc": "进出场费 Frais d'entrée et de sortie (Sortie NIVELEUSE)",
+        "unit": "次 Fois",
+        "qty": 1.0,
+        "unit_price": 2000.0
+      }
+    ],
+    "ht": 89222.18,
+    "tva": 17844.43,
+    "ttc": 107066.616,
+    "line_ht": 89222.18,
+    "line_tva": 17844.44,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 32 ZHONGLI CONSTRUCTION MARS.pdf",
+    "number": "032/2026/AI",
+    "date": "2026-03-27",
+    "client_ice": "003069395000031",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION JOURNALIERE DE 5 CAMIONS",
+        "unit": "JOURS",
+        "qty": 46.0,
+        "unit_price": 1700.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 78200.0,
+    "tva": 15640.0,
+    "ttc": 93840.0,
+    "line_ht": 78200.0,
+    "line_tva": 15640.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 33 MINGDIAN TANGER MARS mdf.pdf",
+    "number": "033/2026/AI",
+    "date": "2026-04-02",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "NIVELEUSE",
+        "unit": "JOUR",
+        "qty": 2.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "CHARGEUSE 950H",
+        "unit": "JOUR",
+        "qty": 23.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "CHARGEUSE 950H",
+        "unit": "HEURS",
+        "qty": 14.0,
+        "unit_price": 255.55
+      },
+      {
+        "desc": "PELLE SUR CHENILLES *2",
+        "unit": "JOURS",
+        "qty": 51.0,
+        "unit_price": 2000.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLES *2",
+        "unit": "HEURS",
+        "qty": 2.0,
+        "unit_price": 222.22
+      },
+      {
+        "desc": "CAMION 8*4 *3",
+        "unit": "JOURS",
+        "qty": 33.5,
+        "unit_price": 1700.0
+      },
+      {
+        "desc": "CAMION 8*4",
+        "unit": "HEURS",
+        "qty": 7.0,
+        "unit_price": 188.88
+      },
+      {
+        "desc": "进出场费 Frais d'entrée et de sortie (Entrée PELLE VOLVO) (Sortie NIVELEUSE)",
+        "unit": "次 Fois",
+        "qty": 2.0,
+        "unit_price": 2000.0
+      }
+    ],
+    "ht": 225794.3,
+    "tva": 45158.86,
+    "ttc": 270953.16,
+    "line_ht": 225794.3,
+    "line_tva": 45158.86,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 34 AGL.pdf",
+    "number": "034/2026/AI",
+    "date": "2026-04-20",
+    "client_ice": "001527059000033",
+    "line_items": [
+      {
+        "desc": "Stockage à l'entrepôt",
+        "unit": "JOURS",
+        "qty": 10,
+        "unit_price": 50,
+        "tva_rate": 20
+      },
+      {
+        "desc": "Calage et transfert marchandise vers site",
+        "unit": "CAMION",
+        "qty": 1,
+        "unit_price": 6400,
+        "tva_rate": 20
+      }
+    ],
+    "ht": 6900.0,
+    "tva": 1380.0,
+    "ttc": 8280.0,
+    "line_ht": 6900.0,
+    "line_tva": 1380.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 35 OVERSEAS LIFTING.pdf",
+    "number": "035/2026/AI",
+    "date": "2024-03-19",
+    "client_ice": "003654969000048",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Chariot Elevateur 3TN",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 12500.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 12500.0,
+    "tva": 2500.0,
+    "ttc": 15000.0,
+    "line_ht": 12500.0,
+    "line_tva": 2500.0,
+    "issues": [
+      "printed date year differs from invoice number: 2024-03-19"
+    ]
+  },
+  {
+    "source_file": "FACTURES 2026/INV 36 TG NORTH AFRICA SARL.pdf",
+    "number": "036/2026/AI",
+    "date": "2026-05-04",
+    "client_ice": "003844653000083",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Acompte de 40 % sur les travaux de manutention",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 32560.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 32560.0,
+    "tva": 6512.0,
+    "ttc": 39072.0,
+    "line_ht": 32560.0,
+    "line_tva": 6512.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 37 AGL 2026.pdf",
+    "number": "037/2026/AI",
+    "date": "2026-05-05",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "MOBILISATION D’UN MAIN SHAFT AGREDA – BOUJDOUR (Réf : 10190208)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 168000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "IMMOBILISATION DU CAMION",
+        "unit": "JOUR",
+        "qty": 2.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "SURCHARGE CARBURANT",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 19000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 191000.0,
+    "tva": 0.0,
+    "ttc": 191000.0,
+    "line_ht": 191000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 38 AGL 2026.pdf",
+    "number": "038/2026/AI",
+    "date": "2026-05-05",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "MOBILISATION D’UN MAIN SHAFT BOUJDOUR – SIGUERO (Réf : 35624177)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 171000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "SURCHARGE CARBURANT",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 19000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 190000.0,
+    "tva": 0.0,
+    "ttc": 190000.0,
+    "line_ht": 190000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 39 COVEC TANGER MDF.pdf",
+    "number": "039/2026/AI",
+    "date": "2026-05-06",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "NACELLE CISEAUX 8M 1",
+        "unit": "JOUR",
+        "qty": 12.0,
+        "unit_price": 500.0
+      },
+      {
+        "desc": "NACELLE CISEAUX 8M 2",
+        "unit": "JOUR",
+        "qty": 8.0,
+        "unit_price": 500.0
+      },
+      {
+        "desc": "NACELLE CISEAUX 8M 3",
+        "unit": "JOUR",
+        "qty": 9.0,
+        "unit_price": 500.0
+      },
+      {
+        "desc": "MOBILISATION DE DEUX NACELLE CISEAUX 8M",
+        "unit": "Aller",
+        "qty": 3.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "NACELLE ELEVATRICE ARTICULEE 18M",
+        "unit": "JOUR",
+        "qty": 1.0,
+        "unit_price": 850.0
+      },
+      {
+        "desc": "MOBILISATION D’UNE NACELLE 18M",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 5500.0
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR 3T 1",
+        "unit": "JOUR",
+        "qty": 13.0,
+        "unit_price": 769.23
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR 3T 2",
+        "unit": "JOUR",
+        "qty": 8.0,
+        "unit_price": 769.23
+      },
+      {
+        "desc": "MOBILISATION DE DEUX CHARIOT ELEVATEUR 3T",
+        "unit": "Aller",
+        "qty": 2.0,
+        "unit_price": 2000.0
+      }
+    ],
+    "ht": 45503.83,
+    "tva": 9100.76,
+    "ttc": 54604.59,
+    "line_ht": 45503.83,
+    "line_tva": 9100.77,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 40 AGL.pdf",
+    "number": "040/2026/AI",
+    "date": "2026-05-07",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transport D’UN GEARBOX BOUJDOUR – SIGUERO",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 171000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "SURCHARGE CARBURANT",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 19000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION DE CAMION",
+        "unit": "JOUR",
+        "qty": 2.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "CHARGEMENT- DECHARGEMENT",
+        "unit": "U",
+        "qty": 2.0,
+        "unit_price": 6000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 210000.0,
+    "tva": 0.0,
+    "ttc": 210000.0,
+    "line_ht": 206000.0,
+    "line_tva": 0.0,
+    "issues": [
+      "line HT differs from stated HT: lines=206000.00 stated=210000.00"
+    ]
+  },
+  {
+    "source_file": "FACTURES 2026/INV 41 AGL.pdf",
+    "number": "041/2026/AI",
+    "date": "2026-05-11",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transport D’UNE MAIN CHAFT AGREDA – BOUJDOUR N serie : 10190203",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 168000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "SURCHARGE CARBURANT",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 19000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION DE CAMION",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 193000.0,
+    "tva": 0.0,
+    "ttc": 193000.0,
+    "line_ht": 193000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 42 AGL.pdf",
+    "number": "042/2026/AI",
+    "date": "2026-05-11",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transport D’UNE MAIN CHAFT AGREDA – BOUJDOUR N serie : 10190206",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 168000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "SURCHARGE CARBURANT",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 19000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION DE CAMION",
+        "unit": "JOUR",
+        "qty": 4.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 195000.0,
+    "tva": 0.0,
+    "ttc": 195000.0,
+    "line_ht": 195000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 43 BIS MINGDIAN TANGER AVRIL.pdf",
+    "number": "043/2026/AI/BIS",
+    "date": "2026-05-12",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "CHARGEUSE 950H",
+        "unit": "JOUR",
+        "qty": 21.5,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "CHARGEUSE 950H",
+        "unit": "HEURES",
+        "qty": 5.5,
+        "unit_price": 255.55
+      },
+      {
+        "desc": "PELLE SUR CHENILLES 320C",
+        "unit": "JOURS",
+        "qty": 11.0,
+        "unit_price": 2000.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLES 320C",
+        "unit": "HEURES",
+        "qty": 2.5,
+        "unit_price": 222.22
+      },
+      {
+        "desc": "PELLE SUR CHENILLES VOLVO",
+        "unit": "JOURS",
+        "qty": 2.0,
+        "unit_price": 2000.0
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE",
+        "unit": "JOURS",
+        "qty": 20.5,
+        "unit_price": 1300.0
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE",
+        "unit": "HEURES",
+        "qty": 11.0,
+        "unit_price": 144.44
+      },
+      {
+        "desc": "进出场费 Frais d'entrée et de sortie (Sortie Pelle Volvo) (Sortie pelle 320c)",
+        "unit": "次 Fois",
+        "qty": 2.0,
+        "unit_price": 2000.0
+      },
+      {
+        "desc": "进出场费 Frais d'entrée et de sortie (Entrée chariot télescopique)",
+        "unit": "次 Fois",
+        "qty": 1.0,
+        "unit_price": 2500.0
+      }
+    ],
+    "ht": 112149.91,
+    "tva": 22429.98,
+    "ttc": 134579.89,
+    "line_ht": 112149.92,
+    "line_tva": 22429.99,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 43 MINGLAI.pdf",
+    "number": "043/2026/AI",
+    "date": "2026-05-11",
+    "client_ice": "003797353000081",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "location Grue 100 TN",
+        "unit": "JOUR",
+        "qty": 12.0,
+        "unit_price": 4615.0
+      },
+      {
+        "desc": "Mobilisation de la grue",
+        "unit": "u",
+        "qty": 1.0,
+        "unit_price": 20000.0
+      }
+    ],
+    "ht": 75380.0,
+    "tva": 15076.0,
+    "ttc": 90456.0,
+    "line_ht": 75380.0,
+    "line_tva": 15076.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 44 CITERNE MINGDIAN TANGER MARS..pdf",
+    "number": "044/2026/AI",
+    "date": "2026-05-12",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "VENTE D’UNE CITERNE DE GASOIL CYLINDRIQUE HORIZONTALE AVEC POMPE INTEGREE N°De série:M-787/24 Capacité :30 000L POIDS : 2900KG",
+        "unit": "次 Fois",
+        "qty": 1.0,
+        "unit_price": 120000.0
+      }
+    ],
+    "ht": 120000.0,
+    "tva": 24000.0,
+    "ttc": 144000.0,
+    "line_ht": 120000.0,
+    "line_tva": 24000.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 45 TG NORTH AFRICA SARL.pdf",
+    "number": "045/2026/AI",
+    "date": "2026-05-13",
+    "client_ice": "003844653000083",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Forfait journalier pour mise à disposition d’équipements de manutention (chariots élévateurs (5 tonnes et 12 tonnes, télescopique, transpalettes, manutentionnaire x2 et outillage), incluant conducteur et gasoil. Mobilisation et démobilisation inclus",
+        "unit": "JOURS",
+        "qty": 4.0,
+        "unit_price": 15600.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "Assurance marchandise – plafond : 1 000 000 DH / conteneur",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 19000.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 81400.0,
+    "tva": 16280.0,
+    "ttc": 97680.0,
+    "line_ht": 81400.0,
+    "line_tva": 16280.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 46 CROMAT.pdf",
+    "number": "046/2026/AI",
+    "date": "2026-04-25",
+    "client_ice": "003884477000080",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "HDPE-DN200",
+        "unit": "ml",
+        "qty": 20.0,
+        "unit_price": 161.68
+      },
+      {
+        "desc": "HDPE-DN250",
+        "unit": "ml",
+        "qty": 21.0,
+        "unit_price": 250.98
+      },
+      {
+        "desc": "HDPE-DN300",
+        "unit": "ml",
+        "qty": 20.0,
+        "unit_price": 370.36
+      },
+      {
+        "desc": "PVC-U-DN100",
+        "unit": "ml",
+        "qty": 20.0,
+        "unit_price": 23.5
+      },
+      {
+        "desc": "PVC-U-DN150",
+        "unit": "ml",
+        "qty": 24.0,
+        "unit_price": 46.06
+      },
+      {
+        "desc": "PVC-U-DN75",
+        "unit": "ml",
+        "qty": 10.0,
+        "unit_price": 13.63
+      },
+      {
+        "desc": "DN250 HDPE connector MANCHON ELECTRO",
+        "unit": "piece",
+        "qty": 90.0,
+        "unit_price": 532.04
+      },
+      {
+        "desc": "DN300 HDPE connector MANCHON ELECTRO",
+        "unit": "piece",
+        "qty": 42.0,
+        "unit_price": 844.12
+      },
+      {
+        "desc": "DN200*DN200 HDPE 90°elbow ELECTRO",
+        "unit": "piece",
+        "qty": 49.0,
+        "unit_price": 642.96
+      },
+      {
+        "desc": "DN250*DN250 HDPE 90°elbow ELECTRO",
+        "unit": "piece",
+        "qty": 19.0,
+        "unit_price": 1579.2
+      },
+      {
+        "desc": "reduction 300/250 PEHD PN16 ELECTRO",
+        "unit": "piece",
+        "qty": 15.0,
+        "unit_price": 913.68
+      },
+      {
+        "desc": "te DN250*DN250*DN200（HDPE）ELECTRO",
+        "unit": "piece",
+        "qty": 20.0,
+        "unit_price": 2256.0
+      },
+      {
+        "desc": "te DN300*DN300*DN200 （HDPE）ELECTRO",
+        "unit": "piece",
+        "qty": 24.0,
+        "unit_price": 4324.0
+      },
+      {
+        "desc": "reduction DN250*DN200 （HDPE）ELECTRO",
+        "unit": "piece",
+        "qty": 28.0,
+        "unit_price": 554.6
+      },
+      {
+        "desc": "MANCHON DN200（HDPE）MANCHON ELECTRO",
+        "unit": "piece",
+        "qty": 48.0,
+        "unit_price": 532.04
+      },
+      {
+        "desc": "Bride PEHD 40",
+        "unit": "piece",
+        "qty": 20.0,
+        "unit_price": 179.0
+      },
+      {
+        "desc": "Bride PEHD 50",
+        "unit": "piece",
+        "qty": 2.0,
+        "unit_price": 185.0
+      },
+      {
+        "desc": "Grand coude en PVC-U DN75",
+        "unit": "piece",
+        "qty": 18.0,
+        "unit_price": 262.0
+      },
+      {
+        "desc": "Joint de bride PEHD DN40",
+        "unit": "piece",
+        "qty": 6.0,
+        "unit_price": 33.0
+      }
+    ],
+    "ht": 375001.52,
+    "tva": 75000.3,
+    "ttc": 450001.82,
+    "line_ht": 375001.52,
+    "line_tva": 75000.31,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 47 AGL Mai.pdf",
+    "number": "047/2026/AI",
+    "date": "2026-05-20",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Mobilization of a Main Shaft from BOUJDOUR to BORUPVEJ",
+        "unit": "Trip",
+        "qty": 2.0,
+        "unit_price": 319500.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "Immobilisation",
+        "unit": "J",
+        "qty": 2.0,
+        "unit_price": 6000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 651000.0,
+    "tva": 0.0,
+    "ttc": 651000.0,
+    "line_ht": 651000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 48 MINGDIAN COBCO MARS AVRIL.pdf",
+    "number": "048/2026/AI",
+    "date": "2026-05-20",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "CHARIOT ELEVATEUR 5T",
+        "unit": "JOUR",
+        "qty": 43.0,
+        "unit_price": 1000.0
+      }
+    ],
+    "ht": 43000.0,
+    "tva": 8600.0,
+    "ttc": 51600.0,
+    "line_ht": 43000.0,
+    "line_tva": 8600.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 49 COVEC.pdf",
+    "number": "049/2026/AI",
+    "date": "2026-06-09",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Locatio des camion d'évacuation de déblai à ouvrage CASA",
+        "unit": "JOUR",
+        "qty": 307.0,
+        "unit_price": 1600.0
+      },
+      {
+        "desc": "Locatio des camion d'évacuation de déblai à ouvrage CASA ( location journalier )",
+        "unit": "JOUR",
+        "qty": 26.7,
+        "unit_price": 1700.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 40TN ouvrage 2800",
+        "unit": "JOUR",
+        "qty": 26.7,
+        "unit_price": 2615.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 35 TN ouvrage 0380",
+        "unit": "JOUR",
+        "qty": 27.0,
+        "unit_price": 2307.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 35 TN ouvrage 0380 (night shift)",
+        "unit": "HEURE",
+        "qty": 20.0,
+        "unit_price": 256.0
+      },
+      {
+        "desc": "Location chargeuse a la base de vie",
+        "unit": "JOUR",
+        "qty": 26.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu CAT 318 2009",
+        "unit": "JOUR",
+        "qty": 28.8,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu FIAT HITACHI 2800",
+        "unit": "JOUR",
+        "qty": 28.5,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu CAT 318 2682",
+        "unit": "JOUR",
+        "qty": 27.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT volvo 2800 ASA",
+        "unit": "JOUR",
+        "qty": 9.6,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 322 2800 ASA",
+        "unit": "JOUR",
+        "qty": 8.3,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 322 380 CASA",
+        "unit": "JOUR",
+        "qty": 26.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 325 0137 /66 CASA",
+        "unit": "JOUR",
+        "qty": 29.5,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE VOLVO 2700 CASA",
+        "unit": "JOUR",
+        "qty": 34.7,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 325 2700/2000/0137 CASA",
+        "unit": "JOUR",
+        "qty": 31.6,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 322 0436 CASA",
+        "unit": "JOUR",
+        "qty": 25.5,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 322 0137 CASA",
+        "unit": "JOUR",
+        "qty": 25.1,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 325 0137 CASA",
+        "unit": "JOUR",
+        "qty": 28.7,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 320 0644 CASA",
+        "unit": "JOUR",
+        "qty": 25.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location CAMION CITERNE ( CASABLANCA )",
+        "unit": "JOUR",
+        "qty": 25.7,
+        "unit_price": 1000.0
+      },
+      {
+        "desc": "Location camion grue",
+        "unit": "JOUR",
+        "qty": 27.3,
+        "unit_price": 1923.0
+      },
+      {
+        "desc": "Location JCB AVEC MATREAU( MOHAMEDIA )",
+        "unit": "JOUR",
+        "qty": 26.6,
+        "unit_price": 1538.0
+      },
+      {
+        "desc": "Location JCB AVEC GODGET( MOHAMEDIA )",
+        "unit": "JOUR",
+        "qty": 26.7,
+        "unit_price": 1300.0
+      },
+      {
+        "desc": "LOCATION COMPACTEUR 1006",
+        "unit": "JOUR",
+        "qty": 4.0,
+        "unit_price": 1400.0
+      }
+    ],
+    "ht": 1539736.3,
+    "tva": 307947.26,
+    "ttc": 1847683.56,
+    "line_ht": 1539736.3,
+    "line_tva": 307947.26,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 50 COVEC.pdf",
+    "number": "050/2026/AI",
+    "date": "2026-06-04",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Travaux de transportation de contoneure remoraue grue",
+        "unit": "U",
+        "qty": 2.0,
+        "unit_price": 3500.0
+      },
+      {
+        "desc": "Travaux de transportation location camion plateau",
+        "unit": "u",
+        "qty": 2.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "Travaux de déviation de circulation Chariot élévateur 5TN",
+        "unit": "U",
+        "qty": 3.0,
+        "unit_price": 1300.0
+      },
+      {
+        "desc": "Travaux de transportation location portchar",
+        "unit": "u",
+        "qty": 9.0,
+        "unit_price": 1500.0
+      }
+    ],
+    "ht": 27400.0,
+    "tva": 5480.0,
+    "ttc": 32880.0,
+    "line_ht": 27400.0,
+    "line_tva": 5480.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 52 CHINA CONSTRUCTION.pdf",
+    "number": "052/2026/AI",
+    "date": "2026-06-04",
+    "client_ice": "002086799000041",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE GRUE MOBILE 75T",
+        "unit": "MOIS",
+        "qty": 1.5,
+        "unit_price": 145000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "LOCATION MENSUELLE NACELLE 26M",
+        "unit": "MOIS",
+        "qty": 2.410256,
+        "unit_price": 34000.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 299448.72,
+    "tva": 59889.74,
+    "ttc": 359338.46,
+    "line_ht": 299448.7,
+    "line_tva": 59889.74,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 54 COVEC TANGER mdf.pdf",
+    "number": "054/2026/AI",
+    "date": "2026-06-11",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "8米剪叉式升降平台租赁 ×4台 OCATION NACELLE CISEAUX 8M ×4",
+        "unit": "月 mois",
+        "qty": 4.0,
+        "unit_price": 15500.0
+      },
+      {
+        "desc": "3吨叉车租赁（1号） LOCATION CHARIOT ELEVATEUR 3T (1)",
+        "unit": "月 mois",
+        "qty": 1.0,
+        "unit_price": 24000.0
+      },
+      {
+        "desc": "3吨叉车租赁（2号） LOCATION CHARIOT ELEVATEUR 3T (2)",
+        "unit": "月 mois",
+        "qty": 1.0,
+        "unit_price": 24000.0
+      },
+      {
+        "desc": "18米柴油曲臂式高空作业平台租赁 LOCATION D’UNE NACELLE DIESEL 18M",
+        "unit": "天 JOURS",
+        "qty": 16.0,
+        "unit_price": 850.0
+      },
+      {
+        "desc": "18米高空作业平台退场运输费 MOBILISATION NACELLE 18M",
+        "unit": "次 Retour",
+        "qty": 1.0,
+        "unit_price": 5500.0
+      },
+      {
+        "desc": "16米电动高空作业平台租赁 LOCATION D’UNE NACELLE ELECTRIQUE 16M",
+        "unit": "天 JOURS",
+        "qty": 18.0,
+        "unit_price": 850.0
+      },
+      {
+        "desc": "16米电动高空作业平台进场运输费 MOBILISATION NACELLE 16M ELECTRIQUE",
+        "unit": "次 Aller",
+        "qty": 1.0,
+        "unit_price": 4000.0
+      },
+      {
+        "desc": "伸缩臂叉装车（Telehandler）租赁 LOCATION CHARIOT TELESCOPIQUE",
+        "unit": "天 JOURS",
+        "qty": 13.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "伸缩臂叉装车运输费 MOBILISATION LOCATION CHARIOT TELESCOPIQUE",
+        "unit": "次 Aller",
+        "qty": 1.0,
+        "unit_price": 3000.0
+      },
+      {
+        "desc": "130吨汽车起重机租赁 LOCATION D’UNE GRUE MOBILE 130T",
+        "unit": "天 JOURS",
+        "qty": 10.0,
+        "unit_price": 13000.0
+      },
+      {
+        "desc": "130吨汽车起重机往返运输费 MOBILISATION GRUE MOBILE 130T",
+        "unit": "往返 Aller-retour",
+        "qty": 2.0,
+        "unit_price": 22000.0
+      }
+    ],
+    "ht": 344900.0,
+    "tva": 68980.0,
+    "ttc": 413880.0,
+    "line_ht": 344900.0,
+    "line_tva": 68980.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 55 GOTION.pdf",
+    "number": "055/2026/AI",
+    "date": "2026-06-22",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION JOURNALIERE D’UN CHARIOT EELEVATEUR 3T *2",
+        "unit": "JOURS",
+        "qty": 38.0,
+        "unit_price": 962.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION CHARIOT ELEVATEUR 3T *2",
+        "unit": "ENTRÉE-SORTIE",
+        "qty": 4.0,
+        "unit_price": 4000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION JOURNALIERE D’UN CHARIOT ELEVATEUR 5T",
+        "unit": "JOURS",
+        "qty": 8.0,
+        "unit_price": 1077.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION CHARIOT ELEVATEUR 5T",
+        "unit": "ENTRÉE-SORTIE",
+        "qty": 2.0,
+        "unit_price": 4000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION JOURNALIERE D’UN CHARIOT ELEVATEUR 16T",
+        "unit": "JOURS",
+        "qty": 11.5,
+        "unit_price": 2115.4,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION CHARIOT ELEVATEUR 16T",
+        "unit": "ENTRÉE-SORTIE",
+        "qty": 2.0,
+        "unit_price": 4000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION JOURNALIERE TRANSPALETTE ELECTRIQUE*3",
+        "unit": "JOURS",
+        "qty": 12.0,
+        "unit_price": 350.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION TRANSPALETTE ELECTRIQUE*3",
+        "unit": "ENTRÉE-SORTIE",
+        "qty": 2.0,
+        "unit_price": 4000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "FRAIS DE DEDOUANEMENT",
+        "unit": "ENTREE",
+        "qty": 7.0,
+        "unit_price": 600.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 117899.1,
+    "tva": 0.0,
+    "ttc": 117899.1,
+    "line_ht": 117899.1,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 56 AGL Mdf.pdf",
+    "number": "056/2026/AI",
+    "date": "2026-06-20",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transportation of a Main Shaft from BOUJDOUR, MA to BORUPVEJ, Danemark",
+        "unit": "Trip",
+        "qty": 1.0,
+        "unit_price": 319500.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 319500.0,
+    "tva": 0.0,
+    "ttc": 319500.0,
+    "line_ht": 319500.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 57 COVEC.pdf",
+    "number": "057/2026/AI",
+    "date": "2026-07-07",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Locatio des camion d'évacuation de déblai à ouvrage CASA",
+        "unit": "JOUR",
+        "qty": 24.0,
+        "unit_price": 1600.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 40TN ouvrage 2800",
+        "unit": "JOUR",
+        "qty": 22.0,
+        "unit_price": 2615.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 35 TN ouvrage 0137",
+        "unit": "JOUR",
+        "qty": 9.0,
+        "unit_price": 2307.0
+      },
+      {
+        "desc": "Location chargeuse a la base de vie",
+        "unit": "JOUR",
+        "qty": 7.0,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu CAT 318 2009",
+        "unit": "JOUR",
+        "qty": 22.2,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu FIAT HITACHI 2800",
+        "unit": "JOUR",
+        "qty": 20.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu FIAT HITACHI 2682",
+        "unit": "JOUR",
+        "qty": 21.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 325 0114",
+        "unit": "JOUR",
+        "qty": 21.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE cat 322",
+        "unit": "JOUR",
+        "qty": 20.3,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE Volvo 2700",
+        "unit": "JOUR",
+        "qty": 9.7,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE 322. 380",
+        "unit": "JOUR",
+        "qty": 6.6,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE 322. 1409",
+        "unit": "JOUR",
+        "qty": 8.5,
+        "unit_price": 2300.0
+      },
+      {
+        "desc": "Location camion grue",
+        "unit": "JOUR",
+        "qty": 19.0,
+        "unit_price": 1923.0
+      },
+      {
+        "desc": "Location JCB AVEC MATREAU( MOHAMEDIA )",
+        "unit": "JOUR",
+        "qty": 19.5,
+        "unit_price": 1538.0
+      },
+      {
+        "desc": "Location JCB AVEC GODGET 1006",
+        "unit": "JOUR",
+        "qty": 19.0,
+        "unit_price": 1300.0
+      },
+      {
+        "desc": "Location Compacteur",
+        "unit": "JOUR",
+        "qty": 16.8,
+        "unit_price": 1400.0
+      },
+      {
+        "desc": "L O CATION PORTCHAR 100 TN",
+        "unit": "U",
+        "qty": 2.0,
+        "unit_price": 60000.0
+      },
+      {
+        "desc": "Travaux de déviation de circulation Chariot élévateur 5TN",
+        "unit": "U",
+        "qty": 3.0,
+        "unit_price": 1300.0
+      }
+    ],
+    "ht": 612636.6,
+    "tva": 122527.32,
+    "ttc": 735163.92,
+    "line_ht": 612636.6,
+    "line_tva": 122527.32,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 58 AGL .pdf",
+    "number": "058/2026/AI",
+    "date": "2026-06-25",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transportation of a Main Shaft from Tarfaya, Morocco to Denmark",
+        "unit": "Trip",
+        "qty": 1.0,
+        "unit_price": 283500.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 283500.0,
+    "tva": 0.0,
+    "ttc": 283500.0,
+    "line_ht": 283500.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 59 AGL Mdf.pdf",
+    "number": "059/2026/AI",
+    "date": "2026-06-25",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transportation of a Main Shaft from BOUJDOUR,MA to Valadolid,Spain",
+        "unit": "Trip",
+        "qty": 1.0,
+        "unit_price": 168000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "Fuel surcharge",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 19000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 187000.0,
+    "tva": 0.0,
+    "ttc": 187000.0,
+    "line_ht": 187000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 60 ZHONGCHENG TANGER JUIN 2026.pdf",
+    "number": "060/2026/AI",
+    "date": "2026-07-03",
+    "client_ice": "003775962000003",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR TELESCOPIQUE 17M",
+        "unit": "JOUR",
+        "qty": 30.0,
+        "unit_price": 1300.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 39000.0,
+    "tva": 7800.0,
+    "ttc": 46800.0,
+    "line_ht": 39000.0,
+    "line_tva": 7800.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 61 GOTION.pdf",
+    "number": "061/2026/AI",
+    "date": "2026-07-06",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE D’UN CHARIOT ELEVATEUR 5T PERIODE :DU 01/06 AU 30/06",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 28000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION D’UN CHARIOT EELEVATEUR 5T PERIODE :DU 01/06 AU 30/06",
+        "unit": "HEURES",
+        "qty": 3.0,
+        "unit_price": 119.66,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION MENSUELLE D’UN CHARIOT ELEVATEUR 16T PERIODE :DU 01/06 AU 30/06",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 55000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION D’UN CHARIOT ELEVATEUR 16T PERIODE :DU 01/06 AU 30/06",
+        "unit": "HEURES",
+        "qty": 5.0,
+        "unit_price": 235.04,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION JOURNALIERE D’UN CHARIOT ELEVATEUR 3T*2 PERIODE :DU 24/04 AU 30/04",
+        "unit": "JOURS",
+        "qty": 12.0,
+        "unit_price": 962.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 96078.18,
+    "tva": 0.0,
+    "ttc": 96078.18,
+    "line_ht": 96078.18,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 63 AGL .pdf",
+    "number": "063/2026/AI",
+    "date": "2026-06-26",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transportation of a Main shaft from Tarfaya,MA to Brande,Denmark",
+        "unit": "Trip",
+        "qty": 1.0,
+        "unit_price": 283500.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 283500.0,
+    "tva": 0.0,
+    "ttc": 283500.0,
+    "line_ht": 283500.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 64 AGL.pdf",
+    "number": "064/2026/AI",
+    "date": "2026-06-26",
+    "client_ice": "001527059000033",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Transportation of a GEAR from Tarfaya,MA to Brande,Denmark",
+        "unit": "Trip",
+        "qty": 1.0,
+        "unit_price": 153900.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 153900.0,
+    "tva": 0.0,
+    "ttc": 153900.0,
+    "line_ht": 153900.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 65 GOTION.pdf",
+    "number": "065/2026/AI",
+    "date": "2026-07-07",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION GRUE 160 TN",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 21000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION DEMBILISATION",
+        "unit": "U",
+        "qty": 2.0,
+        "unit_price": 17000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "Camion 12 m",
+        "unit": "JOUR",
+        "qty": 3.0,
+        "unit_price": 2000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 103000.0,
+    "tva": 0.0,
+    "ttc": 103000.0,
+    "line_ht": 103000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 66 COVEC TANGER.pdf",
+    "number": "066/2026/AI",
+    "date": "2026-07-11",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 8M *4",
+        "unit": "MOIS",
+        "qty": 4.0,
+        "unit_price": 15000.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (1)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 23076.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (2)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 23076.0
+      },
+      {
+        "desc": "-LOCATION D’UNE NACELE ELECTRIQUE 16M (1)",
+        "unit": "JOURS",
+        "qty": 30.0,
+        "unit_price": 850.0
+      },
+      {
+        "desc": "-LOCATION D’UNE NACELLE ELECTRIQUE 16M (2)",
+        "unit": "JOURS",
+        "qty": 25.0,
+        "unit_price": 850.0
+      },
+      {
+        "desc": "-MOBILISATION NACELLE 16 M (2)",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 4000.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT TELESCOPIQUE",
+        "unit": "JOUR",
+        "qty": 29.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT TELESCOPIQUE",
+        "unit": "HEURE",
+        "qty": 17.5,
+        "unit_price": 166.66
+      }
+    ],
+    "ht": 247582.26,
+    "tva": 41263.71,
+    "ttc": 288845.97,
+    "line_ht": 203318.55,
+    "line_tva": 40663.71,
+    "issues": [
+      "line mismatch: -LOCATION D’UNE NACELE ELECTRIQUE 1 qty=30 price=850.00 printed=28500.00",
+      "line HT differs from stated HT: lines=203318.55 stated=247582.26",
+      "line TVA differs from stated TVA: lines=40663.71 stated=41263.71"
+    ]
+  },
+  {
+    "source_file": "FACTURES 2026/INV 68 COVEC.pdf",
+    "number": "068/2026/AI",
+    "date": "2026-08-18",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "Location de camion d'évacuation de déblai à CASA / Mohamedia / Bouskoura ( Location journalière)",
+        "unit": "JOUR",
+        "qty": 66.0,
+        "unit_price": 1700.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 40TN ouvrage 2800",
+        "unit": "JOUR",
+        "qty": 27.0,
+        "unit_price": 2307.0
+      },
+      {
+        "desc": "Location dune GRUE MOBILE 30 TN Bouskoura 1409",
+        "unit": "JOUR",
+        "qty": 8.0,
+        "unit_price": 2115.0
+      },
+      {
+        "desc": "Location forfaitaire dune GRUE MOBILE 240 TN 0253",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 60000.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu CAT 318 2009",
+        "unit": "JOUR",
+        "qty": 27.7,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu FIAT HITACHI 2800",
+        "unit": "JOUR",
+        "qty": 26.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur pneu CASE 2682",
+        "unit": "JOUR",
+        "qty": 17.0,
+        "unit_price": 1615.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE CAT 325 0114",
+        "unit": "JOUR",
+        "qty": 24.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE cat 322 0713",
+        "unit": "JOUR",
+        "qty": 23.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Excavateur sur CHENILLE 322. 1409",
+        "unit": "JOUR",
+        "qty": 2.0,
+        "unit_price": 2076.0
+      },
+      {
+        "desc": "Location Mini Excavateur sur CHENILLE 0137",
+        "unit": "JOUR",
+        "qty": 17.7,
+        "unit_price": 1423.0
+      },
+      {
+        "desc": "Location camion grue",
+        "unit": "JOUR",
+        "qty": 24.5,
+        "unit_price": 1923.0
+      },
+      {
+        "desc": "Location JCB AVEC MATREAU ( MOHAMEDIA )",
+        "unit": "JOUR",
+        "qty": 22.0,
+        "unit_price": 1538.0
+      },
+      {
+        "desc": "Location JCB AVEC GODGET 1006",
+        "unit": "JOUR",
+        "qty": 21.0,
+        "unit_price": 1300.0
+      },
+      {
+        "desc": "Location Auto betoniaire 3 m3",
+        "unit": "JOUR",
+        "qty": 6.0,
+        "unit_price": 1900.0
+      },
+      {
+        "desc": "Location Compacteur",
+        "unit": "JOUR",
+        "qty": 26.0,
+        "unit_price": 1400.0
+      },
+      {
+        "desc": "LOCATION PORTCHAR TRANSPORTATION PELLE 1409",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "LOCATION PORTCHAR 100 TN",
+        "unit": "U",
+        "qty": 1.0,
+        "unit_price": 6000.0
+      }
+    ],
+    "ht": 656050.1,
+    "tva": 131210.02,
+    "ttc": 787260.12,
+    "line_ht": 656050.1,
+    "line_tva": 131210.02,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 70 FRACHT MAROC.pdf",
+    "number": "070/2026/AI",
+    "date": "2026-07-28",
+    "client_ice": "003320081000072",
+    "manual_client_name": "FRACHT MAROC",
+    "line_items": [
+      {
+        "desc": "Transport du Main Shaft d'Agreda (Espagne) vers Boulnouar (Mauritanie)",
+        "unit": "FF",
+        "qty": 1.0,
+        "unit_price": 324000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "IMMOBILISATION DU CAMION",
+        "unit": "JOURS",
+        "qty": 5.0,
+        "unit_price": 5000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 349000.0,
+    "tva": 0.0,
+    "ttc": 349000.0,
+    "line_ht": 349000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 71 GOTION.pdf",
+    "number": "071/2026/AI",
+    "date": "2026-08-03",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE D’UN CHARIOT ELEVATEUR 5T PERIODE :DU 01/07 AU 31/07",
+        "unit": "JOURS",
+        "qty": 27.0,
+        "unit_price": 1076.92,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION MENSUELLE D’UN CHARIOT ELEVATEUR 16T PERIODE :DU 01/07 AU 31/07",
+        "unit": "JOURS",
+        "qty": 27.0,
+        "unit_price": 2115.38,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION D’UN CHARIOT ELEVATEUR 16T PERIODE :DU 01/07 AU 31/07",
+        "unit": "HEURES",
+        "qty": 2.5,
+        "unit_price": 235.04,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 86779.7,
+    "tva": 0.0,
+    "ttc": 86779.7,
+    "line_ht": 86779.7,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 72 GOTION.pdf",
+    "number": "072/2026/AI",
+    "date": "2026-08-03",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE D’UNE GRUE MOBILE 100T PERIODE :DU 01/07 AU 31/07",
+        "unit": "JOURS",
+        "qty": 25.0,
+        "unit_price": 5000.0,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION MENSUELLE D’UNE GRUE MOBILE 100T PERIODE :DU 01/07 AU 31/07",
+        "unit": "HEURES",
+        "qty": 10.0,
+        "unit_price": 555.55,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "MOBILISATION/DEMOBILISATION D’UNE GRUE MOBILE 100T",
+        "unit": "Aller-retour",
+        "qty": 1.0,
+        "unit_price": 34000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 164555.5,
+    "tva": 0.0,
+    "ttc": 164555.5,
+    "line_ht": 164555.5,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 73 COVEC JUILLET TANGER .pdf",
+    "number": "073/2026/AI",
+    "date": "2026-08-08",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 8M (1)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 15500.0
+      },
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 8M (2)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 15500.0
+      },
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 8M (3)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 15500.0
+      },
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 8M (4)",
+        "unit": "JOURS",
+        "qty": 29.0,
+        "unit_price": 500.0
+      },
+      {
+        "desc": "-MOBILISATION NACELLE CISEAUX 8M",
+        "unit": "Aller-retour",
+        "qty": 2.0,
+        "unit_price": 2500.0
+      },
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 8M(5)",
+        "unit": "JOURS",
+        "qty": 9.0,
+        "unit_price": 500.0
+      },
+      {
+        "desc": "-MOBILISATION NACELLE CISEAUX 8M",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 2500.0
+      },
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 12M",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 19076.78
+      },
+      {
+        "desc": "-MOBILISATION NACELLE CISEAUX 12M",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 6000.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (1)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 23846.13
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (2)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 23846.13
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (3)",
+        "unit": "JOURS",
+        "qty": 9.0,
+        "unit_price": 769.23
+      },
+      {
+        "desc": "-MOBILISATION CHARIOT ELEVATEUR 3T (3)",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 6000.0
+      },
+      {
+        "desc": "-LOCATION D’UNE NACELLE ELECTRIQUE 16M (2)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 26350.0
+      },
+      {
+        "desc": "-LOCATION D’UNE NACELLE ELECTRIQUE 16M (2)",
+        "unit": "JOURS",
+        "qty": 20.0,
+        "unit_price": 850.0
+      },
+      {
+        "desc": "-MOBILISATION NACELLE 16 M (2)",
+        "unit": "Retour",
+        "qty": 1.0,
+        "unit_price": 6000.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT TELESCOPIQUE",
+        "unit": "JOUR",
+        "qty": 30.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT TELESCOPIQUE",
+        "unit": "HEURE",
+        "qty": 26.5,
+        "unit_price": 166.66
+      }
+    ],
+    "ht": 257458.6,
+    "tva": 51491.72,
+    "ttc": 308950.32,
+    "line_ht": 257458.6,
+    "line_tva": 51491.73,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 74 MINGDIAN TANGER 3 mois mdf.pdf",
+    "number": "074/2026/AI",
+    "date": "2026-08-17",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE",
+        "unit": "JOURS",
+        "qty": 28.5,
+        "unit_price": 1300.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE",
+        "unit": "HEURES",
+        "qty": 17.0,
+        "unit_price": 144.44,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE",
+        "unit": "JOURS",
+        "qty": 59.0,
+        "unit_price": 1200.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE",
+        "unit": "HEURES",
+        "qty": 39.0,
+        "unit_price": 133.33,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CAMION CITERNE D’EAU",
+        "unit": "JOURS",
+        "qty": 48.0,
+        "unit_price": 800.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "TRACTOPELLE 1",
+        "unit": "JOURS",
+        "qty": 26.0,
+        "unit_price": 1000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "TRACTOPELLE 1",
+        "unit": "HEURES",
+        "qty": 2.0,
+        "unit_price": 111.11,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "TRACTOPELLE 2",
+        "unit": "JOURS",
+        "qty": 23.0,
+        "unit_price": 1000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CAMION 8*4",
+        "unit": "JOURS",
+        "qty": 30.5,
+        "unit_price": 1700.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLE 320C",
+        "unit": "JOURS",
+        "qty": 11.5,
+        "unit_price": 2000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLE 320C",
+        "unit": "HEURES",
+        "qty": 4.0,
+        "unit_price": 222.22,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLE VOLVO",
+        "unit": "JOURS",
+        "qty": 27.5,
+        "unit_price": 2000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLE VOLVO",
+        "unit": "HEURES",
+        "qty": 1.0,
+        "unit_price": 222.22,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CHARGEUSE 950H",
+        "unit": "JOURS",
+        "qty": 20.0,
+        "unit_price": 2300.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CHARGEUSE 950H",
+        "unit": "HEURES",
+        "qty": 9.0,
+        "unit_price": 255.55,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "Frais d’Entrée de chargeuse",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 13000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "Frais d’entrée et sortie Tractopelle 1",
+        "unit": "Aller-retour",
+        "qty": 2.0,
+        "unit_price": 1500.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "Frais d’entrée Tractopelle 2",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 1500.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "Frais d’entrée et sortie 320C",
+        "unit": "Aller-retour",
+        "qty": 2.0,
+        "unit_price": 1500.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "Dédouanement pelle sur chenille 320c",
+        "unit": "UN",
+        "qty": 2.0,
+        "unit_price": 1000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "Frais d’entrée et sortie VOLVO",
+        "unit": "Aller-retour",
+        "qty": 2.0,
+        "unit_price": 1500.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "Dédouanement pelle sur chenille VOLVO",
+        "unit": "UN",
+        "qty": 2.0,
+        "unit_price": 1000.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 409888.62,
+    "tva": 81977.72,
+    "ttc": 491866.34,
+    "line_ht": 409888.62,
+    "line_tva": 81977.72,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 75 CHINA CONSTRUCTION MDF .pdf",
+    "number": "075/2026/AI",
+    "date": "2026-08-18",
+    "client_ice": "003489610000025",
+    "manual_client_name": "ZHUO HENG MO LUO GE JIAN ZHU YOU XIAN CO",
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE GRUE MOBILE 75T",
+        "unit": "MOIS",
+        "qty": 0.615,
+        "unit_price": 145000.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 89230.77,
+    "tva": 17846.15,
+    "ttc": 107076.92,
+    "line_ht": 89175.0,
+    "line_tva": 17835.0,
+    "issues": [
+      "line mismatch: LOCATION MENSUELLE GRUE MOBILE 75T qty=0.615 price=145000.00 printed=89230.77",
+      "line HT differs from stated HT: lines=89175.00 stated=89230.77",
+      "line TVA differs from stated TVA: lines=17835.00 stated=17846.15"
+    ]
+  },
+  {
+    "source_file": "FACTURES 2026/INV 76 GOTION 100T Août 2026.pdf",
+    "number": "076/2026/AI",
+    "date": "2026-08-31",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE D’UNE GRUE MOBILE 100T PERIODE :DU 01/08 AU 31/08",
+        "unit": "JOURS",
+        "qty": 27.0,
+        "unit_price": 5000.0,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 135000.0,
+    "tva": 0.0,
+    "ttc": 135000.0,
+    "line_ht": 135000.0,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 77 COVEC AOUT TANGER.pdf",
+    "number": "077/2026/AI",
+    "date": "2026-09-01",
+    "client_ice": "001596313000044",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 8M*5",
+        "unit": "MOIS",
+        "qty": 5.0,
+        "unit_price": 15500.0
+      },
+      {
+        "desc": "-LOCATION NACELLE CISEAUX 12M",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 19076.78
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (1)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 23846.13
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (1)",
+        "unit": "HEURES",
+        "qty": 93.0,
+        "unit_price": 85.47
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (2)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 23846.13
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (2)",
+        "unit": "HEURES",
+        "qty": 93.0,
+        "unit_price": 85.47
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (3)",
+        "unit": "MOIS",
+        "qty": 1.0,
+        "unit_price": 23846.13
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (3)",
+        "unit": "HEURES",
+        "qty": 93.0,
+        "unit_price": 85.47
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (4)",
+        "unit": "JOURS",
+        "qty": 22.0,
+        "unit_price": 769.23
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (4)",
+        "unit": "HEURES",
+        "qty": 66.0,
+        "unit_price": 85.47
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (5)",
+        "unit": "JOURS",
+        "qty": 9.0,
+        "unit_price": 769.23
+      },
+      {
+        "desc": "-LOCATION CHARIOT ELEVATEUR 3T (5)",
+        "unit": "HEURES",
+        "qty": 27.0,
+        "unit_price": 85.47
+      },
+      {
+        "desc": "-MOBILISATION CHARIOT ELEVATEUR 3T (4)",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 7500.0
+      },
+      {
+        "desc": "-MOBILISATION CHARIOT ELEVATEUR 3T (5)",
+        "unit": "Aller",
+        "qty": 1.0,
+        "unit_price": 7500.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT TELESCOPIQUE",
+        "unit": "JOUR",
+        "qty": 31.0,
+        "unit_price": 1500.0
+      },
+      {
+        "desc": "-LOCATION CHARIOT TELESCOPIQUE",
+        "unit": "HEURE",
+        "qty": 46.5,
+        "unit_price": 166.66
+      }
+    ],
+    "ht": 293005.83,
+    "tva": 58601.16,
+    "ttc": 351606.99,
+    "line_ht": 293005.83,
+    "line_tva": 58601.17,
+    "issues": [
+      "line mismatch: -LOCATION CHARIOT ELEVATEUR 3T (4) qty=22 price=769.23 printed=23846.13",
+      "line mismatch: -LOCATION CHARIOT ELEVATEUR 3T (5) qty=9 price=769.23 printed=23846.13"
+    ]
+  },
+  {
+    "source_file": "FACTURES 2026/INV 78 GOTION AOUT.pdf",
+    "number": "078/2026/AI",
+    "date": "2026-09-01",
+    "client_ice": "003520699000060",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "LOCATION MENSUELLE D’UN CHARIOT ELEVATEUR 5T PERIODE :DU 01/08 AU 31/08",
+        "unit": "JOURS",
+        "qty": 27.0,
+        "unit_price": 1076.92,
+        "tva_rate": 0.0
+      },
+      {
+        "desc": "LOCATION MENSUELLE D’UN CHARIOT ELEVATEUR 16T PERIODE :DU 01/08 AU 31/08",
+        "unit": "JOURS",
+        "qty": 27.0,
+        "unit_price": 2115.38,
+        "tva_rate": 0.0
+      }
+    ],
+    "ht": 86192.1,
+    "tva": 0.0,
+    "ttc": 86192.1,
+    "line_ht": 86192.1,
+    "line_tva": 0.0,
+    "issues": []
+  },
+  {
+    "source_file": "FACTURES 2026/INV 80 MINGDIAN AOUT TANGER .pdf",
+    "number": "080/2026/AI",
+    "date": "2026-09-07",
+    "client_ice": "003389053000034",
+    "manual_client_name": null,
+    "line_items": [
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE 1",
+        "unit": "JOURS",
+        "qty": 31.0,
+        "unit_price": 1200.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE 2",
+        "unit": "JOURS",
+        "qty": 27.0,
+        "unit_price": 1200.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CHARIOT ELEVATEUR TELESCOPIQUE 2",
+        "unit": "HEURES",
+        "qty": 2.0,
+        "unit_price": 133.33,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "CAMION CITERNE D’EAU",
+        "unit": "JOURS",
+        "qty": 21.5,
+        "unit_price": 800.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "TRACTOPELLE 2",
+        "unit": "JOURS",
+        "qty": 23.5,
+        "unit_price": 1000.0,
+        "tva_rate": 20.0
+      },
+      {
+        "desc": "PELLE SUR CHENILLES 325L",
+        "unit": "JOURS",
+        "qty": 3.0,
+        "unit_price": 1900.0,
+        "tva_rate": 20.0
+      }
+    ],
+    "ht": 116266.66,
+    "tva": 23253.33,
+    "ttc": 139519.99,
+    "line_ht": 116266.66,
+    "line_tva": 23253.33,
+    "issues": []
+  }
+]

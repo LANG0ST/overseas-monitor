@@ -31,6 +31,8 @@ export type DocumentRow = {
   is_locked: boolean;
   manual_number_only?: boolean;
   source_pointage_sheet_id?: string | null;
+  paid?: boolean;
+  paid_date?: string | null;
 };
 
 export type DocumentSnapshotData = Pick<
@@ -159,17 +161,15 @@ function normalizeNumber(type: DocumentType, value: string, documentDate: string
   }
   if (!/^\d+$/.test(number)) return number;
   const sequence = BigInt(number).toString();
-  if (type === "bon_commande") {
-    const yearSuffix = documentDate.slice(2, 4);
-    return `BC-${sequence.padStart(4, "0")}/${yearSuffix}`;
-  }
-  const prefix: Record<DocumentType, string> = {
-    facture: "Fact",
-    devis: "Dev",
+  const year = documentDate.slice(0, 4);
+  const yearSuffix = year.slice(2, 4);
+  if (type === "facture") return `${sequence.padStart(3, "0")}/${year}/AI`;
+  const prefix: Record<Exclude<DocumentType, "facture">, string> = {
+    devis: "D",
     bon_commande: "BC",
     avoir: "AV",
   };
-  return `${prefix[type]}-${sequence.padStart(3, "0")}`;
+  return `${prefix[type]}-${sequence.padStart(4, "0")}/${yearSuffix}`;
 }
 
 export async function createDraftDocument(
@@ -237,6 +237,58 @@ export async function createDraftDocument(
   return data as DocumentRow;
 }
 
+export async function duplicateDocument(documentId: string) {
+  requireId(documentId);
+  const supabase = await createClient();
+  const { userId } = await requireUser(supabase);
+  const { data: source, error: sourceError } = await supabase
+    .from("documents")
+    .select(
+      "type, date, partenaire_id, client_name, client_ice, client_address, city, has_cachet, line_items, tva_rate, validity_days, chantier, period_start, period_end, motif, reference_facture_number, devis_fuel_driver, devis_driver, bon_driver, devis_payment_conditions, devis_bank_name, devis_iban, avoir_payment_method, avoir_payment_reference",
+    )
+    .eq("id", documentId)
+    .maybeSingle();
+  if (sourceError) failDatabase(sourceError);
+  if (!source) throw new DocumentError("NOT_FOUND", "Document introuvable.");
+
+  const type = source.type as DocumentType;
+  requireType(type);
+  await requireDocumentEdit(supabase, type);
+
+  const lineItems = source.line_items as LineItem[];
+  const tvaRate = Number(source.tva_rate);
+  let totals: DocumentTotals;
+  try {
+    totals = calculateTotals(lineItems, tvaRate);
+  } catch (error) {
+    throw new DocumentError(
+      "INVALID_INPUT",
+      error instanceof Error ? error.message : "Lignes invalides.",
+    );
+  }
+
+  const { data, error } = await supabase
+    .from("documents")
+    .insert({
+      ...source,
+      number: null,
+      line_items: lineItems,
+      tva_rate: tvaRate,
+      ...totals,
+      paid: false,
+      paid_date: null,
+      is_active: true,
+      is_locked: false,
+      manual_number_only: false,
+      source_pointage_sheet_id: null,
+      created_by: userId,
+    })
+    .select("id, type")
+    .single();
+  if (error) failDatabase(error);
+  return data as { id: string; type: DocumentType };
+}
+
 export async function assignNumber(documentId: string) {
   requireId(documentId);
   const supabase = await createClient();
@@ -280,21 +332,15 @@ export async function assignNumberManually(documentId: string, value: string) {
   const document = await getDocument(supabase, documentId);
   const number = normalizeNumber(document.type, value, document.date);
   requireActive(document);
-  if (document.number && !document.manual_number_only) {
-    throw new DocumentError("ALREADY_NUMBERED", "Ce document doit être déverrouillé avant de changer son numéro.");
-  }
-  if (document.number && !user.isSuperAdmin) {
-    throw new DocumentError("PERMISSION_DENIED", "Seul un super-administrateur peut modifier un numéro existant.");
-  }
   if (document.is_locked) throw new DocumentError("LOCKED", "Un document verrouillé ne peut pas être renuméroté.");
 
   let update = supabase
     .from("documents")
-    .update({ number })
+    .update({ number, manual_number_only: true })
     .eq("id", documentId)
     .eq("is_locked", false);
   update = document.number
-    ? update.eq("number", document.number).eq("manual_number_only", true)
+    ? update.eq("number", document.number)
     : update.is("number", null);
   const { data: updated, error } = await update
     .select("id, type, number, date, city, has_cachet, client_name, client_ice, client_address, line_items, tva_rate, ht, tva, ttc, is_active, is_locked, manual_number_only, source_pointage_sheet_id")

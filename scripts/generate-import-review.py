@@ -147,13 +147,13 @@ CLIENTS = [
         "filename_hints": ["ZHONGCHENG"],
     },
     {
-        "status": "review",
+        "status": "approve",
         "canonical_name": "MINGLAI",
-        "ice": "00379735000081",
+        "ice": "003797353000081",
         "address": "",
         "aliases": "MINGLAI",
-        "confidence": "medium",
-        "notes": "The printed ICE has 14 digits; verify whether a zero is missing before import.",
+        "confidence": "high",
+        "notes": "Correct ICE confirmed by user; client already exists in the database.",
         "filename_hints": ["MINGLAI"],
     },
     {
@@ -319,8 +319,8 @@ def invoice_number_from_filename(name: str) -> str:
     match = re.search(r"(?i)^INV\s*0*([0-9]+)(?:\s+(BIS))?", name)
     if not match:
         return ""
-    suffix = " BIS" if match.group(2) else ""
-    return f"{int(match.group(1)):03d}{suffix}/2026/AI"
+    suffix = "/BIS" if match.group(2) else ""
+    return f"{int(match.group(1)):03d}/2026/AI{suffix}"
 
 
 def build_exception_rows(documents: list[dict[str, object]]) -> list[dict[str, object]]:
@@ -330,8 +330,19 @@ def build_exception_rows(documents: list[dict[str, object]]) -> list[dict[str, o
     for document in documents:
         number = invoice_number_from_filename(str(document["name"]))
         if number:
-            numeric_key = number.split("/", 1)[0].replace(" BIS", "")
+            numeric_key = number.split("/", 1)[0]
             number_groups[numeric_key].append(document)
+            if number.endswith("/BIS"):
+                rows.append(
+                    {
+                        "source_file": document["relative"],
+                        "exception_type": "bis_invoice_number",
+                        "detected_value": number,
+                        "confidence": "high",
+                        "recommended_action": "use_bis_suffix_on_import",
+                        "notes": "Client-confirmed numbering rule: BIS in filename maps to /BIS at the end of the entered invoice number; printed PDF may omit the suffix.",
+                    }
+                )
         if document["error"]:
             rows.append(
                 {
@@ -350,20 +361,29 @@ def build_exception_rows(documents: list[dict[str, object]]) -> list[dict[str, o
                     "exception_type": "image_only_or_no_text",
                     "detected_value": f"{document['text_chars']} extracted characters",
                     "confidence": "high",
-                    "recommended_action": "ocr",
-                    "notes": "Route only this file to OCR; do not OCR the full folder.",
+                    "recommended_action": "review_ocr_transcript",
+                    "notes": "OCR completed on this image-only PDF; see ocr_transcripts.txt and the re-audit summary.",
                 }
             )
 
     for number, group in sorted(number_groups.items()):
         if len(group) < 2:
             continue
+        if number == "003":
+            # The image-only COVEC invoice prints 003/2026/AL, whereas GOTION is 003/2026/AI.
+            continue
         files = " | ".join(str(item["relative"]) for item in group)
         for document in group:
+            if invoice_number_from_filename(str(document["name"])).endswith("/BIS"):
+                continue
+            if number == "047":
+                continue
+            if len([item for item in group if not invoice_number_from_filename(str(item["name"])).endswith("/BIS")]) < 2:
+                continue
             rows.append(
                 {
                     "source_file": document["relative"],
-                    "exception_type": "duplicate_or_bis_invoice_number",
+                    "exception_type": "repeated_non_bis_invoice_number",
                     "detected_value": f"{number}/2026/AI",
                     "confidence": "high",
                     "recommended_action": "manual_review",
@@ -374,28 +394,36 @@ def build_exception_rows(documents: list[dict[str, object]]) -> list[dict[str, o
     rows.extend(
         [
             {
-                "source_file": "FACTURES 2026/INV 47 AGL.pdf",
-                "exception_type": "possible_revised_invoice",
-                "detected_value": "047/2026/AI; total 639000",
+                "source_file": "FACTURES 2026/INV 003 COVEC 第三份五金发票.pdf",
+                "exception_type": "filename_series_differs_from_printed_number",
+                "detected_value": "003/2026/AL",
                 "confidence": "high",
-                "recommended_action": "compare_versions",
-                "notes": "The 'Mai' version includes an additional immobilisation line and a different total.",
+                "recommended_action": "use_printed_series_on_import",
+                "notes": "Visual review of the OCR page confirms AL; GOTION 003 is AI and is a separate invoice number.",
             },
             {
                 "source_file": "FACTURES 2026/INV 47 AGL Mai.pdf",
-                "exception_type": "possible_revised_invoice",
+                "exception_type": "retained_invoice_version",
                 "detected_value": "047/2026/AI; total 651000",
                 "confidence": "high",
-                "recommended_action": "compare_versions",
-                "notes": "Likely later revision, but requires confirmation before invoice import.",
+                "recommended_action": "use_for_import",
+                "notes": "User confirmed this is the retained version; numeric TTC is 651000 though the amount in words says 639000.",
             },
             {
                 "source_file": "FACTURES 2026/INV 43 MINGLAI.pdf",
-                "exception_type": "invalid_ice_length",
-                "detected_value": "00379735000081",
+                "exception_type": "client_ice_corrected",
+                "detected_value": "003797353000081",
                 "confidence": "high",
-                "recommended_action": "verify_client_ice",
-                "notes": "Printed client ICE contains 14 digits.",
+                "recommended_action": "use_existing_client",
+                "notes": "User provided corrected ICE; printed PDF contains a 14-digit typo.",
+            },
+            {
+                "source_file": "FACTURES 2026/INV 20 AGL.pdf",
+                "exception_type": "manual_entry_by_user",
+                "detected_value": "N20/2026/AI",
+                "confidence": "high",
+                "recommended_action": "do_not_import",
+                "notes": "User will enter this invoice manually.",
             },
             {
                 "source_file": "FACTURES 2026/INV 23 BIS WWL MOROCCO.pdf",
@@ -420,7 +448,7 @@ def build_exception_rows(documents: list[dict[str, object]]) -> list[dict[str, o
 
 def csv_text(rows: list[dict[str, object]], fields: list[str]) -> str:
     buffer = io.StringIO(newline="")
-    writer = csv.DictWriter(buffer, fieldnames=fields, extrasaction="ignore")
+    writer = csv.DictWriter(buffer, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
     writer.writeheader()
     writer.writerows(rows)
     return buffer.getvalue()

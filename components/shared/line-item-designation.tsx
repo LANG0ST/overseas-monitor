@@ -8,7 +8,7 @@ function formatPeriodDate(value: string) {
 export function LineItemDesignation({ line }: { line: LineItem }) {
   return (
     <>
-      <p>{line.desc || "Sans désignation"}</p>
+      <p className="whitespace-pre-line">{line.desc || "Sans désignation"}</p>
       {line.period_start && line.period_end ? (
         <p className="mt-1 text-[10px] font-semibold tracking-wide text-primary-600">
           PÉRIODE : DU {formatPeriodDate(line.period_start)} AU {formatPeriodDate(line.period_end)}

@@ -42,3 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 /context
+
+/FACTURES_2026
+
+/outputs

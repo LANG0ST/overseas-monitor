@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function CreateAvoirButton({ factureId, factureNumber }: { factureId: string; factureNumber: string }) {
@@ -10,11 +11,12 @@ export function CreateAvoirButton({ factureId, factureNumber }: { factureId: str
   return (
     <>
       <button
-        className="rounded-full border border-primary-300 bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary-900 hover:bg-primary-100"
+        className="inline-flex items-center gap-1 rounded-full border border-primary-300 bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary-900 hover:bg-primary-100"
         onClick={() => setOpen(true)}
         type="button"
       >
-        Créer un avoir
+        <Plus className="size-3.5" />
+        Avoir
       </button>
       {open ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/40 p-4" role="dialog" aria-modal="true" aria-labelledby="avoir-dialog-title">

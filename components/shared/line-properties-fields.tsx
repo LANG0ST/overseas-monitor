@@ -25,10 +25,11 @@ export function LinePropertiesFields({
     <>
       <label className="block text-sm font-semibold text-neutral-900">
         Désignation
-        <input
-          className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
+        <textarea
+          className="mt-1 min-h-20 w-full resize-y rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
           disabled={locked}
           onChange={(event) => onChange("desc", event.target.value)}
+          rows={3}
           value={line.desc}
         />
       </label>

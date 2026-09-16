@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { FileSpreadsheet } from "lucide-react";
 import { CreateAvoirButton } from "@/components/shared/create-avoir-button";
+import { DuplicateDocumentButton } from "@/components/shared/duplicate-document-button";
+import { InvoicePaidButton } from "@/components/shared/invoice-paid-button";
 import { getAccessContext } from "@/lib/auth/can-edit";
 import type { DocumentType } from "@/lib/db/documents";
 import { createClient } from "@/lib/supabase/server";
@@ -146,6 +149,15 @@ export async function DocumentList({
           </h1>
         </div>
         <div className="flex gap-2">
+          {type === "facture" ? (
+            <a
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-emerald-700 bg-emerald-700 px-4 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
+              href="/api/reports/factures.xlsx"
+            >
+              <FileSpreadsheet className="size-4" />
+              Exporter le rapport Excel
+            </a>
+          ) : null}
           <Link
             className="inline-flex min-h-11 items-center rounded-full border border-neutral-300 bg-white px-4 text-sm font-medium text-ink-900 shadow-sm"
             href={hrefWithFilters(path, filters, {
@@ -281,7 +293,7 @@ export async function DocumentList({
       </form>
 
       <div className="hidden overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm md:block">
-        <table className="min-w-[900px] w-full text-left text-sm">
+        <table className="min-w-[1100px] w-full table-fixed text-left text-sm">
           <thead className="bg-ink-900 text-xs uppercase tracking-wide text-white">
             <tr>
               <th className="px-5 py-4">Numéro</th>
@@ -289,15 +301,11 @@ export async function DocumentList({
                 <th className="px-5 py-4">Facture référencée</th>
               ) : null}
               <th className="px-5 py-4">Date</th>
-              <th className="px-5 py-4">Client</th>
+              <th className="w-[24%] px-4 py-4">Client</th>
               <th className="px-5 py-4 text-right">TTC</th>
               <th className="px-5 py-4">Dernière modification</th>
               <th className="px-5 py-4">Statut</th>
-              {type === "facture" ? (
-                <>
-                  <th className="px-5 py-4 text-right">Action</th>
-                </>
-              ) : null}
+              <th className={`${type === "facture" ? "w-[360px]" : "w-[140px]"} px-4 py-4 text-right`}>Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-200">
@@ -322,7 +330,7 @@ export async function DocumentList({
                 <td className="px-5 py-4 text-neutral-600">
                   {formatDate(document.date)}
                 </td>
-                <td className="px-5 py-4 text-neutral-900">
+                <td className="px-4 py-4 text-neutral-900">
                   {document.client_name || "Client non renseigné"}
                 </td>
                 <td className="px-5 py-4 text-right font-medium text-neutral-900">
@@ -355,18 +363,28 @@ export async function DocumentList({
                         </span>
                       )}
                 </td>
-                {type === "facture" ? (
-                  <>
-                    <td className="px-5 py-4 text-right">
-                      {!showInactive && canAccessAvoirs && document.number && document.is_locked ? (
-                        <CreateAvoirButton
-                          factureId={document.id}
-                          factureNumber={document.number}
-                        />
+                <td className="px-4 py-4">
+                  {!showInactive ? (
+                    <div className="flex flex-wrap justify-end gap-2">
+                      <DuplicateDocumentButton documentId={document.id} path={path} />
+                      {type === "facture" && document.number && document.is_locked ? (
+                        <>
+                          <InvoicePaidButton
+                            factureId={document.id}
+                            factureNumber={document.number}
+                            paid={document.paid}
+                          />
+                          {canAccessAvoirs ? (
+                            <CreateAvoirButton
+                              factureId={document.id}
+                              factureNumber={document.number}
+                            />
+                          ) : null}
+                        </>
                       ) : null}
-                    </td>
-                  </>
-                ) : null}
+                    </div>
+                  ) : null}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -374,32 +392,29 @@ export async function DocumentList({
       </div>
       <div className="space-y-3 md:hidden">
         {documents.map((document) => (
-          <Link
-            className="block rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm"
-            href={`${path}/${document.id}`}
-            key={document.id}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="font-semibold text-ink-900">
-                  {document.number || "Brouillon"}
-                </p>
-                <p className="mt-1 text-sm text-neutral-600">
-                  {document.client_name || "Client non renseigné"}
-                </p>
-                {type === "avoir" ? (
-                  <p className="mt-1 text-xs font-medium text-neutral-700">
-                    Facture : {document.reference_facture_number || "—"}
+          <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm" key={document.id}>
+            <Link className="block p-4" href={`${path}/${document.id}`}>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-ink-900">
+                    {document.number || "Brouillon"}
                   </p>
-                ) : null}
+                  <p className="mt-1 text-sm text-neutral-600">
+                    {document.client_name || "Client non renseigné"}
+                  </p>
+                  {type === "avoir" ? (
+                    <p className="mt-1 text-xs font-medium text-neutral-700">
+                      Facture : {document.reference_facture_number || "—"}
+                    </p>
+                  ) : null}
+                </div>
+                <p className="font-semibold text-neutral-900">
+                  {formatAmount(Number(document.ttc))}
+                </p>
               </div>
-              <p className="font-semibold text-neutral-900">
-                {formatAmount(Number(document.ttc))}
-              </p>
-            </div>
-            <div className="mt-3 flex items-center justify-between text-xs text-neutral-600">
-              <span>{formatDate(document.date)} · modifié {formatActivity(document.updated_at)}</span>
-              <span
+              <div className="mt-3 flex items-center justify-between text-xs text-neutral-600">
+                <span>{formatDate(document.date)} · modifié {formatActivity(document.updated_at)}</span>
+                <span
                   className={
                     draftScope
                       ? "font-semibold text-neutral-700"
@@ -411,7 +426,7 @@ export async function DocumentList({
                           ? "font-semibold text-green-800"
                           : "font-semibold text-amber-900"
                   }
-              >
+                >
                   {draftScope
                     ? "Brouillon"
                     : !document.is_locked
@@ -421,10 +436,22 @@ export async function DocumentList({
                         : document.paid
                         ? "Payée"
                         : "Impayée"}
-              </span>
-            </div>
-            {isAdmin && document.created_by ? <p className="mt-1 text-xs text-neutral-500">Créé par {creatorNames.get(document.created_by) || "Utilisateur"}</p> : null}
-          </Link>
+                </span>
+              </div>
+              {isAdmin && document.created_by ? <p className="mt-1 text-xs text-neutral-500">Créé par {creatorNames.get(document.created_by) || "Utilisateur"}</p> : null}
+            </Link>
+            {!showInactive ? (
+              <div className="flex flex-wrap justify-end gap-2 border-t border-neutral-200 p-3">
+                <DuplicateDocumentButton documentId={document.id} path={path} />
+                {type === "facture" && document.number && document.is_locked ? (
+                  <>
+                    <InvoicePaidButton factureId={document.id} factureNumber={document.number} paid={document.paid} />
+                    {canAccessAvoirs ? <CreateAvoirButton factureId={document.id} factureNumber={document.number} /> : null}
+                  </>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
         ))}
       </div>
       {documents.length === 0 ? (

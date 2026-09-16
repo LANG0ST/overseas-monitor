@@ -459,7 +459,7 @@ export function AvoirEditor({
   }
 
   async function assignManualNumber() {
-    if (locked || (document.number && !document.manual_number_only)) return;
+    if (locked) return;
     const number = window.prompt("Numéro manuel de l’avoir", document.number || manualNumber);
     if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à cet avoir. Un doublon sera refusé.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
@@ -508,7 +508,7 @@ export function AvoirEditor({
   }
 
   async function save() {
-    if (locked) return;
+    if (locked || !dirty) return;
     setPreviewSnapshotId(null);
     if (!(await confirm({ title: "Enregistrer l’avoir ?", description: "Les modifications seront enregistrées et un nouveau snapshot sera créé.", confirmLabel: "Enregistrer" }))) return;
     startTransition(async () => {
@@ -636,7 +636,7 @@ export function AvoirEditor({
               Déverrouiller l’avoir
             </button>
           ) : null}
-          {document.is_active && !locked && ((!document.number && isAdmin) || (document.manual_number_only && isSuperAdmin)) ? (
+          {document.is_active && !locked && isAdmin ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -660,9 +660,10 @@ export function AvoirEditor({
           ) : null}
           {document.is_active && !locked ? (
             <button
-              className="rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-sm"
-              disabled={pending}
+              className="rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={pending || !dirty}
               onClick={save}
+              title={!dirty ? "Aucune modification à enregistrer" : undefined}
               type="button"
             >
               <DatabaseArrowDownIcon className="mr-2 inline" size={16} />

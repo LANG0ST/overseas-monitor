@@ -471,7 +471,7 @@ export function InvoiceEditor({
   }
 
   async function assignManualNumber() {
-    if (locked || (document.number && !document.manual_number_only)) return;
+    if (locked) return;
     const number = window.prompt("Numéro manuel de la facture", document.number || manualNumber);
     if (!number || !(await confirm({ title: "Définir ce numéro manuel ?", description: `Le numéro « ${number.trim()} » sera attribué à cette facture. Un doublon sera refusé.`, confirmLabel: "Définir le numéro" }))) return;
     setManualNumber(number.trim());
@@ -519,7 +519,7 @@ export function InvoiceEditor({
   }
 
   async function save() {
-    if (locked) return;
+    if (locked || !dirty) return;
     if (!(await confirm({ title: "Enregistrer la facture ?", description: "Les modifications seront enregistrées et un nouveau snapshot sera créé.", confirmLabel: "Enregistrer" }))) return;
     startTransition(async () => {
       if (applyResult(await persistInvoice(false)) && selectedTool === "snapshots") {
@@ -563,7 +563,14 @@ export function InvoiceEditor({
 
   async function togglePaid() {
     if (!locked) return;
-    if (!(await confirm({ title: document.paid ? "Marquer comme impayée ?" : "Marquer comme payée ?", description: "Le statut de paiement de cette facture sera mis à jour.", confirmLabel: "Confirmer" }))) return;
+    const factureNumber = document.number || "sans numéro";
+    if (!(await confirm({
+      title: document.paid ? "Marquer comme impayée ?" : "Marquer comme payée ?",
+      description: document.paid
+        ? `Voulez-vous marquer la facture ${factureNumber} comme impayée ?`
+        : `Voulez-vous marquer la facture ${factureNumber} comme payée ?`,
+      confirmLabel: "Confirmer",
+    }))) return;
     startTransition(async () => {
       applyResult(await setInvoicePaidAction(document.id, !document.paid));
     });
@@ -670,7 +677,7 @@ export function InvoiceEditor({
               Déverrouiller la facture
             </button>
           ) : null}
-          {document.is_active && !locked && ((!document.number && isAdmin) || (document.manual_number_only && isSuperAdmin)) ? (
+          {document.is_active && !locked && isAdmin ? (
             <button
               className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-ink-900 shadow-sm"
               disabled={pending}
@@ -683,9 +690,10 @@ export function InvoiceEditor({
           ) : null}
           {document.is_active && !locked ? (
             <button
-              className="rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-sm"
-              disabled={pending}
+              className="rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={pending || !dirty}
               onClick={save}
+              title={!dirty ? "Aucune modification à enregistrer" : undefined}
               type="button"
             >
               <DatabaseArrowDownIcon className="mr-2 inline" size={16} />
