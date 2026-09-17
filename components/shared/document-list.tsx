@@ -57,7 +57,10 @@ function formatDate(value: string) {
 }
 
 function formatActivity(value: string) {
-  return new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "short" }).format(new Date(value));
+  return new Intl.DateTimeFormat("fr-FR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(new Date(value));
 }
 
 function hrefWithFilters(
@@ -84,7 +87,8 @@ export async function DocumentList({
 }: DocumentListProps) {
   const showInactive = filters.inactive === "1";
   const { userId, isAdmin, allowedResources } = await getAccessContext();
-  const canAccessAvoirs = type === "facture" && allowedResources.includes("avoirs");
+  const canAccessAvoirs =
+    type === "facture" && allowedResources.includes("avoirs");
   const supabase = await createClient();
   const draftScope =
     filters.drafts === "mine"
@@ -93,12 +97,18 @@ export async function DocumentList({
         ? "all"
         : null;
 
-  const from = filters.from && /^\d{4}-\d{2}-\d{2}$/.test(filters.from) ? filters.from : "";
-  const to = filters.to && /^\d{4}-\d{2}-\d{2}$/.test(filters.to) ? filters.to : "";
-  const search = filters.search?.replace(/[^\p{L}\p{N}\s\-_/]/gu, " ").trim() ?? "";
+  const from =
+    filters.from && /^\d{4}-\d{2}-\d{2}$/.test(filters.from)
+      ? filters.from
+      : "";
+  const to =
+    filters.to && /^\d{4}-\d{2}-\d{2}$/.test(filters.to) ? filters.to : "";
+  const search =
+    filters.search?.replace(/[^\p{L}\p{N}\s\-_/]/gu, " ").trim() ?? "";
   const client = filters.client?.trim() ?? "";
   const requestedPage = Number.parseInt(filters.page ?? "1", 10);
-  const page = Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+  const page =
+    Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
 
   let query = supabase
     .from("documents")
@@ -117,27 +127,43 @@ export async function DocumentList({
   if (from) query = query.gte("date", from);
   if (to) query = query.lte("date", to);
   if (client) query = query.ilike("client_name", `%${client}%`);
-  if (search) query = query.or(`number.ilike.%${search}%,client_name.ilike.%${search}%`);
-  if (type === "facture" && draftScope === null && filters.paid && filters.paid !== "all") {
+  if (search)
+    query = query.or(`number.ilike.%${search}%,client_name.ilike.%${search}%`);
+  if (
+    type === "facture" &&
+    draftScope === null &&
+    filters.paid &&
+    filters.paid !== "all"
+  ) {
     query = query.eq("paid", filters.paid === "paid");
   }
 
   const rangeStart = (page - 1) * PAGE_SIZE;
-  const { data, error, count } = await query
-    .order("date", { ascending: false })
-    .range(rangeStart, rangeStart + PAGE_SIZE - 1);
+  query = draftScope
+    ? query.order("date", { ascending: false })
+    : query.order("number", { ascending: false }).order("date", { ascending: false });
+  const { data, error, count } = await query.range(
+    rangeStart,
+    rangeStart + PAGE_SIZE - 1,
+  );
 
   if (error) throw new Error(error.message);
   const documents = (data ?? []) as ListDocument[];
   const total = count ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const creatorIds = isAdmin
-    ? [...new Set(documents.map((document) => document.created_by).filter(Boolean))] as string[]
+    ? ([
+        ...new Set(
+          documents.map((document) => document.created_by).filter(Boolean),
+        ),
+      ] as string[])
     : [];
   const { data: creators } = creatorIds.length
     ? await supabase.from("profiles").select("id, name").in("id", creatorIds)
     : { data: [] };
-  const creatorNames = new Map((creators ?? []).map((creator) => [creator.id, creator.name]));
+  const creatorNames = new Map(
+    (creators ?? []).map((creator) => [creator.id, creator.name]),
+  );
 
   return (
     <div className="space-y-6">
@@ -176,40 +202,43 @@ export async function DocumentList({
         </div>
       </div>
 
-      <nav aria-label={`Vues des ${title.toLocaleLowerCase("fr")}`} className="grid w-full gap-2 sm:flex sm:flex-wrap">
+      <nav
+        aria-label={`Vues des ${title.toLocaleLowerCase("fr")}`}
+        className="grid w-full gap-2 sm:flex sm:flex-wrap"
+      >
+        <Link
+          className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === null ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+          href={hrefWithFilters(path, filters, {
+            drafts: undefined,
+            paid: filters.paid,
+            page: undefined,
+          })}
+        >
+          {title}
+        </Link>
+        <Link
+          className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === "mine" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+          href={hrefWithFilters(path, filters, {
+            drafts: "mine",
+            paid: undefined,
+            page: undefined,
+          })}
+        >
+          Mes brouillons
+        </Link>
+        {isAdmin ? (
           <Link
-            className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === null ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
+            className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === "all" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
             href={hrefWithFilters(path, filters, {
-              drafts: undefined,
-              paid: filters.paid,
-              page: undefined,
-            })}
-          >
-            {title}
-          </Link>
-          <Link
-            className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === "mine" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
-            href={hrefWithFilters(path, filters, {
-              drafts: "mine",
+              drafts: "all",
               paid: undefined,
               page: undefined,
             })}
           >
-            Mes brouillons
+            Tous les brouillons
           </Link>
-          {isAdmin ? (
-            <Link
-              className={`inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-center text-sm font-semibold shadow-sm ${draftScope === "all" ? "border-ink-900 bg-ink-900 text-white" : "border-neutral-300 bg-white text-ink-900"}`}
-              href={hrefWithFilters(path, filters, {
-                drafts: "all",
-                paid: undefined,
-                page: undefined,
-              })}
-            >
-              Tous les brouillons
-            </Link>
-          ) : null}
-        </nav>
+        ) : null}
+      </nav>
 
       <form
         className="glass-card grid gap-4 rounded-2xl p-5 md:grid-cols-2 xl:grid-cols-5"
@@ -305,7 +334,11 @@ export async function DocumentList({
               <th className="px-5 py-4 text-right">TTC</th>
               <th className="px-5 py-4">Dernière modification</th>
               <th className="px-5 py-4">Statut</th>
-              <th className={`${type === "facture" ? "w-[360px]" : "w-[140px]"} px-4 py-4 text-right`}>Actions</th>
+              <th
+                className={`${type === "facture" ? "w-[360px]" : "w-[140px]"} px-4 py-4 text-right`}
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-200">
@@ -338,36 +371,46 @@ export async function DocumentList({
                 </td>
                 <td className="px-5 py-4 text-xs text-neutral-600">
                   <p>{formatActivity(document.updated_at)}</p>
-                  {isAdmin && document.created_by ? <p className="mt-1">Par {creatorNames.get(document.created_by) || "Utilisateur"}</p> : null}
+                  {isAdmin && document.created_by ? (
+                    <p className="mt-1">
+                      Par{" "}
+                      {creatorNames.get(document.created_by) || "Utilisateur"}
+                    </p>
+                  ) : null}
                 </td>
                 <td className="px-5 py-4">
-                      {draftScope ? (
-                        <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-700">
-                          Brouillon
-                        </span>
-                      ) : !document.is_locked ? (
-                        <span className="rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-900">
-                          Numérotée
-                        </span>
-                      ) : type !== "facture" ? (
-                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
-                          Verrouillé
-                        </span>
-                      ) : document.paid ? (
-                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
-                          Payée
-                        </span>
-                      ) : (
-                        <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
-                          Impayée
-                        </span>
-                      )}
+                  {draftScope ? (
+                    <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-700">
+                      Brouillon
+                    </span>
+                  ) : !document.is_locked ? (
+                    <span className="rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-900">
+                      Numérotée
+                    </span>
+                  ) : type !== "facture" ? (
+                    <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
+                      Verrouillé
+                    </span>
+                  ) : document.paid ? (
+                    <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
+                      Payée
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
+                      Impayée
+                    </span>
+                  )}
                 </td>
                 <td className="px-4 py-4">
                   {!showInactive ? (
                     <div className="flex flex-wrap justify-end gap-2">
-                      <DuplicateDocumentButton documentId={document.id} path={path} />
-                      {type === "facture" && document.number && document.is_locked ? (
+                      <DuplicateDocumentButton
+                        documentId={document.id}
+                        path={path}
+                      />
+                      {type === "facture" &&
+                      document.number &&
+                      document.is_locked ? (
                         <>
                           <InvoicePaidButton
                             factureId={document.id}
@@ -392,7 +435,10 @@ export async function DocumentList({
       </div>
       <div className="space-y-3 md:hidden">
         {documents.map((document) => (
-          <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm" key={document.id}>
+          <div
+            className="rounded-2xl border border-neutral-200 bg-white shadow-sm"
+            key={document.id}
+          >
             <Link className="block p-4" href={`${path}/${document.id}`}>
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -413,7 +459,10 @@ export async function DocumentList({
                 </p>
               </div>
               <div className="mt-3 flex items-center justify-between text-xs text-neutral-600">
-                <span>{formatDate(document.date)} · modifié {formatActivity(document.updated_at)}</span>
+                <span>
+                  {formatDate(document.date)} · modifié{" "}
+                  {formatActivity(document.updated_at)}
+                </span>
                 <span
                   className={
                     draftScope
@@ -423,8 +472,8 @@ export async function DocumentList({
                         : type !== "facture"
                           ? "font-semibold text-green-800"
                           : document.paid
-                          ? "font-semibold text-green-800"
-                          : "font-semibold text-amber-900"
+                            ? "font-semibold text-green-800"
+                            : "font-semibold text-amber-900"
                   }
                 >
                   {draftScope
@@ -434,19 +483,33 @@ export async function DocumentList({
                       : type !== "facture"
                         ? "Verrouillé"
                         : document.paid
-                        ? "Payée"
-                        : "Impayée"}
+                          ? "Payée"
+                          : "Impayée"}
                 </span>
               </div>
-              {isAdmin && document.created_by ? <p className="mt-1 text-xs text-neutral-500">Créé par {creatorNames.get(document.created_by) || "Utilisateur"}</p> : null}
+              {isAdmin && document.created_by ? (
+                <p className="mt-1 text-xs text-neutral-500">
+                  Créé par{" "}
+                  {creatorNames.get(document.created_by) || "Utilisateur"}
+                </p>
+              ) : null}
             </Link>
             {!showInactive ? (
               <div className="flex flex-wrap justify-end gap-2 border-t border-neutral-200 p-3">
                 <DuplicateDocumentButton documentId={document.id} path={path} />
                 {type === "facture" && document.number && document.is_locked ? (
                   <>
-                    <InvoicePaidButton factureId={document.id} factureNumber={document.number} paid={document.paid} />
-                    {canAccessAvoirs ? <CreateAvoirButton factureId={document.id} factureNumber={document.number} /> : null}
+                    <InvoicePaidButton
+                      factureId={document.id}
+                      factureNumber={document.number}
+                      paid={document.paid}
+                    />
+                    {canAccessAvoirs ? (
+                      <CreateAvoirButton
+                        factureId={document.id}
+                        factureNumber={document.number}
+                      />
+                    ) : null}
                   </>
                 ) : null}
               </div>
@@ -460,17 +523,34 @@ export async function DocumentList({
         </p>
       ) : null}
       <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-neutral-700">
-        <p>{total} document{total === 1 ? "" : "s"}</p>
+        <p>
+          {total} document{total === 1 ? "" : "s"}
+        </p>
         {totalPages > 1 ? (
-          <nav aria-label="Pagination des documents" className="flex items-center gap-2">
+          <nav
+            aria-label="Pagination des documents"
+            className="flex items-center gap-2"
+          >
             {page > 1 ? (
-              <Link className="rounded-full border border-neutral-300 bg-white px-4 py-2 font-semibold text-ink-900" href={hrefWithFilters(path, filters, { page: String(page - 1) })}>
+              <Link
+                className="rounded-full border border-neutral-300 bg-white px-4 py-2 font-semibold text-ink-900"
+                href={hrefWithFilters(path, filters, {
+                  page: String(page - 1),
+                })}
+              >
                 Précédent
               </Link>
             ) : null}
-            <span>Page {Math.min(page, totalPages)} sur {totalPages}</span>
+            <span>
+              Page {Math.min(page, totalPages)} sur {totalPages}
+            </span>
             {page < totalPages ? (
-              <Link className="rounded-full border border-neutral-300 bg-white px-4 py-2 font-semibold text-ink-900" href={hrefWithFilters(path, filters, { page: String(page + 1) })}>
+              <Link
+                className="rounded-full border border-neutral-300 bg-white px-4 py-2 font-semibold text-ink-900"
+                href={hrefWithFilters(path, filters, {
+                  page: String(page + 1),
+                })}
+              >
                 Suivant
               </Link>
             ) : null}
